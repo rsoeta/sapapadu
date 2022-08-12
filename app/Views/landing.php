@@ -3,13 +3,21 @@
 
 <head>
 
-	<link rel="apple-touch-icon" sizes="180x180" href="<?= base_url('pbb_ico/apple-touch-icon.png'); ?>">
-	<link rel="icon" type="image/png" sizes="32x32" href="<?= base_url('pbb_ico/favicon-32x32.png'); ?>">
-	<link rel="icon" type="image/png" sizes="16x16" href="<?= base_url('pbb_ico/favicon-16x16.png'); ?>">
-	<link rel="manifest" href="<?= base_url('pbb_ico/site.webmanifest'); ?>">
-	<link rel="mask-icon" href="<?= base_url('pbb_ico/safari-pinned-tab.svg'); ?>" color="#5bbad5">
-	<meta name="msapplication-TileColor" content="#da532c">
-	<meta name="theme-color" content="#ffffff">
+	<link rel="apple-touch-icon" href="<?= base_url('pbb_ico/apple-touch-icon.png'); ?>">
+	<link rel="apple-touch-icon" sizes="16x16" href="<?= base_url('pbb_ico/favicon-16x16.png'); ?>">
+	<link rel="apple-touch-icon" sizes="32x32" href="<?= base_url('pbb_ico/favicon-32x32.png'); ?>">
+	<link rel="apple-touch-icon" sizes="150x150" href="<?= base_url('pbb_ico/mstile-150x150.png'); ?>">
+	<link rel="apple-touch-icon" sizes="192x192" href="<?= base_url('pbb_ico/android-chrome-192x192.png'); ?>">
+	<link rel="apple-touch-icon" sizes="384x384" href="<?= base_url('pbb_ico/android-chrome-384x384.png'); ?>">
+	<link rel="icon" type="image/png" sizes="192x192" href="<?= base_url('favicon.ico'); ?>">
+	<link rel="icon" type="image/png" sizes="32x32" href="<?= base_url('favicon.ico'); ?>">
+	<link rel="icon" type="image/png" sizes="96x96" href="<?= base_url('favicon.ico'); ?>">
+	<link rel="icon" type="image/png" sizes="16x16" href="<?= base_url('favicon.ico'); ?>">
+	<link rel="manifest" href="<?= base_url('pbb_ico/manifest.json'); ?>">
+
+	<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 	<meta name="author" content="Rian Sutarsa">
