@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Akaya+Kanadaka&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Charm:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Grenze:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mirza:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Gabriela&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Trykker&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@200;300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700;800;900&display=swap');
+
+@font-face {
+    font-family: 'NanumGothic-Bold';
+    src: url('../../assets/fonts/Nanum_Gothic/NanumGothic-Bold.ttf');
+} 
+@font-face {
+    font-family: 'NanumGothic-ExtraBold';
+    src: url('../../assets/fonts/Nanum_Gothic/NanumGothic-ExtraBold.ttf');
+}
+@font-face {
+    font-family: 'NanumGothic-Regular';
+    src: url('../../assets/fonts/Nanum_Gothic/NanumGothic-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'bookman old style';
+    src: url('../../assets/fonts/bookman-old-style/bookman old style.ttf');
+}
+
+@font-face {
+    font-family: 'Lato-Regular';
+    src: url('../../assets/fonts/Lato/Lato-Regular.ttf');
+}
+
+
+* {
+    /* font-family: 'Titillium Web', sans-serif; */
+    /* font-family: 'Akaya Kanadaka', cursive; */
+    /* font-family: 'NanumGothic-Regular', serif; */
+    /* font-family: 'PT Sans Narrow', sans-serif; */
+    /* font-family: 'Yanone Kaffeesatz', sans-serif; */
+    /* font-family: 'Saira Condensed', sans-serif; */
+    /* font-family: 'Varela Round', sans-serif; */
+    /* font-family: 'M PLUS Rounded 1c', sans-serif; */
+    font-family: 'Lato-Regular', sans-serif;
+
+    font-size: 12px;
+    /* font-size: 11px; */
+}
+
+a {
+    text-decoration: none;
+}
+
+body a{
+    text-decoration: none;
+}
+
+body div nav ul li a {
+    text-decoration: none;
+}
+
+.brand-text, .d-block, .nav-header, .nav-icon, p {
+  color: #F8F8F8 !important; 
+}
+
+
+table {
+    line-height: 2rem;
+    
+    /* padding-top: 0px; */
+    /* padding-bottom: 0px; */
+}
+
+#dhkp21,
+#pbbterhutang {
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+.nopadding {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.select2-container {
+    width: 100% !important;
+}
+
+textarea {
+    width: 100%;
+}
+
+tr th td {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.nav-second-level li,
+.nav-third-level li {
+    border-bottom: none !important;
+}
+
+.nav-second-level li a {
+    padding-left: 25px;
+}
+
+.nav-third-level li a {
+    padding-left: 45px;
+}
+
+.garis-putih {
+    border-bottom: 1px solid #fff;
+    padding: 0%;
+}
+
+#keluar {
+    position: fixed;
+    list-style-type: none;
+    padding-bottom: 1em;
+    bottom: 0;
+}
+
+.small-box{
+    outline:black solid;
+}
+
+#tanda-tangan {
+    text-decoration: underline;
+}
+
+#kop-surat {
+    font-family: 'bookman old style';
+    font-weight: bolder;
+    text-align: center;
+}
