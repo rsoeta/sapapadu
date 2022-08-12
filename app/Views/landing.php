@@ -9,10 +9,10 @@
 	<link rel="apple-touch-icon" sizes="150x150" href="<?= base_url('pbb_ico/mstile-150x150.png'); ?>">
 	<link rel="apple-touch-icon" sizes="192x192" href="<?= base_url('pbb_ico/android-chrome-192x192.png'); ?>">
 	<link rel="apple-touch-icon" sizes="384x384" href="<?= base_url('pbb_ico/android-chrome-384x384.png'); ?>">
-	<link rel="icon" type="image/png" sizes="192x192" href="<?= base_url('favicon.ico'); ?>">
-	<link rel="icon" type="image/png" sizes="32x32" href="<?= base_url('favicon.ico'); ?>">
-	<link rel="icon" type="image/png" sizes="96x96" href="<?= base_url('favicon.ico'); ?>">
-	<link rel="icon" type="image/png" sizes="16x16" href="<?= base_url('favicon.ico'); ?>">
+	<link rel="icon" type="ico" sizes="192x192" href="<?= base_url('favicon.ico'); ?>">
+	<link rel="icon" type="ico" sizes="32x32" href="<?= base_url('favicon.ico'); ?>">
+	<link rel="icon" type="ico" sizes="96x96" href="<?= base_url('favicon.ico'); ?>">
+	<link rel="icon" type="ico" sizes="16x16" href="<?= base_url('favicon.ico'); ?>">
 	<link rel="manifest" href="<?= base_url('pbb_ico/manifest.json'); ?>">
 
 	<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
@@ -28,12 +28,14 @@
 	<meta property="og:description" content="<?= deskApp(); ?>" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="<?= base_url(); ?>" />
+	<meta property="og:image" content="<?= base_url('pbb_ico/android-chrome-192x192.png'); ?>" />
 
 	<meta name="twitter:card" content="summary" />
 	<meta name="twitter:site" content="@sutarsarian" />
 	<meta name="twitter:creator" content="@sutarsarian" />
 	<meta name="twitter:title" content="<?= namaApp(); ?>" />
 	<meta name="twitter:description" content="<?= deskApp(); ?>" />
+	<meta name="twitter:image" content="<?= base_url('pbb_ico/android-chrome-192x192.png'); ?>" />
 
 
 	<title><?= namaApp(); ?></title>
