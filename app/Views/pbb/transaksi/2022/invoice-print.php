@@ -26,8 +26,8 @@
                                     <div class="col" id="kop-surat">
                                         <h1 style="font-size: 4em; letter-spacing: 0.5em;"><?= namaApp(); ?></h1>
                                         <h4>( <?= deskApp(); ?> )</h4>
-                                        <h2><?= 'DESA ' . detailUser()->nm_desa . ' KECAMATAN ' . detailUser()->nm_kec; ?></h2>
-                                        <h6><?= isset($sekretariat) ? $sekretariat['lp_sekretariat'] : ''; ?></h6>
+                                        <h2><?= !empty(detailUser()->nm_desa) ? 'DESA ' . detailUser()->nm_desa . ' KECAMATAN ' . detailUser()->nm_kec : ' KECAMATAN ' . detailUser()->nm_kec; ?></h2>
+                                        <h6><?= !empty($sekretariat['lp_sekretariat']) ? $sekretariat['lp_sekretariat'] : ''; ?></h6>
                                     </div>
                                     <div class="col-2">
                                         <img src="<?= base_url('favicon.png') ?>" alt="" class="" style="opacity: .8; text-align: center; width:130px;" width="100">
