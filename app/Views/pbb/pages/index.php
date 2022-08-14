@@ -102,14 +102,14 @@
     // setup 
     const data_desa = {
         labels: [
-            <?php foreach ($setoranPerDesa  as $row) : ?> '<?= $row['desaNama']; ?>', <?php endforeach ?>
+            <?php foreach ($setoranPerDesa  as $row) : ?> '<?= $row->desaNama; ?>', <?php endforeach ?>
         ],
         datasets: [{
                 label: 'Target',
                 data: [
                     <?php
                     foreach ($setoranPerDesa  as $row) : ?>
-                        <?php echo '"' . $row['dataTarget'] . '",'; ?>
+                        <?php echo '"' . $row->dataTarget . '",'; ?>
                     <?php endforeach ?>
                 ],
                 backgroundColor: [
@@ -125,7 +125,7 @@
                 data: [
                     <?php
                     foreach ($setoranPerDesa  as $row) : ?>
-                        <?php echo '"' . $row['dataCapaian'] . '",'; ?>
+                        <?php echo '"' . $row->dataCapaian . '",'; ?>
                     <?php endforeach ?>
                 ],
                 backgroundColor: [
