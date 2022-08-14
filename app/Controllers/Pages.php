@@ -78,7 +78,7 @@ class Pages extends BaseController
             'setoranPerDesa' => $setoranPerDesa,
         ];
 
-        $this->cachePage(60); // 60 seconds
+        // $this->cachePage(60); // 60 seconds
         return view('pbb/pages/index', $data);
     }
 

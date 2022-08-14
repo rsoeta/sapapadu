@@ -2,7 +2,7 @@
 
 <?= $this->section('content'); ?>
 
-<script src="<?= base_url('assets/plugins/chart.js/chartjs-plugin-labels.min.js'); ?>"></script>
+<!-- <script src="<?= base_url('assets/plugins/chart.js/chartjs-plugin-labels.min.js'); ?>"></script> -->
 <script src="<?= base_url('assets/plugins/chart.js/3.7.0/chart.min.js'); ?>"></script>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper mt-1">
@@ -35,13 +35,15 @@
                     <!-- Morris chart - Sales -->
                     <div class="chart tab-pane active" id="thread-desa">
                         <div class="row">
-                            <div class="col-12 col-sm-8 col-md-8">
+                            <div class="col-12 col-sm-12 col-md-7">
                                 <h4 class="text-center">
                                     <strong>Chart Desa</strong>
                                 </h4>
-                                <canvas id="thread-desa-canvas" style="width:10px !important; height:6px !important;"></canvas>
+                                <div class="chart-container" style="position: relative; height:50vh; width:100%">
+                                    <canvas id="thread-desa-canvas" style="width: 100%;"></canvas>
+                                </div>
                             </div>
-                            <div class="col-12 col-sm-4 col-md-4">
+                            <div class="col-12 col-sm-12 col-md-5">
                                 <div class="table-responsive">
                                     <table class="table table-hover table-sm" style="width: 100%;">
                                         <thead class="text-center">
@@ -50,7 +52,7 @@
                                                 <th>Desa</th>
                                                 <th>Target</th>
                                                 <th>Capaian</th>
-                                                <th>SPPT Bermasalah</th>
+                                                <th>Data Bermasalah</th>
                                                 <th>Persentase</th>
                                             </tr>
                                         </thead>
@@ -61,10 +63,10 @@
                                                 <tr>
                                                     <td><?= $i; ?></td>
                                                     <td><?= $setoran->desaNama; ?></td>
-                                                    <td><?= $setoran->dataTarget; ?></td>
-                                                    <td><?= $setoran->dataCapaian; ?></td>
-                                                    <td><?= $setoran->dataBermasalah; ?></td>
-                                                    <td><?= $setoran->persentase; ?></td>
+                                                    <td style="text-align:right;"><?= number_format($setoran->dataTarget, 0, ',', '.'); ?></td>
+                                                    <td style="text-align:right;"><?= number_format($setoran->dataCapaian, 0, ',', '.'); ?></td>
+                                                    <td style="text-align:right;"><?= number_format($setoran->dataBermasalah, 0, ',', '.'); ?></td>
+                                                    <td style="text-align:right;"><?= number_format($setoran->dataPersentase, 2, ',', '.') . ' %'; ?></td>
                                                 </tr>
                                                 <?php $i++; ?>
                                             <?php endforeach; ?>
@@ -144,6 +146,8 @@
         type: 'bar',
         data: data_desa,
         options: {
+            responsive: true,
+            maintainAspectRatio: false,
             scales: {
                 y: {
                     beginAtZero: true

@@ -938,13 +938,15 @@ class DhkpModel22 extends Model
     {
         $sQuery = "SELECT tb_villages.name as desaNama, 
         SUM(IF(pbb_dhkp22.pd_ket=0, pbb_dhkp22.pajak, 0)) as dataCapaian,
-        SUM(IF(pbb_dhkp22.pd_ket=1, pbb_dhkp22.pajak, 0)) as dataTarget,
+        SUM(IF(pbb_dhkp22.pd_ket>=0, pbb_dhkp22.pajak, 0)) as dataTarget,
         SUM(IF(pbb_dhkp22.pd_ket>1, pbb_dhkp22.pajak, 0)) as dataBermasalah,
-        SUM(IF(pbb_dhkp22.pd_ket=0, pbb_dhkp22.pajak, 0)) / SUM(IF(pbb_dhkp22.pd_ket=1, pbb_dhkp22.pajak, 0)) * 100 as dataPersentase
+        -- ROUND(SUM(IF(pbb_dhkp22.pd_ket=0, pbb_dhkp22.pajak, 0)) / SUM(IF(pbb_dhkp22.pd_ket>=0, pbb_dhkp22.pajak, 0)) * 100, 2) as dataPersentase,
+        ROUND(SUM(IF(pbb_dhkp22.pd_ket=0, pbb_dhkp22.pajak, 0)) / SUM(IF(pbb_dhkp22.pd_ket>=0, pbb_dhkp22.pajak, 0)) * 100, 2) as dataPersentase
         -- join
         FROM pbb_dhkp22 
         JOIN tb_villages ON tb_villages.id = pbb_dhkp22.pd_desa 
-        GROUP BY tb_villages.name";
+        GROUP BY tb_villages.name
+        ORDER BY dataPersentase DESC";
 
         $query = $this->db->query($sQuery);
         return $query->getResult();
