@@ -3,6 +3,7 @@
 namespace App\Models\Pbb;
 
 use CodeIgniter\Model;
+use CodeIgniter\I18n\Time;
 
 class DhkpModel22 extends Model
 {
@@ -38,7 +39,7 @@ class DhkpModel22 extends Model
     protected $skipValidation   = false;
 
 
-    var $column_order = array('', 'nama_wp', 'nop', 'alamat_wp', 'alamat_op', 'bumi', 'pajak', 'nama_ktp', 'dusun', 'rw', 'rt', 'pd_ket');
+    var $column_order = array('', 'id', 'nama_wp', 'nop', 'alamat_wp', 'alamat_op', 'bumi', 'pajak', 'nama_ktp', 'dusun', 'rw', 'rt', 'pd_ket');
     var $column_order1 = array('', 'nama_wp', 'nop', 'alamat_wp', 'alamat_op', 'bumi', 'pajak', 'nama_ktp', 'dusun', 'rw', 'rt');
     var $column_order0 = array('', 'nama_wp', 'nop', 'alamat_wp', 'alamat_op', 'bumi', 'pajak', 'nama_ktp', 'dusun', 'rw', 'rt');
 
@@ -665,68 +666,77 @@ class DhkpModel22 extends Model
         return $query;
     }
 
-    function jumlahLunas()
-    {
-        $sQuery = "SELECT COUNT(id) as jumlahLunas FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket=0";
-        $db = db_connect();
-        $query = $db->query($sQuery)->getRow();
+    // function jumlahLunas()
+    // {
+    //     $sQuery = "SELECT COUNT(id) as jumlahLunas FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket=0";
+    //     $db = db_connect();
+    //     $query = $db->query($sQuery)->getRow();
 
-        return $query;
-    }
+    //     return $query;
+    // }
 
-    public function jumlahTotalLunas()
-    {
-        $sQuery = "SELECT SUM(pajak) as jumlahTotalLunas FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket=0";
-        $db = db_connect();
-        $query = $db->query($sQuery)->getRow();
+    // public function jumlahTotalLunas()
+    // {
+    //     $sQuery = "SELECT SUM(pajak) as jumlahTotalLunas FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket=0";
+    //     $db = db_connect();
+    //     $query = $db->query($sQuery)->getRow();
 
-        return $query;
-    }
+    //     return $query;
+    // }
 
-    function jumlahBelumLunas()
-    {
-        $sQuery = "SELECT COUNT(id) as jumlahBelumLunas FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket=1";
-        $db = db_connect();
-        $query = $db->query($sQuery)->getRow();
+    // function jumlahBelumLunas()
+    // {
+    //     $sQuery = "SELECT COUNT(id) as jumlahBelumLunas FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket=1";
+    //     $db = db_connect();
+    //     $query = $db->query($sQuery)->getRow();
 
-        return $query;
-    }
+    //     return $query;
+    // }
 
-    public function jumlahTotalBelumLunas()
-    {
-        $sQuery = "SELECT SUM(pajak) as jumlahTotalBelumLunas FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket=1";
-        $db = db_connect();
-        $query = $db->query($sQuery)->getRow();
+    // public function jumlahTotalBelumLunas()
+    // {
+    //     $sQuery = "SELECT SUM(pajak) as jumlahTotalBelumLunas FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket=1";
+    //     $db = db_connect();
+    //     $query = $db->query($sQuery)->getRow();
 
-        return $query;
-    }
+    //     return $query;
+    // }
 
-    function jumlahBermasalah()
-    {
-        $sQuery = "SELECT COUNT(id) as jumlahBermasalah FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket>1";
-        $db = db_connect();
-        $query = $db->query($sQuery)->getRow();
+    // function jumlahBermasalah()
+    // {
+    //     $sQuery = "SELECT COUNT(id) as jumlahBermasalah FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket>1";
+    //     $db = db_connect();
+    //     $query = $db->query($sQuery)->getRow();
 
-        return $query;
-    }
+    //     return $query;
+    // }
 
-    public function jumlahTotalBermasalah()
-    {
-        $sQuery = "SELECT SUM(pajak) as jumlahTotalBermasalah FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket>1";
-        $db = db_connect();
-        $query = $db->query($sQuery)->getRow();
+    // public function jumlahTotalBermasalah()
+    // {
+    //     $sQuery = "SELECT SUM(pajak) as jumlahTotalBermasalah FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket>1";
+    //     $db = db_connect();
+    //     $query = $db->query($sQuery)->getRow();
 
-        return $query;
-    }
+    //     return $query;
+    // }
 
     public function getDataRekDes()
     {
-        $builder = $this->db->table('pbb_dhkp22');
-        $builder->select('(SELECT SUM(pbb_dhkp22.pajak) FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket>1) AS pajak2', false);
-        $builder->select('(SELECT SUM(pbb_dhkp22.pajak) FROM pbb_dhkp22) AS pajak1', false);
-        $builder->select('(SELECT SUM(pbb_dhkp22.pajak) FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket=0) AS pajak0', false);
-        $builder->distinct();
-        $query = $builder->get();
+        $sql = 'SELECT tb_villages.name AS desaNama,
+                    SUM(IF(`pd_ket` >= 0,1,0)) dataTarget,
+                    SUM(IF(`pd_ket` = 0,1,0)) dataCapaian,
+                    SUM(IF(`pd_ket` > 1,1,0)) dataBermasalah,
+                    ROUND((SUM(IF(`pd_ket` = 0,1,0) + IF(`pd_ket`>1,1,0))/SUM(IF(`pd_ket` >= 0,1,0)) * 100 ),2) AS persentase
+                FROM pbb_dhkp22
+                JOIN tb_villages ON tb_villages.id = pbb_dhkp22.pd_desa
+                GROUP BY tb_villages.name
+                ORDER BY persentase DESC';
+
+        // $query = $sql;
+        $builder = $this->db->query($sql);
+        $builder->getResult();
+        $query = $builder;
+
         return $query;
     }
 
@@ -734,9 +744,9 @@ class DhkpModel22 extends Model
     {
         $builder = $this->db->table('pbb_dhkp22');
         $builder->select('dusun');
-        $builder->join('tbl_dusun', 'tbl_dusun.no_dusun = pbb_dhkp22.dusun');
-        $builder->select('(SELECT SUM(pbb_dhkp22.pajak) FROM pbb_dhkp22 WHERE pbb_dhkp22.dusun=tbl_dusun.no_dusun) AS pajak1', false);
-        $builder->select('(SELECT SUM(pbb_dhkp22.pajak) FROM pbb_dhkp22 WHERE pbb_dhkp22.dusun=tbl_dusun.no_dusun && pbb_dhkp22.pd_ket=0) AS pajak0', false);
+        $builder->join('tb_dusun', 'tb_dusun.td_kode_dusun = pbb_dhkp22.dusun');
+        $builder->select('(SELECT SUM(pbb_dhkp22.pajak) FROM pbb_dhkp22 WHERE pbb_dhkp22.dusun=tb_dusun.td_kode_dusun) AS pajak1', false);
+        $builder->select('(SELECT SUM(pbb_dhkp22.pajak) FROM pbb_dhkp22 WHERE pbb_dhkp22.dusun=tb_dusun.td_kode_dusun && pbb_dhkp22.pd_ket=0) AS pajak0', false);
         $builder->orderBy('dusun', 'asc');
         $builder->distinct();
         $query = $builder->get();
@@ -769,5 +779,174 @@ class DhkpModel22 extends Model
         $builder->groupBy(['dusun', 'rw', 'rt']);
         $query = $builder->get();
         return $query;
+    }
+
+    function jumlahSppt($data_desa = null, $data_dusun = null, $data_rw = null, $data_rt = null, $data_tahun = null)
+    {
+        if ($data_desa == null && $data_dusun == null && $data_rw == null && $data_rt == null && $data_tahun) {
+            $sQuery = "SELECT COUNT(id) as jumlahSppt FROM pbb_dhkp22 WHERE YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun == null && $data_rw == null && $data_rt == null && $data_tahun) {
+            $sQuery = "SELECT COUNT(id) as jumlahSppt FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw == null && $data_rt == null && $data_tahun) {
+            $sQuery = "SELECT COUNT(id) as jumlahSppt FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw != null && $data_rt == null && $data_tahun) {
+            $sQuery = "SELECT COUNT(id) as jumlahSppt FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.rw='$data_rw' AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw != null && $data_rt != null && $data_tahun) {
+            $sQuery = "SELECT COUNT(id) as jumlahSppt FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.rw='$data_rw' AND pbb_dhkp22.rt='$data_rt' AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw != null && $data_rt != null && $data_tahun) {
+            $sQuery = "SELECT COUNT(id) as jumlahSppt FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.rw='$data_rw' AND pbb_dhkp22.rt='$data_rt' AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        }
+        $query = $this->db->query($sQuery);
+        return $query->getRow();
+    }
+
+    function jumlahLunas($data_desa, $data_dusun, $data_rw, $data_rt, $data_ket, $data_tahun)
+    {
+        if ($data_desa == null && $data_dusun == null && $data_rw == null && $data_rt == null && $data_ket == null && $data_tahun) {
+            $sQuery = "SELECT COUNT(id) as jumlahLunas FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket=0 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun == null && $data_rw == null && $data_rt == null && $data_ket == null && $data_tahun) {
+            $sQuery = "SELECT COUNT(id) as jumlahLunas FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.pd_ket=0 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw == null && $data_rt == null && $data_ket == null && $data_tahun) {
+            $sQuery = "SELECT COUNT(id) as jumlahLunas FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.pd_ket=0 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw != null && $data_rt == null && $data_ket == null && $data_tahun) {
+            $sQuery = "SELECT COUNT(id) as jumlahLunas FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.rw='$data_rw' AND pbb_dhkp22.pd_ket=0 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw != null && $data_rt != null && $data_ket == null && $data_tahun) {
+            $sQuery = "SELECT COUNT(id) as jumlahLunas FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.rw='$data_rw' AND pbb_dhkp22.rt='$data_rt' AND pbb_dhkp22.pd_ket=0 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw != null && $data_rt != null && $data_ket != null && $data_tahun) {
+            $sQuery = "SELECT COUNT(id) as jumlahLunas FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.rw='$data_rw' AND pbb_dhkp22.rt='$data_rt' AND pbb_dhkp22.pd_ket='$data_ket' AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        }
+        $query = $this->db->query($sQuery);
+        return $query->getRow();
+    }
+
+    function jumlahBelumLunas($data_desa, $data_dusun, $data_rw, $data_rt, $data_ket, $data_tahun)
+    {
+        if ($data_desa == null && $data_dusun == null && $data_rw == null && $data_rt == null && $data_ket && $data_tahun) {
+            $sQuery = "SELECT COUNT(id) as jumlahBelumLunas FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket=1 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun == null && $data_rw == null && $data_rt == null && $data_ket && $data_tahun) {
+            $sQuery = "SELECT COUNT(id) as jumlahBelumLunas FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.pd_ket=1 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw == null && $data_rt == null && $data_ket && $data_tahun) {
+            $sQuery = "SELECT COUNT(id) as jumlahBelumLunas FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.pd_ket=1 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw != null && $data_rt == null && $data_ket && $data_tahun) {
+            $sQuery = "SELECT COUNT(id) as jumlahBelumLunas FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.rw='$data_rw' AND pbb_dhkp22.pd_ket=1 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw != null && $data_rt != null && $data_ket && $data_tahun) {
+            $sQuery = "SELECT COUNT(id) as jumlahBelumLunas FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.rw='$data_rw' AND pbb_dhkp22.rt='$data_rt' AND pbb_dhkp22.pd_ket=1 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw != null && $data_rt != null && $data_ket && $data_tahun) {
+            $sQuery = "SELECT COUNT(id) as jumlahBelumLunas FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.rw='$data_rw' AND pbb_dhkp22.rt='$data_rt' AND pbb_dhkp22.pd_ket=1 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        }
+        $query = $this->db->query($sQuery);
+        return $query->getRow();
+    }
+
+    function jumlahBermasalah($data_desa, $data_dusun, $data_rw, $data_rt, $data_ket, $data_tahun)
+    {
+        if ($data_desa == null && $data_dusun == null && $data_rw == null && $data_rt == null && $data_ket && $data_tahun) {
+            $sQuery = "SELECT COUNT(id) as jumlahBermasalah FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket>=2 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun == null && $data_rw == null && $data_rt == null && $data_ket && $data_tahun) {
+            $sQuery = "SELECT COUNT(id) as jumlahBermasalah FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.pd_ket>=2 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw == null && $data_rt == null && $data_ket && $data_tahun) {
+            $sQuery = "SELECT COUNT(id) as jumlahBermasalah FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.pd_ket>=2 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw != null && $data_rt == null && $data_ket && $data_tahun) {
+            $sQuery = "SELECT COUNT(id) as jumlahBermasalah FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.rw='$data_rw' AND pbb_dhkp22.pd_ket>=2 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw != null && $data_rt != null && $data_ket && $data_tahun) {
+            $sQuery = "SELECT COUNT(id) as jumlahBermasalah FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.rw='$data_rw' AND pbb_dhkp22.rt='$data_rt' AND pbb_dhkp22.pd_ket>=2 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw != null && $data_rt != null && $data_ket != null && $data_tahun) {
+            $sQuery = "SELECT COUNT(id) as jumlahBermasalah FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.rw='$data_rw' AND pbb_dhkp22.rt='$data_rt' AND pbb_dhkp22.pd_ket>=2 AND YEAR(pbb_dhkp22.created_at
+            )='$data_tahun'";
+        }
+        $query = $this->db->query($sQuery);
+        return $query->getRow();
+    }
+
+    function jumlahTotal($data_desa, $data_dusun, $data_rw, $data_rt, $data_tahun)
+    {
+        if ($data_desa == null && $data_dusun == null && $data_rw == null && $data_rt == null && $data_tahun) {
+            $sQuery = "SELECT SUM(pajak) as jumlahTotal FROM pbb_dhkp22 WHERE YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun == null && $data_rw == null && $data_rt == null && $data_tahun) {
+            $sQuery = "SELECT SUM(pajak) as jumlahTotal FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw == null && $data_rt == null && $data_tahun) {
+            $sQuery = "SELECT SUM(pajak) as jumlahTotal FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw != null && $data_rt == null && $data_tahun) {
+            $sQuery = "SELECT SUM(pajak) as jumlahTotal FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.rw='$data_rw' AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw != null && $data_rt != null && $data_tahun) {
+            $sQuery = "SELECT SUM(pajak) as jumlahTotal FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.rw='$data_rw' AND pbb_dhkp22.rt='$data_rt' AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw != null && $data_rt != null && $data_tahun) {
+            $sQuery = "SELECT SUM(pajak) as jumlahTotal FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.rw='$data_rw' AND pbb_dhkp22.rt='$data_rt' AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        }
+        $query = $this->db->query($sQuery);
+        return $query->getRow();
+    }
+
+    function jumlahTotalLunas($data_desa, $data_dusun, $data_rw, $data_rt, $data_ket, $data_tahun)
+    {
+        if ($data_desa == null && $data_dusun == null && $data_rw == null && $data_rt == null && $data_ket == null && $data_tahun) {
+            $sQuery = "SELECT SUM(pajak) as jumlahTotal FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket=0 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun == null && $data_rw == null && $data_rt == null && $data_ket == null && $data_tahun) {
+            $sQuery = "SELECT SUM(pajak) as jumlahTotal FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.pd_ket=0 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw == null && $data_rt == null && $data_ket == null && $data_tahun) {
+            $sQuery = "SELECT SUM(pajak) as jumlahTotal FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.pd_ket=0 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw != null && $data_rt == null && $data_ket == null && $data_tahun) {
+            $sQuery = "SELECT SUM(pajak) as jumlahTotal FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.rw='$data_rw' AND pbb_dhkp22.pd_ket=0 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw != null && $data_rt != null && $data_ket == null && $data_tahun) {
+            $sQuery = "SELECT SUM(pajak) as jumlahTotal FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.rw='$data_rw' AND pbb_dhkp22.rt='$data_rt' AND pbb_dhkp22.pd_ket=0 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw != null && $data_rt != null && $data_ket != null && $data_tahun) {
+            $sQuery = "SELECT SUM(pajak) as jumlahTotal FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.rw='$data_rw' AND pbb_dhkp22.rt='$data_rt' AND pbb_dhkp22.pd_ket='$data_ket' AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        }
+        $query = $this->db->query($sQuery);
+        return $query->getRow();
+    }
+
+    function jumlahTotalBelumLunas($data_desa, $data_dusun, $data_rw, $data_rt, $data_ket, $data_tahun)
+    {
+        if ($data_desa == null && $data_dusun == null && $data_rw == null && $data_rt == null && $data_ket && $data_tahun) {
+            $sQuery = "SELECT SUM(pajak) as jumlahTotal FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket=1 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun == null && $data_rw == null && $data_rt == null && $data_ket && $data_tahun) {
+            $sQuery = "SELECT SUM(pajak) as jumlahTotal FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.pd_ket=1 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw == null && $data_rt == null && $data_ket && $data_tahun) {
+            $sQuery = "SELECT SUM(pajak) as jumlahTotal FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.pd_ket=1 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw != null && $data_rt == null && $data_ket && $data_tahun) {
+            $sQuery = "SELECT SUM(pajak) as jumlahTotal FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.rw='$data_rw' AND pbb_dhkp22.pd_ket=1 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw != null && $data_rt != null && $data_ket && $data_tahun) {
+            $sQuery = "SELECT SUM(pajak) as jumlahTotal FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.rw='$data_rw' AND pbb_dhkp22.rt='$data_rt' AND pbb_dhkp22.pd_ket=1 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw != null && $data_rt != null && $data_ket != null && $data_tahun) {
+            $sQuery = "SELECT SUM(pajak) as jumlahTotal FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.rw='$data_rw' AND pbb_dhkp22.rt='$data_rt' AND pbb_dhkp22.pd_ket=1 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        }
+        $query = $this->db->query($sQuery);
+        return $query->getRow();
+    }
+
+    function jumlahTotalBermasalah($data_desa, $data_dusun, $data_rw, $data_rt, $data_ket, $data_tahun)
+    {
+        if ($data_desa == null && $data_dusun == null && $data_rw == null && $data_rt == null && $data_ket && $data_tahun) {
+            $sQuery = "SELECT SUM(pajak) as jumlahTotal FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket>=2 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun == null && $data_rw == null && $data_rt == null && $data_ket && $data_tahun) {
+            $sQuery = "SELECT SUM(pajak) as jumlahTotal FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.pd_ket>=2 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw == null && $data_rt == null && $data_ket && $data_tahun) {
+            $sQuery = "SELECT SUM(pajak) as jumlahTotal FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.pd_ket>=2 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw != null && $data_rt == null && $data_ket && $data_tahun) {
+            $sQuery = "SELECT SUM(pajak) as jumlahTotal FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.rw='$data_rw' AND pbb_dhkp22.pd_ket>=2 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw != null && $data_rt != null && $data_ket && $data_tahun) {
+            $sQuery = "SELECT SUM(pajak) as jumlahTotal FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.rw='$data_rw' AND pbb_dhkp22.rt='$data_rt' AND pbb_dhkp22.pd_ket>=2 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        } elseif ($data_desa != null && $data_dusun != null && $data_rw != null && $data_rt != null && $data_ket != null && $data_tahun) {
+            $sQuery = "SELECT SUM(pajak) as jumlahTotal FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_desa='$data_desa' AND pbb_dhkp22.dusun='$data_dusun' AND pbb_dhkp22.rw='$data_rw' AND pbb_dhkp22.rt='$data_rt' AND pbb_dhkp22.pd_ket>=2 AND YEAR(pbb_dhkp22.created_at)='$data_tahun'";
+        }
+        $query = $this->db->query($sQuery);
+        return $query->getRow();
+    }
+
+    function setoranPerDesa()
+    {
+        $sQuery = "SELECT tb_villages.name as desaNama, 
+        SUM(IF(pbb_dhkp22.pd_ket=0, pbb_dhkp22.pajak, 0)) as dataCapaian,
+        SUM(IF(pbb_dhkp22.pd_ket=1, pbb_dhkp22.pajak, 0)) as dataTarget,
+        SUM(IF(pbb_dhkp22.pd_ket>1, pbb_dhkp22.pajak, 0)) as dataBermasalah,
+        SUM(IF(pbb_dhkp22.pd_ket=0, pbb_dhkp22.pajak, 0)) / SUM(IF(pbb_dhkp22.pd_ket=1, pbb_dhkp22.pajak, 0)) * 100 as dataPersentase
+        -- join
+        FROM pbb_dhkp22 
+        JOIN tb_villages ON tb_villages.id = pbb_dhkp22.pd_desa 
+        GROUP BY tb_villages.name";
+
+        $query = $this->db->query($sQuery);
+        return $query->getResult();
     }
 }

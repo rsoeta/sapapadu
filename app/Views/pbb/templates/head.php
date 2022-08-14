@@ -90,7 +90,7 @@
 
     <!-- DataTables -->
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
-    <!-- <script src="<?= base_url(); ?>/assets/js/jquery-3.6.0.min.js"></script> -->
+    <script src="<?= base_url('assets/js/jquery-3.6.0.min.js'); ?>"></script>
     <!-- jQuery -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <!-- <link rel="stylesheet" href="<?= base_url(); ?>/assets/plugins/select2/css/select2.min.css"> -->
@@ -102,10 +102,7 @@
     <!-- CSS -->
     <link rel="stylesheet" href="<?= base_url(); ?>/assets/dist/css/alertify.min.css">
 
-
-
-
-    <style>
+    <!-- <style>
         @keyframes growProgressBar {
 
             0%,
@@ -153,7 +150,7 @@
         }
 
         /* demo */
-    </style>
+    </style> -->
 
     <!-- Memasang jQuery Migrate -->
     <script src="<?= base_url('assets/jquery/jquery-3.6.0.min.js'); ?>"></script>
@@ -386,9 +383,6 @@
     <!-- MOMENT JS -->
     <script src="<?= base_url('assets/js/moment.js'); ?>"></script>
     <script src="<?= base_url('assets/js/moment-with-locales.js'); ?>" charset="UTF-8"></script>
-
-
-    <!-- Copied From : https://www.martinrio.com/2018/12/cara-memasang-jquery-migrate-pada-blogger.html#ixzz6xVAqpPZ5
-Follow Martin Rio on : facebook.com/martinriomax, twitter.com/martin_rio, and instagram.com/martin_rio -->
+    <script src="<?= base_url('assets/js/script.js'); ?>"></script>
 
 </head>

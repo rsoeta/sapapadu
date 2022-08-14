@@ -3,6 +3,9 @@
 
 <head>
 
+	<meta charset="utf-8">
+	<title><?= namaApp(); ?></title>
+
 	<link rel="apple-touch-icon" href="<?= base_url('pbb_ico/apple-touch-icon.png'); ?>">
 	<link rel="apple-touch-icon" sizes="16x16" href="<?= base_url('pbb_ico/favicon-16x16.png'); ?>">
 	<link rel="apple-touch-icon" sizes="32x32" href="<?= base_url('pbb_ico/favicon-32x32.png'); ?>">
@@ -16,7 +19,6 @@
 	<link rel="manifest" href="<?= base_url('pbb_ico/manifest.json'); ?>">
 
 	<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
-	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
@@ -36,9 +38,6 @@
 	<meta name="twitter:title" content="<?= namaApp(); ?>" />
 	<meta name="twitter:description" content="<?= deskApp(); ?>" />
 	<meta name="twitter:image" content="<?= base_url('pbb_ico/android-chrome-192x192.png'); ?>" />
-
-
-	<title><?= namaApp(); ?></title>
 
 	<meta name="keywords" content="">
 	<meta name="description" content="">

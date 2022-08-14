@@ -46,6 +46,10 @@
 
 <script src="<?= base_url(); ?>/assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 
+<?php
+$role = detailUser()->pu_role_id;
+// echo session()->get('pu_nik');
+?>
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
@@ -151,6 +155,9 @@
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                     <i class="fas fa-minus"></i>
                                 </button>
+                                <button type="button" class="btn btn-tool refreshAll">
+                                    <i class="fa fa-exchange-alt"></i>
+                                </button>
                                 <button type="button" class="btn btn-tool" data-card-widget="remove">
                                     <i class="fas fa-times"></i>
                                 </button>
@@ -163,9 +170,8 @@
                                     <!-- small box -->
                                     <div class="small-box bg-info">
                                         <div class="inner">
-                                            <h5>DATA</h5>
-                                            <h4><?= number_format($jumlahSppt); ?> SPPT</h4>
-
+                                            <h5>DATA TARGET</h5>
+                                            <h4 id="jumlahSppt">SPPT</h4>
                                         </div>
                                         <div class="icon">
                                             <i class="fa fa-database"></i>
@@ -174,7 +180,7 @@
                                             <div class="row">
                                                 <div class="col-12 border-right">
                                                     <div class="description-block">
-                                                        <h5 class="description-header">Rp. <?= number_format($jumlahTotal); ?></h5>
+                                                        <h5 class="description-header" id="jumlahTotal">Rp. </h5>
                                                     </div>
                                                 </div>
                                             </div>
@@ -187,7 +193,7 @@
                                     <div class="small-box bg-success">
                                         <div class="inner">
                                             <h5>LUNAS</h5>
-                                            <h4><?= number_format($jumlahLunas); ?> SPPT</h4>
+                                            <h4 id="jumlahLunas"> SPPT</h4>
 
                                         </div>
                                         <div class="icon">
@@ -197,7 +203,7 @@
                                             <div class="row">
                                                 <div class="col-12 border-right">
                                                     <div class="description-block">
-                                                        <h5 class="description-header">Rp. <?= number_format($jumlahTotalLunas); ?></h5>
+                                                        <h5 class="description-header" id="jumlahTotalLunas">Rp. </h5>
                                                     </div>
                                                 </div>
                                             </div>
@@ -210,7 +216,7 @@
                                     <div class="small-box bg-danger">
                                         <div class="inner">
                                             <h5>BELUM LUNAS</h5>
-                                            <h4><?= number_format($jumlahBelumLunas); ?> SPPT</h4>
+                                            <h4 id="jumlahBelumLunas"> SPPT</h4>
 
                                         </div>
                                         <div class="icon">
@@ -220,7 +226,7 @@
                                             <div class="row">
                                                 <div class="col-12 border-right">
                                                     <div class="description-block">
-                                                        <h5 class="description-header">Rp. <?= number_format($jumlahTotalBelumLunas); ?></h5>
+                                                        <h5 class="description-header" id="jumlahTotalBelumLunas">Rp. </h5>
                                                     </div>
                                                 </div>
                                             </div>
@@ -233,7 +239,7 @@
                                     <div class="small-box bg-warning">
                                         <div class="inner">
                                             <h5>BERMASALAH</h5>
-                                            <h4><?= number_format($jumlahBermasalah); ?> SPPT</h4>
+                                            <h4 id="jumlahBermasalah"> SPPT</h4>
 
                                         </div>
                                         <div class="icon">
@@ -243,7 +249,7 @@
                                             <div class="row">
                                                 <div class="col-12 border-right">
                                                     <div class="description-block">
-                                                        <h5 class="description-header">Rp. <?= number_format($jumlahTotalBermasalah); ?></h5>
+                                                        <h5 class="description-header" id="jumlahTotalBermasalah">Rp. </h5>
                                                     </div>
                                                 </div>
                                             </div>
@@ -289,9 +295,21 @@
                                 <div class="tab-pane fade show active" id="dataPbb" role="tabpanel" aria-labelledby="dataPbb-tab">
                                     <div class="row">
                                         <div class="col-12 mb-2">
-                                            <button style="float: right;" type="button" class="btn btn-primary rounded shadow tombolTambah">
-                                                <i class="fa fa-plus mr-1"></i> Tambah Data
-                                            </button>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-secondary">Pilih Aksi</button>
+                                                <button type="button" class="btn btn-secondary dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
+                                                    <span class="sr-only">Toggle Dropdown</span>
+                                                </button>
+                                                <div class="dropdown-menu" role="menu">
+                                                    <button type="button" class="dropdown-item btn btn-primary rounded shadow tombolTambah">
+                                                        <i class="fa fa-folder-plus mr-1"></i> Tambah Data
+                                                    </button>
+                                                    <div class="dropdown-divider"></div>
+                                                    <button type="button" id='delete_record' value='Delete' class="dropdown-item btn btn-danger rounded shadow">
+                                                        <i class="fa fa-trash-alt mr-1"></i> Hapus Data Terpilih
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <?php if (!empty(session()->getFlashdata('success'))) { ?>
@@ -311,10 +329,12 @@
                                             <?php echo session()->getFlashdata('warning'); ?>
                                         </div>
                                     <?php } ?>
+                                    <div id="msg"></div>
                                     <div class="table-responsive">
-                                        <table id="tb_dhkp22" class="table table-sm table-striped table-bordered nowrap compact" cellspacing="0%">
+                                        <table id="tb_dhkp22" class="table table-sm nowrap compact" style="width: 100%;">
                                             <thead style="background-color: cyan; color: dark;">
                                                 <tr role="row">
+                                                    <th><input type="checkbox" class='checkall' id='checkall'></th>
                                                     <th>No</th>
                                                     <th>Nama WP</th>
                                                     <th>N.O.P</th>
@@ -327,14 +347,15 @@
                                                     <th>RW</th>
                                                     <th>RT</th>
                                                     <th>Ket</th>
+                                                    <th>Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody></tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th colspan="6" style="text-align:center; text-decoration: black;">TOTAL</th>
+                                                    <th colspan="7" style="text-align:center; text-decoration: black;">TOTAL</th>
                                                     <th id="total_order"></th>
-                                                    <th colspan="5"></th>
+                                                    <th colspan="6"></th>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -524,6 +545,272 @@
 </div>
 <div class="viewmodal" style="display: none;"></div>
 <script>
+    $(document).ready(function() {
+
+
+        // body collapsed
+        // $('body').toggleClass('sidebar-collapse');
+        $('#reload_page').click(function() {
+            location.reload(true);
+        });
+
+        $('#tb_dhkp22');
+        $('#tb_dhkp22_0');
+        $('#tb_dhkp22_1');
+        $('#tb_dhkp22_2');
+        jumlahSppt();
+        jumlahTotal();
+        jumlahLunas();
+        jumlahTotalLunas();
+        jumlahBelumLunas();
+        jumlahTotalBelumLunas();
+        jumlahBermasalah();
+        jumlahTotalBermasalah();
+
+        $('#data_desa').change(function() {
+            let data_desa = $('#data_desa').val();
+            let action = 'get_dusun';
+            if (data_desa != '') {
+                $.ajax({
+                    url: '<?= base_url('action') ?>',
+                    type: 'post',
+                    data: {
+                        desa: data_desa,
+                        action: action
+                    },
+                    dataType: "JSON",
+                    success: function(data) {
+                        let html = '<option value="">-Semua Dusun-</option>';
+                        for (let count = 0; count < data.length; count++) {
+                            html += '<option value="' + data[count].td_kode_dusun + '">' + data[count].td_nama_dusun + '</option>'
+                        }
+                        $('#data_dusun').html(html);
+                        $('#data_rw').html('<option value="">-Semua RW-</option>');
+                        $('#data_rt').html('<option value="">-Semua RT-</option>');
+                        jumlahSppt();
+                        jumlahTotal();
+                        jumlahLunas();
+                        jumlahTotalLunas();
+                        jumlahBelumLunas();
+                        jumlahTotalBelumLunas();
+                        jumlahBermasalah();
+                        jumlahTotalBermasalah();
+                    }
+                });
+            } else {
+                $('#data_dusun').html('<option value="">Pilih Dusun</option>');
+                $('#data_rw').html('<option value="">Pilih RW</option>');
+                $('#data_rt').html('<option value="">Pilih RT</option>');
+            }
+        });
+
+        $('#data_dusun').change(function() {
+            var desa = $('#data_desa').val();
+            var no_dusun = $('#data_dusun').val();
+            var action = 'get_rw';
+            if (no_dusun != '') {
+                $.ajax({
+                    url: "<?php echo base_url('action'); ?>",
+                    method: "POST",
+                    data: {
+                        desa: desa,
+                        no_dusun: no_dusun,
+                        action: action
+                    },
+                    dataType: "JSON",
+                    success: function(data) {
+                        var html = '<option value="">-Semua RW-</option>';
+
+                        for (var count = 0; count < data.length; count++) {
+
+                            html += '<option value="' + data[count].no_rw + '">' + data[count].no_rw + '</option>';
+                        }
+
+                        $('#data_rw').html(html);
+                        jumlahSppt();
+                        jumlahTotal();
+                        jumlahLunas();
+                        jumlahTotalLunas();
+                        jumlahBelumLunas();
+                        jumlahTotalBelumLunas();
+                        jumlahBermasalah();
+                        jumlahTotalBermasalah();
+                    }
+                });
+            } else {
+                $('#data_rw').val('');
+                $('#data_rt').val('');
+            }
+        });
+
+        $('#data_rw').change(function() {
+            var desa = $('#data_desa').val();
+            var no_rw = $('#data_rw').val();
+            var action = 'get_rt';
+            if (no_rw != '') {
+                $.ajax({
+                    url: "<?php echo base_url('action'); ?>",
+                    method: "POST",
+                    data: {
+                        desa: desa,
+                        no_rw: no_rw,
+                        action: action
+                    },
+                    dataType: "JSON",
+                    success: function(data) {
+                        var html = '<option value="">-Semua RT-</option>';
+
+                        for (var count = 0; count < data.length; count++) {
+
+                            html += '<option value="' + data[count].no_rt + '">' + data[count].no_rt + '</option>';
+
+                        }
+                        $('#data_rt').html(html);
+                        jumlahSppt();
+                        jumlahTotal();
+                        jumlahLunas();
+                        jumlahTotalLunas();
+                        jumlahBelumLunas();
+                        jumlahTotalBelumLunas();
+                        jumlahBermasalah();
+                        jumlahTotalBermasalah();
+                    }
+                });
+            } else {
+                $('#data_rt').val('');
+            }
+        });
+
+        $('#data_rt').change(function() {
+            jumlahSppt();
+            jumlahTotal();
+            jumlahLunas();
+            jumlahTotalLunas();
+            jumlahBelumLunas();
+            jumlahTotalBelumLunas();
+            jumlahBermasalah();
+            jumlahTotalBermasalah();
+        });
+
+        $('.tombolTambah').click(function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: "<?= site_url('formTambah') ?>",
+                dataType: "json",
+                success: function(response) {
+                    $('.viewmodal').html(response.data).show();
+                    $('#modalTambah').modal('show');
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                }
+            });
+        });
+
+        $('#nop').keydown(function(e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                cekNop();
+            }
+        })
+
+        // Check all 
+        $('#checkall').click(function() {
+            if ($(this).is(':checked')) {
+                $('.delete_check').prop('checked', true);
+            } else {
+                $('.delete_check').prop('checked', false);
+            }
+        });
+
+        // Delete record
+        $('#delete_record').click(function() {
+
+            var deleteids_arr = [];
+            // Read all checked checkboxes
+            $("input:checkbox[class=delete_check]:checked").each(function() {
+                deleteids_arr.push($(this).val());
+            });
+
+            // Check checkbox checked or not
+            if (deleteids_arr.length > 0) {
+
+                // Confirm alert
+                var confirmdelete = confirm("Data akan dihapus permanen. \nYakin ingin menghapus data ini?");
+                if (confirmdelete == true) {
+                    $.ajax({
+                        url: 'deleteSelected',
+                        type: 'POST',
+                        data: {
+                            request: 2,
+                            deleteids_arr: deleteids_arr
+                        },
+                        success: function(response) {
+                            // get response from server with swalalert
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: 'Data berhasil dihapus',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            jumlahSppt();
+                            jumlahTotal();
+                            jumlahLunas();
+                            jumlahTotalLunas();
+                            jumlahBelumLunas();
+                            jumlahTotalBelumLunas();
+                            jumlahBermasalah();
+                            jumlahTotalBermasalah();
+                            table.draw();
+                            table0.draw();
+                            table1.draw();
+                            table2.draw();
+                        }
+                    });
+                }
+            }
+        });
+
+        $('.refreshAll').click(function() {
+            jumlahSppt();
+            jumlahTotal();
+            jumlahLunas();
+            jumlahTotalLunas();
+            jumlahBelumLunas();
+            jumlahTotalBelumLunas();
+            jumlahBermasalah();
+            jumlahTotalBermasalah();
+            table.draw();
+            table0.draw();
+            table1.draw();
+            table2.draw();
+        });
+
+    });
+
+    // Checkbox checked
+    function checkcheckbox() {
+
+        // Total checkboxes
+        var length = $('.delete_check').length;
+
+        // Total checked checkboxes
+        var totalchecked = 0;
+        $('.delete_check').each(function() {
+            if ($(this).is(':checked')) {
+                totalchecked += 1;
+            }
+        });
+
+        // Checked unchecked checkbox
+        if (totalchecked == length) {
+            $("#checkall").prop('checked', true);
+        } else {
+            $('#checkall').prop('checked', false);
+        }
+    }
+
     var table;
     var table0;
     var table1;
@@ -531,16 +818,13 @@
     moment.locale("id");
 
     table = $('#tb_dhkp22').DataTable({
-        'order': [],
         'fixedHeader': true,
         'searching': true,
         'paging': true,
         'responsive': true,
         'processing': true,
         'serverSide': true,
-        "lengthMenu": [
-            10, 25, 50, 100, 200, 400, 800, 1600, 3200
-        ],
+        "lengthMenu": [5, 10, 15, 20, 25, 50, 100, 200, 400, 500, 800, 900, 1000, 1600, 200, 3200],
         "pageLength": 10,
 
         "ajax": {
@@ -568,13 +852,14 @@
             $('#total_order').html(settings.json.total);
         },
         "columnDefs": [{
-            "targets": [0],
-            "orderable": false
-        }],
-        "columnDefs": [{
-            "targets": [8, 9, 10],
-            "visible": false
-        }],
+                "orderable": false,
+                "targets": [0]
+            },
+            {
+                "visible": false,
+                "targets": [5, 9, 10, 11],
+            }
+        ],
         dom: 'lBfrtip',
         buttons: [
             //'pageLength',
@@ -987,139 +1272,326 @@
     });
 
     $('#data_desa').change(function() {
+        jumlahSppt();
+        jumlahTotal();
+        jumlahLunas();
+        jumlahTotalLunas();
+        jumlahBelumLunas();
+        jumlahTotalBelumLunas();
+        jumlahBermasalah();
+        jumlahTotalBermasalah();
         table.draw();
         table0.draw();
         table1.draw();
         table2.draw();
     });
     $('#data_dusun').change(function() {
+        jumlahSppt();
+        jumlahTotal();
+        jumlahLunas();
+        jumlahTotalLunas();
+        jumlahBelumLunas();
+        jumlahTotalBelumLunas();
+        jumlahBermasalah();
+        jumlahTotalBermasalah();
         table.draw();
         table0.draw();
         table1.draw();
         table2.draw();
     });
     $('#data_rw').change(function() {
+        jumlahSppt();
+        jumlahTotal();
+        jumlahLunas();
+        jumlahTotalLunas();
+        jumlahBelumLunas();
+        jumlahTotalBelumLunas();
+        jumlahBermasalah();
+        jumlahTotalBermasalah();
         table.draw();
         table0.draw();
         table1.draw();
         table2.draw();
     });
     $('#data_rt').change(function() {
+        jumlahSppt();
+        jumlahTotal();
+        jumlahLunas();
+        jumlahTotalLunas();
+        jumlahBelumLunas();
+        jumlahTotalBelumLunas();
+        jumlahBermasalah();
+        jumlahTotalBermasalah();
         table.draw();
         table0.draw();
         table1.draw();
         table2.draw();
     });
     $('#data_ket').change(function() {
+        jumlahSppt();
+        jumlahTotal();
+        jumlahLunas();
+        jumlahTotalLunas();
+        jumlahBelumLunas();
+        jumlahTotalBelumLunas();
+        jumlahBermasalah();
+        jumlahTotalBermasalah();
         table.draw();
         table0.draw();
         table1.draw();
         table2.draw();
     });
     $('#data_tahun').change(function() {
+        jumlahSppt();
+        jumlahTotal();
+        jumlahLunas();
+        jumlahTotalLunas();
+        jumlahBelumLunas();
+        jumlahTotalBelumLunas();
+        jumlahBermasalah();
+        jumlahTotalBermasalah();
         table.draw();
         table0.draw();
         table1.draw();
         table2.draw();
     });
 
-    $(document).ready(function() {
-
-        $('#reload_page').click(function() {
-            location.reload(true);
-        });
-
-        $('#tb_dhkp22');
-        $('#tb_dhkp22_0');
-        $('#tb_dhkp22_1');
-        $('#tb_dhkp22_2');
-
-        $('#data_dusun').change(function() {
-            var desa = $('#data_desa').val();
-            var no_dusun = $('#data_dusun').val();
-            var action = 'get_rw';
-            if (no_dusun != '') {
-                $.ajax({
-                    url: "<?php echo base_url('action'); ?>",
-                    method: "POST",
-                    data: {
-                        desa: desa,
-                        no_dusun: no_dusun,
-                        action: action
-                    },
-                    dataType: "JSON",
-                    success: function(data) {
-                        var html = '<option value="">-Semua RW-</option>';
-
-                        for (var count = 0; count < data.length; count++) {
-
-                            html += '<option value="' + data[count].no_rw + '">' + data[count].no_rw + '</option>';
-
-                        }
-
-                        $('#data_rw').html(html);
-                    }
-                });
-            } else {
-                $('#data_rw').val('');
-                $('#data_rt').val('');
+    function jumlahSppt() {
+        let data_desa = $('#data_desa').val();
+        let data_dusun = $('#data_dusun').val();
+        let data_rw = $('#data_rw').val();
+        let data_rt = $('#data_rt').val();
+        let data_ket = $('#data_ket').val();
+        let data_tahun = $('#data_tahun').val();
+        let jumlahSppt = $('#jumlahSppt').val();
+        $.ajax({
+            url: '<?= base_url('jumlahSppt') ?>',
+            dataType: 'json',
+            type: 'POST',
+            data: {
+                data_desa: data_desa,
+                data_dusun: data_dusun,
+                data_rw: data_rw,
+                data_rt: data_rt,
+                data_ket: data_ket,
+                data_tahun: data_tahun,
+                _token: '{{ csrf_token() }}',
+                jumlahSppt: jumlahSppt
+            },
+            success: function(data) {
+                let jml = formatNumber(data);
+                let jmlSppt = jml + ' SPPT';
+                $('#jumlahSppt').text(jmlSppt);
+            },
+            error: function(xhr, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
             }
         });
+    }
 
-        $('#data_rw').change(function() {
-            var desa = $('#data_desa').val();
-            var no_rw = $('#data_rw').val();
-            var action = 'get_rt';
-            if (no_rw != '') {
-                $.ajax({
-                    url: "<?php echo base_url('action'); ?>",
-                    method: "POST",
-                    data: {
-                        desa: desa,
-                        no_rw: no_rw,
-                        action: action
-                    },
-                    dataType: "JSON",
-                    success: function(data) {
-                        var html = '<option value="">-Semua RT-</option>';
-
-                        for (var count = 0; count < data.length; count++) {
-
-                            html += '<option value="' + data[count].no_rt + '">' + data[count].no_rt + '</option>';
-
-                        }
-
-                        $('#data_rt').html(html);
-                    }
-                });
-            } else {
-                $('#data_rt').val('');
+    function jumlahLunas() {
+        let data_desa = $('#data_desa').val();
+        let data_dusun = $('#data_dusun').val();
+        let data_rw = $('#data_rw').val();
+        let data_rt = $('#data_rt').val();
+        let data_ket = $('#data_ket').val();
+        let data_tahun = $('#data_tahun').val();
+        let jumlahLunas = $('#jumlahLunas').val();
+        $.ajax({
+            url: '<?= base_url('jumlahLunas') ?>',
+            dataType: 'json',
+            type: 'POST',
+            data: {
+                data_desa: data_desa,
+                data_dusun: data_dusun,
+                data_rw: data_rw,
+                data_rt: data_rt,
+                data_ket: data_ket,
+                data_tahun: data_tahun,
+                _token: '{{ csrf_token() }}',
+                jumlahLunas: jumlahLunas
+            },
+            success: function(data) {
+                let jml = formatNumber(data);
+                let jmlLunas = jml + ' SPPT';
+                $('#jumlahLunas').text(jmlLunas);
+            },
+            error: function(xhr, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
             }
         });
+    }
 
-        $('.tombolTambah').click(function(e) {
-            e.preventDefault();
-            $.ajax({
-                url: "<?= site_url('formTambah') ?>",
-                dataType: "json",
-                success: function(response) {
-                    $('.viewmodal').html(response.data).show();
-                    $('#modalTambah').modal('show');
-                },
-                error: function(xhr, ajaxOptions, thrownError) {
-                    alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
-                }
-            });
-        });
-
-        $('#nop').keydown(function(e) {
-            if (e.keyCode == 13) {
-                e.preventDefault();
-                cekNop();
+    function jumlahBelumLunas() {
+        let data_desa = $('#data_desa').val();
+        let data_dusun = $('#data_dusun').val();
+        let data_rw = $('#data_rw').val();
+        let data_rt = $('#data_rt').val();
+        let data_ket = $('#data_ket').val();
+        let data_tahun = $('#data_tahun').val();
+        let jumlahBelumLunas = $('#jumlahBelumLunas').val();
+        $.ajax({
+            url: '<?= base_url('jumlahBelumLunas') ?>',
+            dataType: 'json',
+            type: 'POST',
+            data: {
+                data_desa: data_desa,
+                data_dusun: data_dusun,
+                data_rw: data_rw,
+                data_rt: data_rt,
+                data_ket: data_ket,
+                data_tahun: data_tahun,
+                _token: '{{ csrf_token() }}',
+                jumlahBelumLunas: jumlahBelumLunas
+            },
+            success: function(data) {
+                let jml = formatNumber(data);
+                let jmlBelumLunas = jml + ' SPPT';
+                $('#jumlahBelumLunas').text(jmlBelumLunas);
             }
-        })
-    });
+        });
+    }
 
+    function jumlahBermasalah() {
+        let data_desa = $('#data_desa').val();
+        let data_dusun = $('#data_dusun').val();
+        let data_rw = $('#data_rw').val();
+        let data_rt = $('#data_rt').val();
+        let data_ket = $('#data_ket').val();
+        let data_tahun = $('#data_tahun').val();
+        let jumlahBermasalah = $('#jumlahBermasalah').val();
+        $.ajax({
+            url: '<?= base_url('jumlahBermasalah') ?>',
+            dataType: 'json',
+            type: 'POST',
+            data: {
+                data_desa: data_desa,
+                data_dusun: data_dusun,
+                data_rw: data_rw,
+                data_rt: data_rt,
+                data_ket: data_ket,
+                data_tahun: data_tahun,
+                _token: '{{ csrf_token() }}',
+                jumlahBermasalah: jumlahBermasalah
+            },
+            success: function(data) {
+                let jml = formatNumber(data);
+                let jmlBermasalah = jml + ' SPPT';
+                $('#jumlahBermasalah').text(jmlBermasalah);
+            }
+        });
+    }
+
+    function jumlahTotal() {
+        let data_desa = $('#data_desa').val();
+        let data_dusun = $('#data_dusun').val();
+        let data_rw = $('#data_rw').val();
+        let data_rt = $('#data_rt').val();
+        let data_ket = $('#data_ket').val();
+        let data_tahun = $('#data_tahun').val();
+        $.ajax({
+            url: '<?= base_url('jumlahTotal'); ?>',
+            type: 'POST',
+            data: {
+                data_desa: data_desa,
+                data_dusun: data_dusun,
+                data_rw: data_rw,
+                data_rt: data_rt,
+                data_ket: data_ket,
+                data_tahun: data_tahun,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(data) {
+                let jml = formatNumber(data);
+                let jmlTotal = 'Rp. ' + jml + ',-';
+                $('#jumlahTotal').text(jmlTotal);
+            },
+            error: function(xhr, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        });
+    }
+
+    function jumlahTotalLunas() {
+        let data_desa = $('#data_desa').val();
+        let data_dusun = $('#data_dusun').val();
+        let data_rw = $('#data_rw').val();
+        let data_rt = $('#data_rt').val();
+        let data_ket = $('#data_ket').val();
+        let data_tahun = $('#data_tahun').val();
+        $.ajax({
+            url: '<?= base_url('jumlahTotalLunas'); ?>',
+            type: 'POST',
+            data: {
+                data_desa: data_desa,
+                data_dusun: data_dusun,
+                data_rw: data_rw,
+                data_rt: data_rt,
+                data_ket: data_ket,
+                data_tahun: data_tahun,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(data) {
+                let jml = formatNumber(data);
+                let jmlTotal = 'Rp. ' + jml + ',-';
+                $('#jumlahTotalLunas').text(jmlTotal);
+            }
+        });
+    }
+
+    function jumlahTotalBelumLunas() {
+        let data_desa = $('#data_desa').val();
+        let data_dusun = $('#data_dusun').val();
+        let data_rw = $('#data_rw').val();
+        let data_rt = $('#data_rt').val();
+        let data_ket = $('#data_ket').val();
+        let data_tahun = $('#data_tahun').val();
+        $.ajax({
+            url: '<?= base_url('jumlahTotalBelumLunas'); ?>',
+            type: 'POST',
+            data: {
+                data_desa: data_desa,
+                data_dusun: data_dusun,
+                data_rw: data_rw,
+                data_rt: data_rt,
+                data_ket: data_ket,
+                data_tahun: data_tahun,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(data) {
+                let jml = formatNumber(data);
+                let jmlTotal = 'Rp. ' + jml + ',-';
+                $('#jumlahTotalBelumLunas').text(jmlTotal);
+            }
+        });
+    }
+
+    function jumlahTotalBermasalah() {
+        let data_desa = $('#data_desa').val();
+        let data_dusun = $('#data_dusun').val();
+        let data_rw = $('#data_rw').val();
+        let data_rt = $('#data_rt').val();
+        let data_ket = $('#data_ket').val();
+        let data_tahun = $('#data_tahun').val();
+        $.ajax({
+            url: '<?= base_url('jumlahTotalBermasalah'); ?>',
+            type: 'POST',
+            data: {
+                data_desa: data_desa,
+                data_dusun: data_dusun,
+                data_rw: data_rw,
+                data_rt: data_rt,
+                data_ket: data_ket,
+                data_tahun: data_tahun,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(data) {
+                let jml = formatNumber(data);
+                let jmlTotal = 'Rp. ' + jml + ',-';
+                $('#jumlahTotalBermasalah').text(jmlTotal);
+            }
+        });
+    }
 
     function cekNop() {
         let nop = $('#nop').val();
@@ -1223,7 +1695,18 @@
                             title: response.sukses,
                         });
                         // window.location.reload();
+                        jumlahSppt();
+                        jumlahTotal();
+                        jumlahLunas();
+                        jumlahTotalLunas();
+                        jumlahBelumLunas();
+                        jumlahTotalBelumLunas();
+                        jumlahBermasalah();
+                        jumlahTotalBermasalah();
                         table.draw();
+                        table0.draw();
+                        table1.draw();
+                        table2.draw();
 
                     }
                 }

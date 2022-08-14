@@ -58,6 +58,7 @@ class Pages extends BaseController
 
     public function login()
     {
+
         $data = [
             'title' => 'Login'
         ];
@@ -67,9 +68,17 @@ class Pages extends BaseController
 
     public function index()
     {
+        $setoranPerDesa = $this->DhkpModel22->setoranPerDesa();
+        // dd($setoranPerDesa);
+        // $dataPerDesa = $this->DhkpModel22->jumlahSppt();
+        // dd($dataPerDesa);
         $data = [
-            'title' => 'Dashboard'
+            'title' => 'Dashboard',
+            // 'dataPerDesa' => $dataPerDesa,
+            'setoranPerDesa' => $setoranPerDesa,
         ];
+
+        $this->cachePage(60); // 60 seconds
         return view('pbb/pages/index', $data);
     }
 
@@ -82,8 +91,8 @@ class Pages extends BaseController
         $setoranPerRw = $this->DhkpModel22->getDataRekRw()->getResultArray();
         $setoranPerRt = $this->DhkpModel22->getDataRekRt()->getResultArray();
 
-        $dataPerDusun = $dhkpModel21->select('SUM(pbb_dhkp21.pajak) AS jumlah, tbl_dusun.no_dusun AS dusun')
-            ->join('tbl_dusun', 'pbb_dhkp21.dusun = tbl_dusun.no_dusun')
+        $dataPerDusun = $dhkpModel21->select('SUM(pbb_dhkp21.pajak) AS jumlah, tb_dusun.td_kode_dusun AS dusun')
+            ->join('tb_dusun', 'pbb_dhkp21.dusun = tb_dusun.td_kode_dusun')
             ->groupBy('pbb_dhkp21.dusun')
             ->get();
 
@@ -92,8 +101,8 @@ class Pages extends BaseController
             ->groupBy('pbb_dhkp21.rw')
             ->get();
 
-        $setorPerDusun = $dhkpModel21->select('SUM(pbb_dhkp21.pajak) AS jumlah, tbl_dusun.no_dusun AS dusun')
-            ->join('tbl_dusun', 'pbb_dhkp21.dusun = tbl_dusun.no_dusun')
+        $setorPerDusun = $dhkpModel21->select('SUM(pbb_dhkp21.pajak) AS jumlah, tb_dusun.td_kode_dusun AS dusun')
+            ->join('tb_dusun', 'pbb_dhkp21.dusun = tb_dusun.td_kode_dusun')
             ->where('pbb_dhkp21.ket', 0)
             ->groupBy('pbb_dhkp21.dusun')
             ->get();
@@ -108,9 +117,9 @@ class Pages extends BaseController
         $data = [
             'title' => 'Dashboard',
             'setoranPerDesa' => $setoranPerDesa,
-            'setoranPerDusun' => $setoranPerDusun,
-            'setoranPerRw' => $setoranPerRw,
-            'setoranPerRt' => $setoranPerRt,
+            // 'setoranPerDusun' => $setoranPerDusun,
+            // 'setoranPerRw' => $setoranPerRw,
+            // 'setoranPerRt' => $setoranPerRt,
             // 'dataPerDusun' => $dataPerDusun,
             // 'dataPerRw' => $dataPerRw,
             // 'setorPerDusun' => $setorPerDusun,

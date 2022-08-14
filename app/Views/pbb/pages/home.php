@@ -272,7 +272,7 @@
         </div><!-- /.card-body -->
     </section>
 </div>
-<script src="<?= base_url(); ?>/assets/plugins/chart.js/3.7.0/chart.min.js"></script>
+<script src="<?= base_url('assets/plugins/chart.js/3.7.0/chart.min.js'); ?>"></script>
 <script>
     function addCommas(nStr) {
         nStr += '';

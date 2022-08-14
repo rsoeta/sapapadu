@@ -37,7 +37,121 @@ class Dhkp22 extends BaseController
         $this->dusun = new DusunModel();
         $this->rw = new RwModel();
         $this->rt = new RtModel();
-        helper(['form', 'url', 'date']);
+    }
+
+    function jumlahSppt()
+    {
+        if ($this->request->isAJAX()) {
+            $data_desa = $this->request->getVar('data_desa');
+            $data_dusun = $this->request->getVar('data_dusun');
+            $data_rw = $this->request->getVar('data_rw');
+            $data_rt = $this->request->getVar('data_rt');
+            $data_ket = $this->request->getVar('data_ket');
+            $data_tahun = $this->request->getVar('data_tahun');
+            $jumlah = $this->dhkpModel22->jumlahSppt($data_desa, $data_dusun, $data_rw, $data_rt, $data_tahun)->jumlahSppt;
+            echo json_encode($jumlah);
+        }
+    }
+
+    function jumlahLunas()
+    {
+        if ($this->request->isAJAX()) {
+            $data_desa = $this->request->getVar('data_desa');
+            $data_dusun = $this->request->getVar('data_dusun');
+            $data_rw = $this->request->getVar('data_rw');
+            $data_rt = $this->request->getVar('data_rt');
+            $data_ket = 0;
+            $data_tahun = $this->request->getVar('data_tahun');
+            $jumlah = $this->dhkpModel22->jumlahLunas($data_desa, $data_dusun, $data_rw, $data_rt, $data_ket, $data_tahun)->jumlahLunas;
+            echo json_encode($jumlah);
+        }
+    }
+
+    function jumlahBelumLunas()
+    {
+        if ($this->request->isAJAX()) {
+            $data_desa = $this->request->getVar('data_desa');
+            $data_dusun = $this->request->getVar('data_dusun');
+            $data_rw = $this->request->getVar('data_rw');
+            $data_rt = $this->request->getVar('data_rt');
+            $data_ket = 1;
+            $data_tahun = $this->request->getVar('data_tahun');
+            $jumlah = $this->dhkpModel22->jumlahBelumLunas($data_desa, $data_dusun, $data_rw, $data_rt, $data_ket, $data_tahun)->jumlahBelumLunas;
+            echo json_encode($jumlah);
+        }
+    }
+
+    function jumlahBermasalah()
+    {
+        if ($this->request->isAJAX()) {
+            $data_desa = $this->request->getVar('data_desa');
+            $data_dusun = $this->request->getVar('data_dusun');
+            $data_rw = $this->request->getVar('data_rw');
+            $data_rt = $this->request->getVar('data_rt');
+            $data_ket = 2;
+            $data_tahun = $this->request->getVar('data_tahun');
+            $jumlah = $this->dhkpModel22->jumlahBermasalah($data_desa, $data_dusun, $data_rw, $data_rt, $data_ket, $data_tahun)->jumlahBermasalah;
+            echo json_encode($jumlah);
+        }
+    }
+
+    function jumlahTotal()
+    {
+        if ($this->request->isAJAX()) {
+            $data_desa = $this->request->getVar('data_desa');
+            $data_dusun = $this->request->getVar('data_dusun');
+            $data_rw = $this->request->getVar('data_rw');
+            $data_rt = $this->request->getVar('data_rt');
+            $data_ket = $this->request->getVar('data_ket');
+            $data_tahun = $this->request->getVar('data_tahun');
+            $jumlah = $this->dhkpModel22->jumlahTotal($data_desa, $data_dusun, $data_rw, $data_rt, $data_tahun)->jumlahTotal;
+
+            // var_dump($jumlah);
+            // die;
+            echo json_encode($jumlah);
+        }
+    }
+
+    function jumlahTotalLunas()
+    {
+        if ($this->request->isAJAX()) {
+            $data_desa = $this->request->getVar('data_desa');
+            $data_dusun = $this->request->getVar('data_dusun');
+            $data_rw = $this->request->getVar('data_rw');
+            $data_rt = $this->request->getVar('data_rt');
+            $data_ket = 0;
+            $data_tahun = $this->request->getVar('data_tahun');
+            $jumlah = $this->dhkpModel22->jumlahTotalLunas($data_desa, $data_dusun, $data_rw, $data_rt, $data_ket, $data_tahun)->jumlahTotal;
+            echo json_encode($jumlah);
+        }
+    }
+
+    function jumlahTotalBelumLunas()
+    {
+        if ($this->request->isAJAX()) {
+            $data_desa = $this->request->getVar('data_desa');
+            $data_dusun = $this->request->getVar('data_dusun');
+            $data_rw = $this->request->getVar('data_rw');
+            $data_rt = $this->request->getVar('data_rt');
+            $data_ket = 1;
+            $data_tahun = $this->request->getVar('data_tahun');
+            $jumlah = $this->dhkpModel22->jumlahTotalBelumLunas($data_desa, $data_dusun, $data_rw, $data_rt, $data_ket, $data_tahun)->jumlahTotal;
+            echo json_encode($jumlah);
+        }
+    }
+
+    function jumlahTotalBermasalah()
+    {
+        if ($this->request->isAJAX()) {
+            $data_desa = $this->request->getVar('data_desa');
+            $data_dusun = $this->request->getVar('data_dusun');
+            $data_rw = $this->request->getVar('data_rw');
+            $data_rt = $this->request->getVar('data_rt');
+            $data_ket = 2;
+            $data_tahun = $this->request->getVar('data_tahun');
+            $jumlah = $this->dhkpModel22->jumlahTotalBermasalah($data_desa, $data_dusun, $data_rw, $data_rt, $data_ket, $data_tahun)->jumlahTotal;
+            echo json_encode($jumlah);
+        }
     }
 
     public function index()
@@ -45,6 +159,7 @@ class Dhkp22 extends BaseController
         $pu_level = detailUser()->pu_level;
         $pu_kode_kec = detailUser()->pu_kode_kec;
         $pu_kode_desa = detailUser()->pu_kode_desa;
+        $filter0 = $this->request->getPost('data_desa');
         $data_dusun = $this->request->getPost('data_dusun');
         $dusun = new DusunModel();
         $dhkpModel22 = new DhkpModel22();
@@ -66,14 +181,6 @@ class Dhkp22 extends BaseController
                 ->where('dusun', $pu_level)
                 ->findAll(),
             'sta_sppt' => $this->KetBayarModel->where('sta_id>', 1)->orderBy('sta_id', 'desc')->findAll(),
-            'jumlahSppt' => $this->dhkpModel22->jumlah_semua()->jml,
-            'jumlahTotal' => $this->dhkpModel22->jumlah_total()->jumlah_total,
-            'jumlahLunas' => $this->dhkpModel22->jumlahLunas()->jumlahLunas,
-            'jumlahTotalLunas' => $this->dhkpModel22->jumlahTotalLunas()->jumlahTotalLunas,
-            'jumlahBelumLunas' => $this->dhkpModel22->jumlahBelumLunas()->jumlahBelumLunas,
-            'jumlahTotalBelumLunas' => $this->dhkpModel22->jumlahTotalBelumLunas()->jumlahTotalBelumLunas,
-            'jumlahBermasalah' => $this->dhkpModel22->jumlahBermasalah()->jumlahBermasalah,
-            'jumlahTotalBermasalah' => $this->dhkpModel22->jumlahTotalBermasalah()->jumlahTotalBermasalah,
         ];
 
         // var_dump($data['sta_sppt']);
@@ -108,6 +215,7 @@ class Dhkp22 extends BaseController
 
             $no++;
             $row = array();
+            $row[] = '<input type="checkbox" class="delete_check" value="' . $key->id . '" id="delchek_"' . $key->id . ' onclick="checkcheckbox();">';
             $row[] = $no;
             $row[] = $key->nama_wp;
             $row[] = $key->nop;
@@ -121,18 +229,18 @@ class Dhkp22 extends BaseController
             $row[] = $key->rt;
             $row[] = '<span class="badge badge-' . $key->sta_class . '">' . $key->sta_keterangan . '</span>';
 
-            if (!session()->get('level') == 1) {
+            if (detailUser()->pu_role_id > 2) {
                 $row[] = '';
             } else {
                 $row[] = '
-                <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="btn-group btn-sm" role="group" aria-label="Button group with nested dropdown">
+                <div class="btn-group btn-sm" role="group">
+                    <button id="btnGroupDrop1" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                     Pilih Aksi
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                    <li><a class="dropdown-item" href="javascript:void(0)" title="Edit" onclick="edit_person(' . "'" . $key->id . "'" . ')"><i class="fa fa-pencil-alt"></i> Edit</a></li>
-                    <li><button class="dropdown-item" data-id="' . $key->id . '" data-nama="' . $key->nama_wp . '" id="tmbDelet"><i class="fa fa-trash-alt"></i> Hapus</button></li>
+                    <li><a class="dropdown-item" href="javascript:void(0)" title="Edit" onclick="edit_person(' . "'" . $key->id . "'" . ')"><i class="fa fa-pencil-alt mr-1"></i> Edit</a></li>
+                    <li><button class="dropdown-item" data-id="' . $key->id . '" data-nama="' . $key->nama_wp . '" id="tmbDelet"><i class="fa fa-trash-alt mr-1"></i> Hapus</button></li>
                     </ul>
                 </div>
                 </div>
@@ -556,7 +664,7 @@ class Dhkp22 extends BaseController
                 'no_dusun' => $row['dusun'],
                 'no_rw' => $row['rw'],
                 'no_rt' => $row['rt'],
-                'ket' => $row['ket'],
+                'ket' => $row['pd_ket'],
                 'dhkp_ajuan' => $row['dhkp_ajuan']
             ];
 
@@ -571,7 +679,7 @@ class Dhkp22 extends BaseController
     public function updatedata()
     {
         if ($this->request->isAJAX()) {
-
+            $user = detailUser()->pu_nik;
             $simpandata = [
                 'nop' => $this->request->getVar('nop'),
                 'nama_wp' => strtoupper($this->request->getVar('nama_wp')),
@@ -585,8 +693,8 @@ class Dhkp22 extends BaseController
                 'dusun' => $this->request->getVar('no_dusun'),
                 'rw' => $this->request->getVar('no_rw'),
                 'rt' => $this->request->getVar('no_rt'),
-                'ket' => $this->request->getVar('ket'),
-                'pd_updater' => session()->get('nik'),
+                'pd_ket' => $this->request->getVar('ket'),
+                'pd_updater' => $user,
                 'dhkp_ajuan' => $this->request->getVar('dhkp_ajuan')
             ];
             // $dhkpModel22 = new DhkpModel22();
@@ -618,6 +726,42 @@ class Dhkp22 extends BaseController
                 'sukses' => 'Data SPPT berhasil dihapus'
             ];
             echo json_encode($msg);
+        }
+    }
+
+    public function deleteSelected()
+    {
+        $model = new DhkpModel22();
+        // Delete record
+        if ($this->request->getPost('request') == 2) {
+
+            $deleteids_arr = array();
+            $deleteids_arr = $this->request->getVar('deleteids_arr');
+            $deletedRecords = 0;
+            foreach ($deleteids_arr as $delete_id) {
+                $model->delete($delete_id);
+                $deletedRecords++;
+            }
+            $deletedRecords = ($deletedRecords == 1) ? '1 data' : $deletedRecords . ' data';
+            $msg = [
+                'sukses' => 'Data SPPT berhasil dihapus'
+            ];
+            echo json_encode($msg);
+        } else {
+            $msg = [
+                'gagal' => 'Data SPPT gagal dihapus'
+            ];
+
+            // if (isset($_POST['deleteids_arr'])) {
+            //     $deleteids_arr = $_POST['deleteids_arr'];
+            // }
+            // foreach ($deleteids_arr as $deleteid) {
+            //     $model->delete($deleteid);
+            //     // mysqli_query($con, "DELETE FROM pbb_dhkp22 WHERE id=" . $deleteid);
+            // }
+
+            // echo 1;
+            // exit;
         }
     }
 

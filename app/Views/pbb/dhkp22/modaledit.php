@@ -8,7 +8,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <?= form_open('pbb/updatedata', ['class' => 'formdhkp']) ?>
+            <?= form_open('updatedata', ['class' => 'formdhkp']) ?>
             <?= csrf_field(); ?>
             <div class="modal-body">
                 <div class="form-group row nopadding">
@@ -146,7 +146,18 @@
                             text: response.sukses
                         })
 
+                        jumlahSppt();
+                        jumlahTotal();
+                        jumlahLunas();
+                        jumlahTotalLunas();
+                        jumlahBelumLunas();
+                        jumlahTotalBelumLunas();
+                        jumlahBermasalah();
+                        jumlahTotalBermasalah();
                         table.draw();
+                        table0.draw();
+                        table1.draw();
+                        table2.draw();
                         $('#modaledit').modal('hide');
                     },
                     error: function(xhr, thrownError) {

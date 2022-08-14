@@ -483,12 +483,17 @@ class Wil extends BaseController
             $dusun = $this->request->getVar('no_dusun');
             $no_rw = $this->request->getVar('no_rw');
 
-            if ($action == 'get_rw') {
+            if ($action == 'get_dusun') {
+                $DusunModel = new DusunModel();
+                $DusunData = $DusunModel->getDataDusun($desa);
+
+                echo json_encode($DusunData);
+            } elseif ($action == 'get_rw') {
                 $RwModel = new RwModel();
                 $Rwdata = $RwModel->getDataRw($desa, $dusun);
 
                 echo json_encode($Rwdata);
-            } else if ($action == 'get_rt') {
+            } elseif ($action == 'get_rt') {
                 $RtModel = new RtModel();
                 $Rtdata = $RtModel->getDataRT($desa, $no_rw);
 
