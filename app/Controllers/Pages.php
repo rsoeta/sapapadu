@@ -68,14 +68,16 @@ class Pages extends BaseController
 
     public function index()
     {
+        $diagramKecamatan = $this->DhkpModel22->getDiagramKecamatan();
         $setoranPerDesa = $this->DhkpModel22->setoranPerDesa();
-        // dd($setoranPerDesa);
+        // dd($diagramKecamatan);
         // $dataPerDesa = $this->DhkpModel22->jumlahSppt();
         // dd($dataPerDesa);
         $data = [
             'title' => 'Dashboard',
-            // 'dataPerDesa' => $dataPerDesa,
+            'diagramKecamatan' => $diagramKecamatan,
             'setoranPerDesa' => $setoranPerDesa,
+            // 'dataPerDesa' => $dataPerDesa,
         ];
 
         // $this->cachePage(60); // 60 seconds

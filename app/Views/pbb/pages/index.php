@@ -1,9 +1,14 @@
 <?= $this->extend('pbb/templates/index'); ?>
 
 <?= $this->section('content'); ?>
-
-<!-- <script src="<?= base_url('assets/plugins/chart.js/chartjs-plugin-labels.min.js'); ?>"></script> -->
+<style>
+    .description-text {
+        font-weight: bold;
+    }
+</style>
 <script src="<?= base_url('assets/plugins/chart.js/3.7.0/chart.min.js'); ?>"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper mt-1">
     <section class="content">
@@ -11,21 +16,24 @@
             <div class="card-header ui-sortable-handle" style="cursor: move;">
                 <h3 class="card-title">
                     <i class="fas fa-chart-pie mr-1"></i>
-                    Chart Target dan Setor
+                    Diagram Target dan Capaian
                 </h3>
                 <div class="card-tools">
                     <ul class="nav nav-pills ml-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" href="#thread-desa" data-toggle="tab">Desa</a>
+                            <a class="nav-link active" href="#thread-kecamatan" data-toggle="tab">Tingkat Kecamatan</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#thread-dusun" data-toggle="tab">Per-Dusun</a>
+                            <a class="nav-link" href="#thread-desa" data-toggle="tab">Tingkat Desa</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#thread_rw" data-toggle="tab">Per-RW</a>
+                            <a class="nav-link" href="#thread-dusun" data-toggle="tab">Tingkat Dusun</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link " href="#thread_rt" data-toggle="tab">Per-RT</a>
+                            <a class="nav-link" href="#thread_rw" data-toggle="tab">Tingkat RW</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="#thread_rt" data-toggle="tab">Tingkat RT</a>
                         </li>
                     </ul>
                 </div>
@@ -33,7 +41,56 @@
             <div class="card-body">
                 <div class="tab-content p-0">
                     <!-- Morris chart - Sales -->
-                    <div class="chart tab-pane active" id="thread-desa">
+                    <div class="chart tab-pane active" id="thread-kecamatan">
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-6">
+                                <h4 class="text-center">
+                                    <strong>Chart Kecamatan</strong>
+                                </h4>
+                                <div class="chart-container" style="position: relative; height:60vh;">
+                                    <canvas id="chart_kecamatan"></canvas>
+                                </div>
+                                <div class="card-footer text-muted">
+                                    <?php foreach ($diagramKecamatan as $row) : ?>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-6">
+                                                <span class="description-text">Target</span>
+                                            </div>
+                                            <div class="col-sm-9 col-12">
+                                                <span class="description-text float-end">Rp. <?= number_format($row->target, 0, ',', '.'); ?></span>
+                                            </div>
+                                            <hr class="solid">
+                                            <div class="col-sm-3 col-6">
+                                                <span class="description-text">Capaian</span>
+                                            </div>
+                                            <div class="col-sm-9 col-12">
+                                                <span class="description-text float-end">Rp. <?= number_format($row->capaian, 0, ',', '.'); ?></span>
+                                            </div>
+                                            <hr class="solid">
+                                            <div class="col-sm-3 col-6">
+                                                <span class="description-text">Bermasalah</span>
+                                            </div>
+                                            <div class="col-sm-9 col-12">
+                                                <span class="description-text float-end">Rp. <?= number_format($row->bermasalah, 0, ',', '.'); ?></span>
+                                            </div>
+                                            <hr class="solid">
+                                            <div class="col-sm-3 col-6">
+                                                <span class="description-text">Sisa</span>
+                                            </div>
+                                            <div class="col-sm-9 col-12">
+                                                <span class="description-text float-end">Rp. <?= number_format($row->sisa, 0, ',', '.'); ?></span>
+                                            </div>
+                                            <hr class="solid">
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart tab-pane" id="thread-desa">
                         <div class="row">
                             <div class="col-12 col-sm-12 col-md-7">
                                 <h4 class="text-center">
@@ -83,7 +140,6 @@
                 </div>
             </div>
             <div class="card-body">
-
             </div>
         </div>
     </section>
@@ -101,6 +157,47 @@
         return x1 + x2;
     }
 
+    // setup 
+    const data_kecamatan = {
+        labels: ['Data Capaian', 'Data Bermasalah', 'Data Sisa'],
+        datasets: [{
+            label: 'Diagram',
+            data: [
+                <?php foreach ($diagramKecamatan as $row) { ?> '<?= $row->capaianPersentase; ?>',
+                    '<?= $row->bermasalahPersentase; ?>',
+                    '<?= $row->sisaPersentase; ?>'
+                <?php } ?>
+            ],
+            backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 206, 86)'
+            ],
+            borderColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 206, 86)'
+            ],
+            borderWidth: 1,
+            hoverOffset: 10
+        }]
+    };
+
+    // config
+    const config_kecamatan = {
+        type: 'pie',
+        data: data_kecamatan,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+        },
+    };
+
+    // render init block
+    const chartKecamatan = new Chart(
+        document.getElementById('chart_kecamatan'),
+        config_kecamatan
+    );
     // setup 
     const data_desa = {
         labels: [

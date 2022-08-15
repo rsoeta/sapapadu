@@ -951,4 +951,25 @@ class DhkpModel22 extends Model
         $query = $this->db->query($sQuery);
         return $query->getResult();
     }
+
+    function getDiagramKecamatan()
+    {
+        // get chart by pbb_dhkp22.pd_kec
+        $builder = $this->db->table('pbb_dhkp22');
+        $builder->select('tb_districts.name as kecNama');
+        // percentage capaian
+        $builder->select('ROUND(SUM(IF(pbb_dhkp22.pd_ket=0, pbb_dhkp22.pajak, 0)) / SUM(IF(pbb_dhkp22.pd_ket>=0, pbb_dhkp22.pajak, 0)) * 100, 2) as capaianPersentase');
+        $builder->select('ROUND(SUM(IF(pbb_dhkp22.pd_ket=1, pbb_dhkp22.pajak, 0)) / SUM(IF(pbb_dhkp22.pd_ket>=0, pbb_dhkp22.pajak, 0)) * 100, 2) as sisaPersentase');
+        $builder->select('ROUND(SUM(IF(pbb_dhkp22.pd_ket>1, pbb_dhkp22.pajak, 0)) / SUM(IF(pbb_dhkp22.pd_ket>=0, pbb_dhkp22.pajak, 0)) * 100, 2) as bermasalahPersentase');
+
+        $builder->select('(SELECT SUM(pbb_dhkp22.pajak) FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket>=0) AS target', false);
+        $builder->select('(SELECT SUM(pbb_dhkp22.pajak) FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket=0) AS capaian', false);
+        $builder->select('(SELECT SUM(pbb_dhkp22.pajak) FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket=1) AS sisa', false);
+        $builder->select('(SELECT SUM(pbb_dhkp22.pajak) FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket>1) AS bermasalah', false);
+
+        $builder->join('tb_districts', 'tb_districts.id = pbb_dhkp22.pd_kec');
+        $builder->groupBy('tb_districts.name');
+        $query = $builder->get();
+        return $query->getResult();
+    }
 }

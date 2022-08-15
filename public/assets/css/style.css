@@ -112,6 +112,27 @@ h1, h2, h3, h4, h5, h6 {
 strong {
   font-family: "mouse-500", Arial, Helvetica, sans-serif; }
 
+  /* Dashed border */
+hr.dashed {
+  border-top: 3px dashed #bbb;
+}
+
+/* Dotted border */
+hr.dotted {
+  border-top: 3px dotted #bbb;
+}
+
+/* Solid border */
+hr.solid {
+  border-top: 3px solid #bbb;
+}
+
+/* Rounded border */
+hr.rounded {
+  border-top: 8px solid #bbb;
+  border-radius: 5px;
+}
+
 .session-title {
   padding: 30px;
   margin: 0px; }
