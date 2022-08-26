@@ -68,7 +68,7 @@ h6 {
      letter-spacing: 0;
      font-weight: normal;
      position: relative;
-     padding: 0 0 10px 0;
+     /* padding: 0 0 10px 0; */
      font-weight: normal;
      line-height: normal;
      color: #111111;
@@ -91,14 +91,17 @@ h3 {
 }
 
 h4 {
+     font-family: 'Baloo Chettan', cursive;
      /* font-size: 16px */
 }
 
 h5 {
+     font-family: 'Baloo Chettan', cursive;
      /* font-size: 14px */
 }
 
 h6 {
+     font-family: 'Baloo Chettan', cursive;
      /* font-size: 13px */
 }
 
@@ -250,6 +253,7 @@ button {
 .main-layout {
      background-repeat: no-repeat;
      background: url(../images/body_bg.png);
+     display: inline;
 }
 
 .loader_bg {
@@ -320,8 +324,11 @@ button {
 
 .header {
      width: 100%;
-     background: transparent;
-     padding: 30px 30px;
+     background: rgb(3, 148, 252);
+     padding: 10px;
+     position: sticky;
+     top: 0;
+     z-index: 3;
 }
 
 .logo a {
@@ -329,11 +336,14 @@ button {
      font-weight: bold;
      text-transform: uppercase;
      color: #fff;
-     line-height: 40px;
+     /* line-height: 40px; */
 }
 
+.logo img {
+     width: 50%;
+}
 .banner_main {
-     padding: 90px 0 190px 0;
+     padding: 10px 0 10px 0;
 }
 
 .text-bg {
@@ -379,7 +389,7 @@ button {
 }
 
 .text-img {
-     padding-top: 100px;
+     padding-top: 10px;
 }
 
 .text-img figure {
@@ -392,7 +402,11 @@ button {
 
 .titlepage {
      text-align: center;
-     padding-bottom: 60px;
+}
+
+.card {
+     width: 90%;
+     margin: 0 auto;
 }
 
 .titlepage h2 {
@@ -414,7 +428,7 @@ button {
 /** business section **/
 
 .business {
-     padding-top: 90px;
+     padding-top: 30px;
 }
 
 .business .titlepage span {
@@ -424,7 +438,7 @@ button {
      text-transform: uppercase;
      line-height: 37px;
      padding-bottom: 10px;
-     display: inline-block;
+     /* display: inline-block; */
 }
 
 .business .titlepage h2 {
@@ -533,8 +547,8 @@ button {
 .Testimonial {
      background: url(../images/test.png);
      background-repeat: no-repeat;
-     margin-top: 90px;
-     padding: 90px 0px;
+     margin-top: 50px;
+     padding: 20px 0px;
      background-position: center;
      background-size: 100% 100%;
 }
@@ -590,7 +604,7 @@ button {
 .Testimonial_box p {
      color: #fff;
      /* font-size: 17px; */
-     line-height: 28px;
+     line-height: 20px;
      padding: 25px 0;
      padding-right: 200px;
 }

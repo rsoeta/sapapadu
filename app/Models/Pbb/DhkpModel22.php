@@ -972,4 +972,24 @@ class DhkpModel22 extends Model
         $query = $builder->get();
         return $query->getResult();
     }
+
+    function getChartKecBulanan()
+    {
+        $builder = $this->db->table('pbb_transaksi22');
+        $builder->select('MONTH(pbb_transaksi22.tr_tgl) as bulan');
+        $builder->selectSum('pbb_transaksi22.tr_totalbersih');
+        $builder->groupBy('MONTH(pbb_transaksi22.tr_tgl)');
+        $query = $builder->get();
+        return $query->getResult();
+    }
+
+    function getChartKecMingguan()
+    {
+        $builder = $this->db->table('pbb_transaksi22');
+        $builder->select('WEEKOFYEAR(pbb_transaksi22.tr_tgl) as pekan');
+        $builder->selectSum('pbb_transaksi22.tr_totalbersih');
+        $builder->groupBy('WEEKOFYEAR(pbb_transaksi22.tr_tgl)');
+        $query = $builder->get();
+        return $query->getResult();
+    }
 }

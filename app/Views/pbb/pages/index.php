@@ -43,7 +43,7 @@
                     <!-- Morris chart - Sales -->
                     <div class="chart tab-pane active" id="thread-kecamatan">
                         <div class="row">
-                            <div class="col-12 col-sm-12 col-md-6">
+                            <div class="col-12 col-sm-12 col-md-3">
                                 <h4 class="text-center">
                                     <strong>Chart Kecamatan</strong>
                                 </h4>
@@ -53,31 +53,31 @@
                                 <div class="card-footer text-muted">
                                     <?php foreach ($diagramKecamatan as $row) : ?>
                                         <div class="row">
-                                            <div class="col-sm-3 col-6">
+                                            <div class="col-6">
                                                 <span class="description-text">Target</span>
                                             </div>
-                                            <div class="col-sm-9 col-12">
+                                            <div class="col-6">
                                                 <span class="description-text float-end">Rp. <?= number_format($row->target, 0, ',', '.'); ?></span>
                                             </div>
                                             <hr class="solid">
-                                            <div class="col-sm-3 col-6">
+                                            <div class="col-6">
                                                 <span class="description-text">Capaian</span>
                                             </div>
-                                            <div class="col-sm-9 col-12">
+                                            <div class="col-6">
                                                 <span class="description-text float-end">Rp. <?= number_format($row->capaian, 0, ',', '.'); ?></span>
                                             </div>
                                             <hr class="solid">
-                                            <div class="col-sm-3 col-6">
+                                            <div class="col-6">
                                                 <span class="description-text">Bermasalah</span>
                                             </div>
-                                            <div class="col-sm-9 col-12">
+                                            <div class="col-6">
                                                 <span class="description-text float-end">Rp. <?= number_format($row->bermasalah, 0, ',', '.'); ?></span>
                                             </div>
                                             <hr class="solid">
-                                            <div class="col-sm-3 col-6">
+                                            <div class="col-6">
                                                 <span class="description-text">Sisa</span>
                                             </div>
-                                            <div class="col-sm-9 col-12">
+                                            <div class="col-6">
                                                 <span class="description-text float-end">Rp. <?= number_format($row->sisa, 0, ',', '.'); ?></span>
                                             </div>
                                             <hr class="solid">
@@ -85,8 +85,23 @@
                                     <?php endforeach; ?>
                                 </div>
                             </div>
-                            <div class="col-12 col-sm-12 col-md-6">
-
+                            <div class="col-12 col-sm-12 col-md-9">
+                                <h4 class="text-center">
+                                    <strong>Diagram Bulanan</strong>
+                                </h4>
+                                <div class="chart-container">
+                                    <canvas id="chart_bulanan"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-12">
+                                <h4 class="text-center">
+                                    <strong>Diagram Mingguan</strong>
+                                </h4>
+                                <div class="chart-container">
+                                    <canvas id="chart_mingguan"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -157,6 +172,75 @@
         return x1 + x2;
     }
 
+    // setup
+    const data_chart_bulanan = {
+        labels: [
+            <?php foreach ($chartKecBulanan as $row) : ?> '<?= $row->bulan; ?>',
+            <?php endforeach; ?>
+        ],
+        datasets: [{
+            label: '2022',
+            data: [
+                <?php foreach ($chartKecBulanan as $row) : ?>
+                    <?= $row->tr_totalbersih; ?>,
+                <?php endforeach; ?>
+            ],
+            fill: {
+                target: 'start',
+                above: 'rgb(255, 99,132)', // Area will be red above the origin
+            },
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1
+        }]
+    };
+
+    // config
+    const config_chart_bulanan = {
+        type: 'line',
+        data: data_chart_bulanan,
+    };
+
+    // render
+    const chartchartKecBulanan = new Chart(
+        document.getElementById('chart_bulanan'),
+        config_chart_bulanan
+    );
+
+    // setup
+    const data_chart_mingguan = {
+        labels: [
+            <?php foreach ($chartKecMingguan as $row) : ?> '<?= $row->pekan; ?>',
+            <?php endforeach; ?>
+        ],
+        datasets: [{
+            label: '2022',
+            data: [
+                <?php foreach ($chartKecMingguan as $row) : ?>
+                    <?= $row->tr_totalbersih; ?>,
+                <?php endforeach; ?>
+            ],
+            fill: {
+                target: 'origin',
+                above: 'rgb(255, 99,132)', // Area will be red above the origin
+            },
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1
+        }]
+    };
+
+    // config
+    const config_chart_mingguan = {
+        type: 'line',
+        data: data_chart_mingguan,
+    };
+
+    // render
+    const chartchartKecMingguan = new Chart(
+        document.getElementById('chart_mingguan'),
+        config_chart_mingguan
+    );
+
+
     // setup 
     const data_kecamatan = {
         labels: ['Data Capaian', 'Data Bermasalah', 'Data Sisa'],
@@ -179,7 +263,7 @@
                 'rgb(255, 206, 86)'
             ],
             borderWidth: 1,
-            hoverOffset: 10
+            hoverOffset: 5
         }]
     };
 

@@ -1502,9 +1502,10 @@ $role = detailUser()->pu_role_id;
                 _token: '{{ csrf_token() }}'
             },
             success: function(data) {
+                let jumlahTotal = document.querySelector("#jumlahTotal");
                 let jml = formatNumber(data);
                 let jmlTotal = 'Rp. ' + jml + ',-';
-                $('#jumlahTotal').text(jmlTotal);
+                jumlahTotal.textContent = jmlTotal;
             },
             error: function(xhr, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);

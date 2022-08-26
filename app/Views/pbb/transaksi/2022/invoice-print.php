@@ -21,7 +21,7 @@
                             <div class="" style="border-bottom: 5px double black;">
                                 <div class="row">
                                     <div class="col-2">
-                                        <img src="<?= base_url('img/logo-garutkab.jpg') ?>" alt="" class="" style="opacity: .8; text-align: center; width:150px;" width="100">
+                                        <img src="<?= base_url('favicon.png') ?>" alt="" class="" style="opacity: .8; text-align: center; width:130px;" width="100">
                                     </div>
                                     <div class="col" id="kop-surat">
                                         <h1 style="font-size: 4em; letter-spacing: 0.5em;"><?= namaApp(); ?></h1>
@@ -30,7 +30,7 @@
                                         <h6><?= !empty($sekretariat['lp_sekretariat']) ? $sekretariat['lp_sekretariat'] : ''; ?></h6>
                                     </div>
                                     <div class="col-2">
-                                        <img src="<?= base_url('favicon.png') ?>" alt="" class="" style="opacity: .8; text-align: center; width:130px;" width="100">
+                                        <img src="<?= base_url('img/logo-garutkab.jpg') ?>" alt="" class="" style="opacity: .8; text-align: center; width:150px;" width="100">
                                     </div>
                                 </div>
                             </div>
@@ -117,41 +117,21 @@
                                 </table>
                             </div>
                         </div>
+                        <div class="col-12">
+                            <span><em>Terbilang: </em></span>
+                            <input type="text" class="form-control" style="font-size: 1em; font-weight:bold;background-color: transparent; border: 0px solid;box-shadow: none;" name="terbilang" id="terbilang" readonly>
+                        </div>
                         <!-- /.col -->
                     </div>
                     <div class="row">
-                        <div class="col-12">
-                            <br><br><br><br><br>
-                            <div class="row">
-                                <div class="col-1"></div>
-                                <!-- accepted payments column -->
-                                <div class="col-4">
-                                    <p class="text-center"><strong>Tata Rustandi</strong></p>
-
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <tr></tr>
-                                            <tr style="text-align: center;">
-                                                <td colspan="2"><em>Kepala Desa Pasirlangu</em></td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="col-2"></div>
-                                <div class="col-4">
-                                    <p class="text-center"><strong>Rian Sutarsa</strong></p>
-
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <tr>
-                                            </tr>
-                                            <tr style="text-align: center;">
-                                                <td colspan="2"><em>Kolektor Desa</em></td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="col-1"></div>
+                        <div class="container-flex" style="display: flex; text-align:center;">
+                            <div class="col">
+                                <h6>Kepala Desa</h6>
+                                <h6 style="margin-top: 80px; text-decoration:underline"><strong>Tata Rustandi</strong></h6>
+                            </div>
+                            <div class="col">
+                                <h6>Kolektor Desa</h6>
+                                <h6 style="margin-top: 80px; text-decoration:underline"><strong>Sukarno</strong></h6>
                             </div>
                         </div>
                         <!-- this row will not appear when printing -->

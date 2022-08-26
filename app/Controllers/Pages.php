@@ -70,13 +70,17 @@ class Pages extends BaseController
     {
         $diagramKecamatan = $this->DhkpModel22->getDiagramKecamatan();
         $setoranPerDesa = $this->DhkpModel22->setoranPerDesa();
-        // dd($diagramKecamatan);
+        $getChartKecBulanan = $this->DhkpModel22->getChartKecBulanan();
+        $getChartKecMingguan = $this->DhkpModel22->getChartKecMingguan();
+        // dd($getChartKecBulanan);
         // $dataPerDesa = $this->DhkpModel22->jumlahSppt();
         // dd($dataPerDesa);
         $data = [
             'title' => 'Dashboard',
             'diagramKecamatan' => $diagramKecamatan,
             'setoranPerDesa' => $setoranPerDesa,
+            'chartKecBulanan' => $getChartKecBulanan,
+            'chartKecMingguan' => $getChartKecMingguan,
             // 'dataPerDesa' => $dataPerDesa,
         ];
 

@@ -232,6 +232,7 @@ class Trx22 extends BaseController
     {
         $db = \Config\Database::connect();
         // $tgl = date('Y-m-d');
+        $kode_desa = substr(detailUser()->pu_kode_desa, 9, 4);
         $tgl = $this->tgl();
         $query = $db->query("SELECT MAX(tr_faktur) AS nofaktur FROM pbb_transaksi22 WHERE DATE_FORMAT(tr_tgl, '%Y-%m-%d') ='$tgl' ");
         $hasil = $query->getRowArray();
@@ -243,7 +244,7 @@ class Trx22 extends BaseController
         $nextNoUrut = intval($lastNoUrut) + 1;
 
         // membuat format nomor transaksi berikutnya
-        $fakturTransaksi = '#KDPSL' . date('ymd', strtotime($tgl)) . sprintf('%03s', $nextNoUrut);
+        $fakturTransaksi = '#SAPAPADU' . $kode_desa . date('ymd', strtotime($tgl)) . sprintf('%03s', $nextNoUrut);
 
         return $fakturTransaksi;
     }

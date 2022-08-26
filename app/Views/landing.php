@@ -79,13 +79,13 @@
 							<div class="full">
 								<div class="center-desk">
 									<div class="logo">
-										<a href="<?= base_url(); ?>"><img src="<?= base_url('img/Free_Sample_By_Wix.png'); ?>" alt="logo <?= namaApp(); ?>" / style="width: 40%;"></a>
+										<a href="<?= base_url(); ?>"><img src="<?= base_url('img/Free_Sample_By_Wix.png'); ?>" alt="logo <?= namaApp(); ?>" /></a>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="col-xl-9 col-lg-9 col-md-9 col-sm-9">
-							<nav class="navigation navbar navbar-expand-md navbar-dark ">
+							<nav class="navigation navbar navbar-expand-md navbar-dark">
 								<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
 									<span class="navbar-toggler-icon"></span>
 								</button>
@@ -140,22 +140,13 @@
 			<div class="row">
 				<div class="col-md-12">
 					<div class="titlepage">
-						<span>Increase your client for</span>
-						<h2>Better position of Business</h2>
-						<p>It is a long established fact that a reader will be distracted by the readable content of a page </p>
+						<h3>Diagram Target dan Capaian</h3>
 					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-10 offset-md-1">
-					<div class="row">
-						<div class="col-md-12">
-							<div class="business_box ">
-								<figure><img src="<?= base_url('assets/diigo/images/business_img.jpg'); ?>" alt="#" /></figure>
-								<p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believableThere are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable</p>
-								<a class="read_more" href="#">Read more</a>
-							</div>
+					<div class="card">
+						<div class="card-header">
 						</div>
+						<div class="card-body"></div>
+						<div class="card-footer"></div>
 					</div>
 				</div>
 			</div>
@@ -168,25 +159,12 @@
 			<div class="row">
 				<div class="col-md-12">
 					<div class="titlepage">
-						<span>Previous Projects</span>
-						<h2>Better position of Business</h2>
-						<p>It is a long established fact that a reader will be distracted by the readable content of a page </p>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-10 offset-md-1">
-					<div class="row">
-						<div class="col-md-6 offset-md-3">
-							<div class="projects_box ">
-								<figure><img src="<?= base_url('assets/diigo/images/projects_img.png'); ?>" alt="#" /></figure>
+						<h3>Cek Pembayaran</h3>
+						<div class="card">
+							<div class="card-header">
 							</div>
-						</div>
-						<div class="col-md-12">
-							<div class="projects_box ">
-								<p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believableThere are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable</p>
-								<a class="read_more" href="#">Read more</a>
-							</div>
+							<div class="card-body"></div>
+							<div class="card-footer"></div>
 						</div>
 					</div>
 				</div>
@@ -253,7 +231,6 @@
 				<div class="col-md-12">
 					<div class="titlepage">
 						<h2>Contact us</h2>
-						<span>There are many variations of passages of Lorem Ipsum available, but the </span>
 					</div>
 				</div>
 			</div>
@@ -310,7 +287,7 @@
 				<div class="container">
 					<div class="row">
 						<div class="col-md-12">
-							<p>Copyright 2019 All Right Reserved By <a href="https://html.design/"> Free html Templates</a></p>
+							<p>Copyright &copy; 2022 All Right Reserved By Kasi Pemerintahan Kec. <?= ucwords(strtolower(profilAdmin()->name)); ?>. design by: <a href="https://html.design/"> Free html Templates</a></p>
 						</div>
 					</div>
 				</div>

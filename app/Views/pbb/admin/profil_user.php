@@ -132,7 +132,7 @@
                                                 </li>
                                                 <li class="list-group-item mt-3">
                                                     <b><i class="fas fa-landmark mr-1"></i> Lembaga </b>
-                                                    <select name="user_lembaga_id" id="user_lembaga_id" class="form-control" disabled>
+                                                    <select name="user_lembaga_id" id="user_lembaga_id" class="form-control">
                                                         <?php foreach ($lembaga as $row) { ?>
                                                             <option value="<?= $row['lk_id']; ?>" <?= $user_login['role_id'] == $row['lk_id'] ? 'selected' : ''; ?>><?= $row['lk_nama']; ?></option>
                                                         <?php } ?>
@@ -172,7 +172,7 @@
                                                 <?= form_input(['type' => 'hidden', 'name' => 'lp_id', 'class' => 'form-control', 'id' => 'lp_id', 'value' => isset($user_login['lp_id']) ? set_value('lp_id', $user_login['lp_id']) : '']); ?>
                                                 <!-- /.card-header -->
                                                 <strong><i class="fas fa-landmark mr-1"></i> Lembaga</strong>
-                                                <select name="user_lembaga_id" id="user_lembaga_id" class="form-control" disabled>
+                                                <select name="user_lembaga_id" id="user_lembaga_id" class="form-control">
                                                     <?php foreach ($lembaga as $row) { ?>
                                                         <option <?= $row['lk_id'] == $user_login['role_id'] ? 'selected' : '' ?> value="<?= $row['lk_id']; ?>"><?= $row['lk_nama']; ?></option>
                                                     <?php } ?>
