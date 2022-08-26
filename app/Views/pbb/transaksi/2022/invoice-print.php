@@ -131,7 +131,7 @@
                             </div>
                             <div class="col">
                                 <h6>Kolektor Desa</h6>
-                                <h6 style="margin-top: 80px; text-decoration:underline"><strong>Sukarno</strong></h6>
+                                <h6 style="margin-top: 80px; text-decoration:underline"><strong>Rian Sutarsa</strong></h6>
                             </div>
                         </div>
                         <!-- this row will not appear when printing -->
