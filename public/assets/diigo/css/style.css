@@ -823,6 +823,34 @@ ul.social_icon li a:hover {
      color: #23262d;
 }
 
+canvas {
+     height: 50%;
+     width: 50%;
+     margin: 0 auto;
+}
+
+.float-end {
+     float: right;
+}
+
+.kartu {
+     border: dashed #000;
+box-shadow: 5px 5px 5px 5px black;
+}
+
+/* ----------- Galaxy S3 ----------- */
+
+/* Portrait and Landscape */
+@media only screen and (max-width: 600px) {
+     
+     canvas {
+          height: 100%;
+          width: 100%;
+          margin: 0 auto;
+     }
+}
+
+
 
 /** end footer **/
 

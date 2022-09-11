@@ -96,7 +96,7 @@ class TrxModel22 extends Model
         return $query;
     }
 
-    public function getDetail($id_tr = false)
+    public function getDetail($id_tr = null)
     {
         $builder = $this->db->table('pbb_transaksi22');
         $builder->select('*');
@@ -105,6 +105,7 @@ class TrxModel22 extends Model
         $builder->where(['pbb_transaksi22.id_tr' => $id_tr]);
         $query = $builder->get()->getResultArray();
 
+        // dd($query);
         return $query;
     }
 }

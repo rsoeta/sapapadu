@@ -450,8 +450,8 @@ class Dhkp22 extends BaseController
 
     function formTambah()
     {
-        $pu_kode_kec = profilAdmin()->pu_kode_kec;
         if ($this->request->isAJAX()) {
+            $pu_kode_kec = profilAdmin()->pu_kode_kec;
             $data = [
                 'title' => 'Form. Tambah Data',
                 'pu_role_id' => detailUser()->pu_role_id,

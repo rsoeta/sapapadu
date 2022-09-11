@@ -8,6 +8,8 @@
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script> -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+<?php foreach ($detail as $row) {
+} ?>
 
 <div class="content-wrapper mt-1">
     <!-- Content Header (Page header) -->
@@ -73,7 +75,7 @@
                             </div>
                             <div class="col-12 form-group row">
                                 <!-- CSRF token -->
-                                <input type="hidden" class="txt_csrfname" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>" />
+                                <input type="hidden" class="txt_csrfname" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>" required />
                                 <select class="form-control border border-white border-0" id="pelanggan" name="pelanggan" style="font-weight:bold; -webkit-appearance: none; -moz-appearance: none; appearance: none; border: none; background: none; width:auto"></select>
                             </div>
                         </div>
@@ -83,7 +85,7 @@
                                 <label for="dusun" class="col-form-label">No. Kuitansi :</label>
                             </div>
                             <div class="col-12 form-group row">
-                                <input class="text-bold form-control" name="nofaktur" id="nofaktur" value="<?= $nofaktur; ?>">
+                                <input class="text-bold form-control" name="nofaktur" id="nofaktur" value="<?= !empty($nofaktur) ? $nofaktur : $row['tr_faktur']; ?>">
                             </div>
                         </div>
                         <!-- /.col -->
@@ -103,12 +105,9 @@
                         <!-- /.col -->
                         <div class="col-4">
                             <p class="lead">Pembayaran</p>
-
                             <div class="table-responsive">
                                 <table class="table">
-                                    <tr>
-
-                                    </tr>
+                                    <tr></tr>
                                     <tr>
                                         <th style="font-size: 1em;">Total :</th>
                                         <td><input type="text" class="form-control" style="font-size: 1em; font-weight:bold;background-color: transparent; border: 0px solid;box-shadow: none;" name="totalbayar" id="totalbayar" readonly>
@@ -123,7 +122,7 @@
                         </div>
                         <!-- /.col -->
                     </div>
-                    <div class="row">
+                    <div class="row mt-6">
                         <div class="container-flex" style="display: flex; text-align:center;">
                             <div class="col">
                                 <h6>Kepala Desa</h6>
@@ -138,7 +137,7 @@
                         <div class="col-12">
                             <div class="row no-print">
                                 <div class="col-6">
-                                    <a type="button" rel="noopener" class="btn btn-default" href="dhkp22"><i class="fa fa-fast-backward mr-1"></i> Data</a>
+                                    <a type="button" rel="noopener" class="btn btn-default" href="/dhkp22"><i class="fa fa-fast-backward mr-1"></i> Data</a>
                                 </div>
                                 <div class="col-6">
                                     <a type="button" rel="noopener" class="btn btn-default float-right" id="btnSimpanTransaksi"><i class="fas fa-print mr-1"></i> Print</a>

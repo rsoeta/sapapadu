@@ -68,7 +68,8 @@
 <script>
     function trans21() {
         $.ajax({
-            url: "<?= site_url('pbb/transaction21/ambildata'); ?>",
+            type: "POST",
+            url: "<?= site_url('trxAmbilData'); ?>",
             dataType: "json",
             success: function(response) {
                 $('.trans21').html(response.data);

@@ -50,7 +50,8 @@ function menu()
 {
     $db = \Config\Database::connect();
     $builder = $db->table('tb_menu');
-    $builder->select('tm_id, tm_nama, tm_class, tm_url, tm_icon, tm_parent_id, tm_status, tm_grup_akses');
+    $builder->select('tm_id, tm_sort, tm_nama, tm_class, tm_url, tm_icon, tm_parent_id, tm_status, tm_grup_akses');
+    $builder->orderBy('tm_sort', 'asc');
     $query = $builder->get();
 
     return $query->getResultArray();
@@ -63,6 +64,7 @@ function menu_child($menu_id)
     $builder = $db->table('tb_menu');
     $builder->select('tm_id, tm_nama, tm_class, tm_url, tm_icon, tm_parent_id, tm_status, tm_grup_akses');
     $builder->where('tm_parent_id', $menu_id);
+    $builder->orderBy('tm_sort', 'asc');
     $query = $builder->get();
     return $query->getResultArray();
 }
@@ -73,6 +75,7 @@ function menu_child_child($menu_child)
     $builder = $db->table('tb_menu');
     $builder->select('tm_id, tm_nama, tm_class, tm_url, tm_icon, tm_parent_id, tm_status, tm_grup_akses');
     $builder->where('tm_parent_id', $menu_child);
+    $builder->orderBy('tm_sort', 'asc');
     $query = $builder->get();
     return $query->getResultArray();
 }
@@ -83,6 +86,7 @@ function menu_child_child_child($menu_child_child)
     $builder = $db->table('tb_menu');
     $builder->select('tm_id, tm_nama, tm_class, tm_url, tm_icon, tm_parent_id, tm_status, tm_grup_akses');
     $builder->where('tm_parent_id', $menu_child_child);
+    $builder->orderBy('tm_sort', 'asc');
     $query = $builder->get();
     return $query->getResultArray();
 }

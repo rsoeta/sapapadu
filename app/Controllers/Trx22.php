@@ -48,7 +48,7 @@ class Trx22 extends BaseController
         if ($this->request->isAJAX()) {
             // $dhkpModel22 = new DhkpModel22();
             $data = [
-                'tampildata' => $this->trans->getData()->getResultArray()
+                'tampildata' => $this->TrxModel22->getData()->getResultArray()
             ];
 
             $msg = [
@@ -57,7 +57,7 @@ class Trx22 extends BaseController
 
             echo json_encode($msg);
         } else {
-            exit('Maaf permintaan anda tidak dapat diproses');
+            return redirect()->to('lockscreen');
         }
     }
 
@@ -148,10 +148,13 @@ class Trx22 extends BaseController
 
     public function detail($id_tr = null)
     {
+        // dd($id_tr);
+        // $nofaktur = '';
         $data = [
             'namaApp' => 'KolektorPBB',
             'title' => 'Lampiran Pembayaran PBB-P2 Tahun 2022',
-            'detail' => $this->trans->getDetail($id_tr)
+            'detail' => $this->TrxModel22->getDetail($id_tr),
+            // 'nofaktur' => $nofaktur
         ];
 
         // var_dump($data);
@@ -216,7 +219,7 @@ class Trx22 extends BaseController
         return date("Y-m-d");
     }
 
-    public function pembayaran()
+    public function pembayaran($id_tr = null)
     {
 
         $data = [
@@ -224,6 +227,7 @@ class Trx22 extends BaseController
             'nofaktur' => $this->buatFaktur(),
             'tgl' => $this->tgl(),
             'sekretariat' => $this->auth->getUserId(),
+            'detail' => $this->TrxModel22->getDetail($id_tr),
         ];
         return view('pbb/transaksi/2022/invoice-print', $data);
     }
@@ -555,7 +559,7 @@ class Trx22 extends BaseController
 
     public function export()
     {
-        $trans = $this->trans->getData()->getResultArray();
+        $trans = $this->TrxModel22->getData()->getResultArray();
 
         $spreadsheet = new Spreadsheet();
 
@@ -578,8 +582,6 @@ class Trx22 extends BaseController
 
             $column++;
         }
-
-
 
         $writer = new Xlsx($spreadsheet);
         $filename = date('Y-m-d-His') . '-Data-Transaksi';

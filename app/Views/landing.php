@@ -55,6 +55,7 @@
 	<!-- Tweaks for older IEs-->
 	<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
+
 	<!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
@@ -143,10 +144,45 @@
 						<h3>Diagram Target dan Capaian</h3>
 					</div>
 					<div class="card">
-						<div class="card-header">
+						<div class="card-body">
+							<div class="chart-container" style="position: relative; height:50vh;">
+								<canvas id="chart_kecamatan" height="40vh" width="80vw"></canvas>
+							</div>
 						</div>
-						<div class="card-body"></div>
-						<div class="card-footer"></div>
+						<div class="card-footer text-muted">
+							<?php foreach ($diagramKecamatan as $row) : ?>
+								<div class="row">
+									<div class="col-6">
+										<span class="description-text">Target</span>
+									</div>
+									<div class="col-6">
+										<span class="description-text float-end">Rp. <?= number_format($row->target, 0, ',', '.'); ?></span>
+									</div>
+									<hr class="solid">
+									<div class="col-6">
+										<span class="description-text">Capaian</span>
+									</div>
+									<div class="col-6">
+										<span class="description-text float-end">Rp. <?= number_format($row->capaian, 0, ',', '.'); ?></span>
+									</div>
+									<hr class="solid">
+									<div class="col-6">
+										<span class="description-text">Bermasalah</span>
+									</div>
+									<div class="col-6">
+										<span class="description-text float-end">Rp. <?= number_format($row->bermasalah, 0, ',', '.'); ?></span>
+									</div>
+									<hr class="solid">
+									<div class="col-6">
+										<span class="description-text">Sisa</span>
+									</div>
+									<div class="col-6">
+										<span class="description-text float-end">Rp. <?= number_format($row->sisa, 0, ',', '.'); ?></span>
+									</div>
+									<hr class="solid">
+								</div>
+							<?php endforeach; ?>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -160,11 +196,40 @@
 				<div class="col-md-12">
 					<div class="titlepage">
 						<h3>Cek Pembayaran</h3>
-						<div class="card">
-							<div class="card-header">
-							</div>
-							<div class="card-body"></div>
-							<div class="card-footer"></div>
+						<div class="kartu">
+							<!-- form start -->
+							<form class="form-horizontal" id="cekBayar">
+								<div class="card-body">
+									<div class="row g-0">
+										<div class="col-sm-4">
+											<img src="<?= base_url('assets/home/images/ilustrasi-pbb_169.jpeg'); ?>" class="img-fluid rounded-start" alt="Cek Status PBB Anda">
+										</div>
+										<div class="col-1">
+										</div>
+										<div class="col-sm-7">
+											<div class="form-group row mt-2">
+												<label for="nop" class="col-3 col-form-label">N.O.P</label>
+												<div class="col-9">
+													<input type="text" class="form-control" id="nop" name="nop" placeholder="Masukan No. Objek Pajak">
+												</div>
+											</div>
+											<div class="form-group row mt-2">
+												<label for="nama_wp" class="col-3 col-form-label">Nama WP</label>
+												<div class="col-9">
+													<input type="text" class="form-control" id="nama_wp" name="nama_wp" placeholder="Masukan Nama Wajib Pajak">
+												</div>
+											</div>
+											<div class="form-group row mt-2">
+												<label class="col-3 col-form-label"></label>
+												<div class="col-9 d-grid gap-2">
+													<button type="button" class="btn btn-primary btn-block" id="btnCek">Cek</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- /.card-footer -->
+							</form>
 						</div>
 					</div>
 				</div>
@@ -295,16 +360,148 @@
 		</div>
 	</footer>
 	<!-- end footer -->
+
+	<div class="viewmodal" style="display: none;"></div>
+
 	<!-- Javascript files-->
 	<script src="<?= base_url('assets/diigo/js/jquery.min.js'); ?>"></script>
 	<script src="<?= base_url('assets/diigo/js/popper.min.js'); ?>"></script>
 	<script src="<?= base_url('assets/diigo/js/bootstrap.bundle.min.js'); ?>"></script>
 	<script src="<?= base_url('assets/diigo/js/jquery-3.0.0.min.js'); ?>"></script>
 	<script src="<?= base_url('assets/diigo/js/plugin.js'); ?>"></script>
+	<!-- chartjs -->
+	<script src="<?= base_url('assets/plugins/chart.js/3.7.0/chart.min.js'); ?>"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 	<!-- sidebar -->
 	<script src="<?= base_url('assets/diigo/js/jquery.mCustomScrollbar.concat.min.js'); ?>"></script>
 	<script src="<?= base_url('assets/diigo/js/custom.js'); ?>"></script>
 	<script src="https:cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+	<!-- sweetalert2 -->
+	<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script>
+		$(document).ready(function() {
+
+			$('#btnCek').click(function(e) {
+				e.preventDefault();
+				// alert('OK!');
+				cek();
+			});
+
+		});
+
+		function cek() {
+			let nop = $('#nop').val();
+			let nama_wp = $('#nama_wp').val();
+
+			$.ajax({
+				type: "post",
+				url: "<?= site_url('cariPbb'); ?>",
+				data: {
+					nop: nop,
+					nop: $('#nop').val(),
+					nama_wp: $('#nama_wp').val(),
+				},
+				cache: false,
+				dataType: "json",
+				success: function(response) {
+					if (response.error) {
+						Swal.fire({
+							icon: 'error',
+							title: 'Perhatian!',
+							text: response.error
+						});
+					}
+					if (response.null) {
+						Swal.fire({
+							icon: 'warning',
+							title: 'Perhatian!',
+							text: response.null
+						});
+					}
+					if (response.data) {
+						$('.viewmodal').html(response.data).show();
+						$('#hasil_pencarian').on('shown.bs.modal', function(event) {
+							$('#nop').focus();
+						});
+						$('#hasil_pencarian').modal('show');
+					}
+				},
+				error: function(xhr, thrownError) {
+					alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+				}
+			});
+		}
+		// setup 
+		const data_kecamatan = {
+			labels: ['Capaian', 'Bermasalah', 'Sisa'],
+			datasets: [{
+				label: 'Diagram',
+				data: [
+					<?php foreach ($diagramKecamatan as $row) { ?> '<?= $row->capaianPersentase; ?>',
+						'<?= $row->bermasalahPersentase; ?>',
+						'<?= $row->sisaPersentase; ?>'
+					<?php } ?>
+				],
+				backgroundColor: [
+					'rgb(255, 99, 132)',
+					'rgb(54, 162, 235)',
+					'rgb(255, 206, 86)'
+				],
+				borderColor: [
+					'rgb(255, 99, 132)',
+					'rgb(54, 162, 235)',
+					'rgb(255, 206, 86)'
+				],
+				borderWidth: 1,
+				hoverOffset: 5
+			}]
+		};
+
+		// config
+		const config_kecamatan = {
+			type: 'pie',
+			data: data_kecamatan,
+			options: {
+				plugins: {
+					legend: {
+						display: false
+					},
+					labels: {
+						// This more specific font property overrides the global property
+						font: {
+							size: 14
+						}
+					}
+				},
+				responsive: true,
+				maintainAspectRatio: false,
+			},
+			plugins: [ChartDataLabels],
+			options: {
+
+			}
+		};
+
+		// render init block
+		const chartKecamatan = new Chart(
+			document.getElementById('chart_kecamatan'),
+			config_kecamatan
+		);
+
+		function addCommas(nStr) {
+			nStr += '';
+			x = nStr.split('.');
+			x1 = x[0];
+			x2 = x.length > 1 ? '.' + x[1] : '';
+			var rgx = /(\d+)(\d{3})/;
+			while (rgx.test(x1)) {
+				x1 = x1.replace(rgx, '$1' + ',' + '$2');
+			}
+			return x1 + x2;
+		}
+	</script>
 </body>
 
 </html>

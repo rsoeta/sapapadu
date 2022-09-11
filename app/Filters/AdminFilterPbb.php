@@ -10,8 +10,10 @@ class AdminFilterPbb implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
+        $noRole = session()->get('pu_role_id');
+        $noStat = session()->get('pu_status');
         // Do something here
-        if (session()->get('pu_level') !== 1 && session()->get('pu_status') !== 1 && session()->get('logPbb') !== true) {
+        if ($noRole > 1 || $noStat > 1 || session()->get('logPbb') === false) {
             return redirect()->to(base_url('lockscreen'));
         }
     }

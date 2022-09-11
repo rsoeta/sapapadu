@@ -32,7 +32,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <h4>
-                                    <img src="<?= base_url('assets') ?>/dist/img/AdminLTELogo.png" alt="" class="brand-image img-circle elevation-3" style="opacity: .8" width="50">
+                                    <img src="<?= base_url('assets/dist/img/AdminLTELogo.png') ?>" alt="" class="brand-image img-circle elevation-3" style="opacity: .8" width="50">
                                     AdminPBB, Inc.
                                     <div class="float-right col-2">
                                         <small>
@@ -42,7 +42,7 @@
                                             <input type="text" class="form-control form-control-sm" name="tanggal" id="tanggal" value="<?php echo date_format(date_create($row['tr_tgl']), "d M Y"); ?>" <?php } ?> style="font-weight: bold;">
                                             <!-- this row will not appear when printing -->
                                             <a type="button" rel="noopener" class="btn btn-default no-print" id="btnSimpanTransaksi"><i class="fas fa-print"></i> Print</a>
-                                            <a type="button" rel="noopener" class="btn btn-default no-print" href="<?= base_url('pbb/transaction21/'); ?>"><i class="fa fa-exchange-alt"></i> Return</a>
+                                            <a type="button" rel="noopener" class="btn btn-default no-print" href="<?= base_url('/transaction21/'); ?>"><i class="fa fa-exchange-alt"></i> Return</a>
                                     </div>
                                 </h4>
                             </div>
@@ -363,7 +363,7 @@
     function dataDetailTrans() {
         $.ajax({
             type: "post",
-            url: "<?= site_url('pbb/transaction21/dataDetailTrans'); ?>",
+            url: "<?= site_url('/transaction21/dataDetailTrans'); ?>",
             data: {
                 nofaktur: $('#nofaktur').val()
             },
@@ -384,7 +384,7 @@
 
     function pbbterhutang() {
         $.ajax({
-            url: "<?= site_url('pbb/dhkp21/pbbterhutang'); ?>",
+            url: "<?= site_url('dhkp21/pbbterhutang'); ?>",
             dataType: "json",
             success: function(response) {
                 $('.pbbterhutang').html(response.data);
@@ -405,7 +405,7 @@
 
     function hitungTotalBayar() {
         $.ajax({
-            url: "<?= site_url('pbb/transaction21/hitungTotalBayar'); ?>",
+            url: "<?= site_url('transaction21/hitungTotalBayar'); ?>",
             dataType: "json",
             data: {
                 nofaktur: $('#nofaktur').val()

@@ -39,23 +39,29 @@ $routes->post('action', 'Wil::action');
 $routes->match(['get', 'post'], 'lockscreen', 'Lockscreen::index');
 
 // $routes->get('/', 'Pbb\Auth::index', ['filter' => 'noauthfilterpbb']);
-$routes->get('auth/cari/(:any)', 'Auth::cari');
+$routes->post('cariPbb', 'Auth::cari');
 $routes->match(['get', 'post'], 'login', 'Auth::login', ['filter' => 'noauthfilterpbb']);
 $routes->get('logout', 'Auth::logout');
 $routes->match(['get', 'post'], 'register', 'Auth::register', ['filter' => 'noauthfilterpbb']);
 // $routes->get('pages', 'Pages::index', ['filter' => 'authfilterpbb']);
 $routes->get('home', 'Pages::index', ['filter' => 'authfilterpbb']);
+$routes->get('diagram', 'Pages::index2', ['filter' => 'authfilterpbb']);
 // $routes->get('home', 'Dhkp22::index', ['filter' => 'authfilterpbb']);
-$routes->get('cache-this-page', 'Pages::index');
+// $routes->get('cache-this-page', 'Pages::index');
 
 $routes->get('setting_web', 'Admin::setting_web', ['filter' => 'adminfilterpbb']);
 $routes->post('get_count_desa/(:any)', 'Admin::get_count_desa/$1', ['filter' => 'adminfilterpbb']);
 $routes->post('get_hitung', 'Admin::get_hitung', ['filter' => 'adminfilterpbb']);
+$routes->get('menu_web', 'Admin::menu_web', ['filter' => 'adminfilterpbb']);
+$routes->post('tb_menu', 'Admin::tb_menu', ['filter' => 'adminfilterpbb']);
+$routes->post('editMenu', 'Admin::editMenu', ['filter' => 'adminfilterpbb']);
+$routes->post('updateMenu', 'Admin::updateMenu', ['filter' => 'adminfilterpbb']);
+$routes->post('modalMenu', 'Admin::modalMenu', ['filter' => 'adminfilterpbb']);
+$routes->post('tambahMenu', 'Admin::tambahMenu', ['filter' => 'adminfilterpbb']);
 
 $routes->get('dhkp', 'Dhkp::index', ['filter' => 'authfilterpbb']);
 $routes->get('dhkp/terhutang', 'Dhkp::terutang', ['filter' => 'authfilterpbb']);
 $routes->match(['get', 'post'], 'dhkp/pembayaran', 'Dhkp::index', ['filter' => 'authfilterpbb']);
-
 $routes->get('dhkp21', 'Dhkp21::index', ['filter' => 'authfilterpbb']);
 $routes->post('tb_dhkp21', 'Dhkp21::data_dhkp21', ['filter' => 'authfilterpbb']);
 $routes->get('dhkp21/terhutang', 'Dhkp21::terutang', ['filter' => 'authfilterpbb']);
@@ -75,7 +81,8 @@ $routes->get('datarw', 'Wilayah::datarw', ['filter' => 'authfilterpbb']);
 $routes->get('datadusun', 'Wilayah::datadusun', ['filter' => 'authfilterpbb']);
 // $routes->get('wilayah', 'Wilayah::index');
 
-$routes->add('transaction21', 'Transaction21::index', ['filter' => 'authfilterpbb']);
+$routes->get('transaction21', 'Transaction21::index', ['filter' => 'authfilterpbb']);
+$routes->post('trxAmbilData', 'Transaction21::ambildata', ['filter' => 'authfilterpbb']);
 $routes->add('transaction21/pembayaran', 'Transaction21::pembayaran', ['filter' => 'authfilterpbb']);
 $routes->post('transaction21/proses_import', 'Transaction::proses_import', ['filter' => 'authfilterpbb']);
 $routes->add('export', 'Transaction21::export', ['filter' => 'authfilterpbb']);
@@ -105,9 +112,12 @@ $routes->post('updatedata', 'Dhkp22::updatedata', ['filter' => 'authfilterpbb'])
 $routes->add('expFile', 'Dhkp22::exportBelumLunas', ['filter' => 'authfilterpbb']);
 $routes->match(['get', 'post'], 'pbbterhutang', 'Dhkp22::pbbterhutang', ['filter' => 'authfilterpbb']);
 
-$routes->add('trx22', 'Trx22::pembayaran', ['filter' => 'authfilterpbb']);
+$routes->add('trx22', 'Trx22::index', ['filter' => 'authfilterpbb']);
+$routes->post('trx22AmbilData', 'Trx22::ambildata', ['filter' => 'authfilterpbb']);
 $routes->post('dataDetail', 'Trx22::dataDetail', ['filter' => 'authfilterpbb']);
 $routes->post('hapusItem', 'Trx22::hapusItem', ['filter' => 'authfilterpbb']);
+$routes->get('trx22-pembayaran', 'Trx22::pembayaran', ['filter' => 'authfilterpbb']);
+$routes->add('export22', 'Trx22::export', ['filter' => 'authfilterpbb']);
 $routes->post('modalBayar', 'Trx22::bayar', ['filter' => 'authfilterpbb']);
 $routes->post('simpanBayar', 'Trx22::simpanBayar', ['filter' => 'authfilterpbb']);
 $routes->post('dataTerhutang', 'Trx22::dataTerhutang', ['filter' => 'authfilterpbb']);

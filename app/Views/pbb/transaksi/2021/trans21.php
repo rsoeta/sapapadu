@@ -15,7 +15,7 @@
         ?>
             <tr>
                 <?php
-                echo form_open('pbb/transaction21/add');
+                echo form_open('/transaction21/add');
                 echo form_hidden('id_tr', $row['id_tr']);
                 ?>
                 <td><?= $nomor; ?></td>
@@ -24,7 +24,7 @@
                 <td><?= $row['nama_pelanggan']; ?></td>
                 <td style="text-align: right;"><?= number_format($row['tr_totalbersih'], 0, ',', '.'); ?></td>
                 <td style="text-align: center;">
-                    <a class="btn btn-sm btn-outline-info" href="/pbb/transaction21/detail/<?= $row['id_tr']; ?>">
+                    <a class="btn btn-sm btn-outline-info" href="/transaction21/detail/<?= $row['id_tr']; ?>">
                         <i class="fas fa-info-circle"></i>
                     </a>
 
@@ -61,7 +61,7 @@
             if (result.value) {
                 $.ajax({
                     type: "post",
-                    url: "<?= site_url('pbb/transaction21/hapus') ?>",
+                    url: "<?= site_url('transaction21/hapus') ?>",
                     data: {
                         id: id
                     },

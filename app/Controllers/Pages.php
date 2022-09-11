@@ -68,6 +68,15 @@ class Pages extends BaseController
 
     public function index()
     {
+        $data = [
+            'title' => 'Dashboard',
+        ];
+        // $this->cachePage(60); // 60 seconds
+        return view('pbb/pages/index2', $data);
+    }
+
+    public function index2()
+    {
         $diagramKecamatan = $this->DhkpModel22->getDiagramKecamatan();
         $setoranPerDesa = $this->DhkpModel22->setoranPerDesa();
         $getChartKecBulanan = $this->DhkpModel22->getChartKecBulanan();
@@ -76,15 +85,13 @@ class Pages extends BaseController
         // $dataPerDesa = $this->DhkpModel22->jumlahSppt();
         // dd($dataPerDesa);
         $data = [
-            'title' => 'Dashboard',
+            'title' => 'Diagram Progres',
             'diagramKecamatan' => $diagramKecamatan,
             'setoranPerDesa' => $setoranPerDesa,
             'chartKecBulanan' => $getChartKecBulanan,
             'chartKecMingguan' => $getChartKecMingguan,
             // 'dataPerDesa' => $dataPerDesa,
         ];
-
-        // $this->cachePage(60); // 60 seconds
         return view('pbb/pages/index', $data);
     }
 
@@ -135,7 +142,7 @@ class Pages extends BaseController
         // dd($data['setoranPerRw']);
         // die;
 
-        return view('pbb/pages/home', $data);
+        return view('pbb/pages/index2', $data);
     }
 
     public function user()

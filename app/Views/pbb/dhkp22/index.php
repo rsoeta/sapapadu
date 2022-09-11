@@ -365,7 +365,7 @@ $role = detailUser()->pu_role_id;
                                 <div class="tab-pane fade" id="lunas" role="tabpanel" aria-labelledby="lunas-tab">
                                     <div class="row">
                                         <div class="col-12 mb-2">
-                                            <button style="float: right;" type="button" class="btn btn-success shadow" onclick="window.location='<?= site_url('trx22'); ?>'">
+                                            <button style="float: right;" type="button" class="btn btn-success shadow" onclick="window.location='<?= site_url('/trx22-pembayaran'); ?>'">
                                                 <i class="fa fa-plus mr-1"></i> Tambah Transaksi
                                             </button>
                                         </div>

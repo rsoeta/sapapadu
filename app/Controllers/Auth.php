@@ -77,18 +77,19 @@ class Auth extends BaseController
 
     public function cari()
     {
-        $model = new DhkpModel22();
 
         if ($this->request->isAJAX()) {
 
+            $model = new DhkpModel22();
             $nop = $this->request->getPost('nop');
             $nama_wp = $this->request->getPost('nama_wp');
 
             $data = [
-                'tampildata' => $model->getLunas()
+                'tampildata' => $model->getLunas(),
+                'ket' => 0
             ];
-
-            $cek = $this->db->table("pbb_dhkp22");
+            $db = \Config\Database::connect();
+            $cek = $db->table("pbb_dhkp22");
             // $cek->select('*');
             // $cek->join('pbb_detailtrans22', 'pbb_detailtrans22.nop = pbb_dhkp22.nop');
             // $cek->join('pbb_transaksi22', 'pbb_transaksi22.tr_faktur = pbb_detailtrans22.dettr_faktur');
@@ -100,9 +101,7 @@ class Auth extends BaseController
             // select all data
             $data = $cek->get()->getRowArray();
             // var_dump($data);
-
-
-
+            // die;
 
             if ($nop == "" || $nama_wp == "") {
                 $msg = [
@@ -151,7 +150,7 @@ class Auth extends BaseController
                 $session->setFlashdata('message', 'User atau Password tidak sesuai!');
                 return view('pbb/auth/login', [
                     "validation" => $this->validator,
-                    "title" => 'Sig In',
+                    "title" => 'Sign In',
                 ]);
             } else {
 

@@ -278,8 +278,8 @@ class Transaction21 extends BaseController
     {
         // $nofaktur = "#KDPSL010170001";
         $nofaktur = $this->request->getVar('nofaktur');
-
-        $tempTr = $this->db->table('pbb_detailtrans21');
+        $db = \Config\Database::connect();
+        $tempTr = $db->table('pbb_detailtrans21');
         $queryTampil = $tempTr
             ->select('pbb_detailtrans21.id as id, pbb_dhkp21.nama_wp, pbb_dhkp21.nama_ktp, pbb_dhkp21.alamat_wp, pbb_dhkp21.alamat_op, dettr_faktur, pbb_detailtrans21.nop, pbb_detailtrans21.pajak, pbb_detailtrans21.ket, dettr_subtotal as subtotal')
             ->join('pbb_dhkp21', 'pbb_detailtrans21.nop = pbb_dhkp21.nop')

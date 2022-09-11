@@ -10,6 +10,7 @@ use App\Models\WilayahModel;
 use App\Models\RoleModel;
 use App\Models\GenModel;
 use App\Models\LembagaModel;
+use App\Models\MenuModel;
 
 class Admin extends BaseController
 {
@@ -23,7 +24,9 @@ class Admin extends BaseController
         $this->GenModel = new GenModel();
         $this->AuthModel = new AuthModel();
         $this->LembagaModel = new LembagaModel();
+        $this->MenuModel = new MenuModel();
     }
+
     public function index()
     {
         if (session()->get('level') > 1) {
@@ -247,6 +250,7 @@ class Admin extends BaseController
         ];
         return view('dhkp/detailDhkp', $data);
     }
+
     public function create()
     {
         if (session()->get('level') > 1) {
@@ -259,6 +263,7 @@ class Admin extends BaseController
         ];
         return view('pbb/admin/create', $data);
     }
+
     public function save()
     {
         if (session()->get('level') > 1) {
@@ -429,12 +434,13 @@ class Admin extends BaseController
         $prof = profilAdmin();
         // dd($prof);
         $kecamatan = $this->wilayahModel->getKec();
+        $menus = $this->MenuModel->getMenu();
         $data = [
             'title' => 'Setting Web',
             'myNama' => $prof->pu_fullname,
             'myKec' => $prof->pu_kode_kec,
             'kecamatan' => $kecamatan,
-
+            'menus' => $menus,
         ];
         return view('pbb/admin/setting_web', $data);
     }
@@ -452,7 +458,7 @@ class Admin extends BaseController
         $data = [
             'jumlahSppt' => $this->dhkpModel22->jumlah_semua()->jml,
             'jumlahTotal' => $this->dhkpModel22->jumlah_total()->jumlah_total,
-            'jumlahLunas' => $this->dhkpModel22->jumlahLunas()->jumlahLunas,
+            'jumlahLunas' => $this->dhkpModel22->jumlahLunas($data_desa = null, $data_dusun = null, $data_rw = null, $data_rt = null, $data_ket = null, $data_tahun = null)->jumlahLunas,
             'jumlahTotalLunas' => $this->dhkpModel22->jumlahTotalLunas()->jumlahTotalLunas,
             'jumlahBelumLunas' => $this->dhkpModel22->jumlahBelumLunas()->jumlahBelumLunas,
             'jumlahTotalBelumLunas' => $this->dhkpModel22->jumlahTotalBelumLunas()->jumlahTotalBelumLunas,
@@ -468,5 +474,239 @@ class Admin extends BaseController
     {
         $dataSls = $this->wilayahModel->getDataRtRwDusun();
         return $dataSls;
+    }
+
+    public function editMenu()
+    {
+        if ($this->request->isAJAX()) {
+
+            $userRole = $this->GenModel->getStatusRole();
+            $id = $this->request->getVar('id');
+
+            $db = \Config\Database::connect();
+            $model = $db->table('tb_menu');
+            // $builder = $model->select('*');
+            $row = $model->where('tm_id', $id)->get()->getRowArray();
+
+            $data = [
+                'title' => 'Form. Edit',
+                'tm_id' => $id,
+                'tm_sort' => $row['tm_sort'],
+                'tm_nama' => $row['tm_nama'],
+                'tm_class' => $row['tm_class'],
+                'tm_url' => $row['tm_url'],
+                'tm_icon' => $row['tm_icon'],
+                'tm_parent_id' => $row['tm_parent_id'],
+                'tm_status' => $row['tm_status'],
+                'tm_grup_akses' => $row['tm_grup_akses'],
+                'userRole' => $userRole,
+            ];
+            $msg = [
+                'sukses' => view('pbb/admin/modaleditmenu', $data)
+            ];
+
+            // var_dump(session()->get('kode_desa'));
+            echo json_encode($msg);
+        }
+    }
+
+    public function updateMenu()
+    {
+        if ($this->request->isAJAX()) {
+            $id = $this->request->getVar('tm_id');
+            $validation = \Config\Services::validation();
+            $valid = $this->validate([
+                'tm_nama' => [
+                    'label' => 'Nama',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} harus diisi.',
+                        'alpha_dash' => '{field} harus berisi alphabet.'
+                    ]
+                ],
+                'tm_url' => [
+                    'label' => 'URL',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} harus diisi.',
+                        'alpha_dash' => '{field} harus berisi alphabet.'
+                    ]
+                ],
+                'tm_icon' => [
+                    'label' => 'Icon',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} harus diisi.',
+                        'alpha_dash' => '{field} harus berisi alphabet.'
+                    ]
+                ],
+                'tm_parent_id' => [
+                    'label' => 'Parent ID',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} harus dipilih.',
+                        'alpha_dash' => '{field} harus berisi alphabet.'
+                    ]
+                ],
+                'tm_grup_akses' => [
+                    'label' => 'Grup Akses',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} harus dipilih.',
+                        'alpha_dash' => '{field} harus berisi alphabet.'
+                    ]
+                ],
+                'tm_status' => [
+                    'label' => 'Status',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} harus dipilih.',
+                        'alpha_dash' => '{field} harus berisi alphabet.'
+                    ]
+                ],
+            ]);
+            if (!$valid) {
+                $msg = [
+                    'error' => [
+                        'tm_nama' => $validation->getError('tm_nama'),
+                        'tm_url' => $validation->getError('tm_url'),
+                        'tm_icon' => $validation->getError('tm_icon'),
+                        'tm_parent_id' => $validation->getError('tm_parent_id'),
+                        'tm_grup_akses' => $validation->getError('tm_grup_akses'),
+                        'tm_status' => $validation->getError('tm_status'),
+                    ]
+                ];
+            } else {
+                $dataUpdate = [
+                    'tm_sort' => $this->request->getVar('tm_sort'),
+                    'tm_nama' => $this->request->getVar('tm_nama'),
+                    'tm_url' => $this->request->getVar('tm_url'),
+                    'tm_icon' => $this->request->getVar('tm_icon'),
+                    'tm_parent_id' => $this->request->getVar('tm_parent_id'),
+                    'tm_grup_akses' => $this->request->getVar('tm_grup_akses'),
+                    'tm_status' => $this->request->getVar('tm_status'),
+                ];
+                $db = \Config\Database::connect();
+                $builder = $db->table('tb_menu');
+                $builder->where('tm_id', $id);
+                $builder->update($dataUpdate);
+
+                $msg = [
+                    'sukses' => 'Data berhasil diupdate',
+                ];
+            }
+            echo json_encode($msg);
+        } else {
+            return view('lockscreen');
+        }
+    }
+
+    public function modalMenu()
+    {
+        if ($this->request->isAJAX()) {
+            $userRole = $this->GenModel->getStatusRole();
+
+            $data = [
+                'title' => 'Form. Tambah Data',
+                'userRole' => $userRole,
+            ];
+            $msg = [
+                'data' => view('pbb/admin/modaltambah', $data)
+            ];
+
+            echo json_encode($msg);
+        } else {
+            return redirect()->to('lockscreen');
+        }
+    }
+
+    public function tambahMenu()
+    {
+        if ($this->request->isAJAX()) {
+            $validation = \Config\Services::validation();
+            $valid = $this->validate([
+                'tm_nama' => [
+                    'label' => 'Nama',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} harus diisi.',
+                        'alpha_dash' => '{field} harus berisi alphabet.'
+                    ]
+                ],
+                'tm_url' => [
+                    'label' => 'URL',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} harus diisi.',
+                        'alpha_dash' => '{field} harus berisi alphabet.'
+                    ]
+                ],
+                'tm_icon' => [
+                    'label' => 'Icon',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} harus diisi.',
+                        'alpha_dash' => '{field} harus berisi alphabet.'
+                    ]
+                ],
+                'tm_parent_id' => [
+                    'label' => 'Parent ID',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} harus dipilih.',
+                        'alpha_dash' => '{field} harus berisi alphabet.'
+                    ]
+                ],
+                'tm_grup_akses' => [
+                    'label' => 'Grup Akses',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} harus dipilih.',
+                        'alpha_dash' => '{field} harus berisi alphabet.'
+                    ]
+                ],
+                'tm_status' => [
+                    'label' => 'Status',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} harus dipilih.',
+                        'alpha_dash' => '{field} harus berisi alphabet.'
+                    ]
+                ],
+            ]);
+
+            if (!$valid) {
+                $msg = [
+                    'error' => [
+                        'tm_nama' => $validation->getError('tm_nama'),
+                        'tm_url' => $validation->getError('tm_url'),
+                        'tm_icon' => $validation->getError('tm_icon'),
+                        'tm_parent_id' => $validation->getError('tm_parent_id'),
+                        'tm_grup_akses' => $validation->getError('tm_grup_akses'),
+                        'tm_status' => $validation->getError('tm_status'),
+                    ]
+                ];
+            } else {
+                $simpandata = [
+                    'tm_sort' => ucfirst($this->request->getVar('tm_sort')),
+                    'tm_nama' => ucfirst($this->request->getVar('tm_nama')),
+                    'tm_class' => strtolower($this->request->getVar('tm_class')),
+                    'tm_url' => strtolower($this->request->getVar('tm_url')),
+                    'tm_icon' => strtolower($this->request->getVar('tm_icon')),
+                    'tm_parent_id' => strtolower($this->request->getVar('tm_parent_id')),
+                    'tm_grup_akses' => strtolower($this->request->getVar('tm_grup_akses')),
+                    'tm_status' => strtolower($this->request->getVar('tm_status')),
+                ];
+
+                $this->MenuModel->save($simpandata);
+
+                $msg = [
+                    'sukses' => 'Data berhasil di simpan!'
+                ];
+            }
+            echo json_encode($msg);
+        } else {
+            return view('lockscreen');
+        }
     }
 }
