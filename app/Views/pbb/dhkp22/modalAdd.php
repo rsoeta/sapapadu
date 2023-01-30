@@ -187,10 +187,10 @@
             $('#no_dusun').val(data.dusun);
             $('#no_rw').val(data.rw);
             $('#no_rt').val(data.rt);
-            // $('#ket').val(data.sta_keterangan);
-            // $('#dhkp_ajuan').val(data.pa_keterangan);
-            $('#ket').val(data.pd_ket);
-            $('#dhkp_ajuan').val(data.dhkp_ajuan);
+            $('#ket').val(data.sta_keterangan);
+            $('#dhkp_ajuan').val(data.pa_keterangan);
+            // $('#ket').val(data.pd_ket);
+            // $('#dhkp_ajuan').val(data.dhkp_ajuan);
         });
     });
 
