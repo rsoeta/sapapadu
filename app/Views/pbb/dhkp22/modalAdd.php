@@ -48,16 +48,14 @@
                             <label class="col-4 col-form-label" for="pajak">Pajak</label>
                             <div class="col-8">
                                 <input type="number" name="pajak" id="pajak" class="form-control form-control-sm">
-                                <div class="invalid-feedback errorpajak">
-                                </div>
+                                <div class="invalid-feedback errorpajak"></div>
                             </div>
                         </div>
                         <div class="form-group row nopadding">
                             <label class="col-4 col-form-label" for="nop">N.O.P</label>
                             <div class="col-8">
                                 <input type="text" name="nop" id="nop" class="form-control form-control-sm">
-                                <div class="invalid-feedback errornop">
-                                </div>
+                                <div class="invalid-feedback errornop"></div>
                             </div>
                         </div>
                         <div class="form-group row nopadding">
