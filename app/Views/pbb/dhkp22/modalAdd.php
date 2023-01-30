@@ -359,7 +359,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 3000,
+                                timer: 2000,
                                 timerProgressBar: true,
                                 didOpen: (toast) => {
                                     toast.addEventListener('mouseenter', Swal.stopTimer)
@@ -377,7 +377,18 @@
 
                         $('#modalTambah').hide();
                         $('.modal-backdrop').hide();
+                        jumlahSppt();
+                        jumlahTotal();
+                        jumlahLunas();
+                        jumlahTotalLunas();
+                        jumlahBelumLunas();
+                        jumlahTotalBelumLunas();
+                        jumlahBermasalah();
+                        jumlahTotalBermasalah();
                         table.draw();
+                        table0.draw();
+                        table1.draw();
+                        table2.draw();
                     }
                 },
                 error: function(xhr, thrownError) {
