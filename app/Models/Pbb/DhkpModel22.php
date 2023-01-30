@@ -29,6 +29,8 @@ class DhkpModel22 extends Model
         'rt',
         'pd_ket',
         'dhkp_ajuan',
+        'pd_tahun',
+        'pd_bulan',
         'created_at',
         'updated_at',
         'pd_creator',
@@ -122,9 +124,9 @@ class DhkpModel22 extends Model
         return $query->getResult();
     }
 
-    function jumlah_semua()
+    function jumlah_semua($filter0, $filter5)
     {
-        $sQuery = "SELECT COUNT(id) as jml FROM pbb_dhkp22";
+        $sQuery = "SELECT COUNT(id) as jml FROM pbb_dhkp22 WHERE pd_desa = '$filter0' AND pd_tahun = '$filter5'";
         $db = db_connect();
         $query = $db->query($sQuery)->getRow();
 
@@ -991,5 +993,26 @@ class DhkpModel22 extends Model
         $builder->groupBy('WEEKOFYEAR(pbb_transaksi22.tr_tgl)');
         $query = $builder->get();
         return $query->getResult();
+    }
+
+    public function getBiodata($id = false)
+    {
+        if ($id === false) {
+            return $this->findAll();
+        } else {
+            $builder = $this->db->table('pbb_dhkp22');
+            $builder->select('*');
+            $builder->join('pbb_stasppt', 'pbb_stasppt.sta_id=pbb_dhkp22.pd_ket');
+            $builder->join('pbb_ajuan', 'pbb_ajuan.pa_id=pbb_dhkp22.dhkp_ajuan');
+            $builder->distinct('nop');
+            $builder->orderBy('nop', 'asc');
+
+            $query = $builder->getWhere(['id' => $id]);
+            return $query;
+
+            // 32.07.040.011.156-2468.0
+
+            // return $this->db->table('pbb_dhkp21')->where(['id' => $id]);
+        }
     }
 }

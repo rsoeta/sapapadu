@@ -98,13 +98,13 @@
                     <!-- <div class="clearfix hidden-md-up"></div> -->
 
                     <div class="col-12 col-sm-6 col-md-4">
-                        <a href="transaction21">
+                        <a href="trx22-pembayaran">
                             <div class="info-box mb-3">
                                 <span class="info-box-icon elevation-1"><i class="fas fa-wallet fa-lg biru"></i></span>
 
                                 <div class="info-box-content">
                                     <span class="info-box-number">Pembayaran</span>
-                                    <p>Rekapitulasi Pembayaran</p>
+                                    <p>Buat Invoice Pembayaran SPPT</p>
                                 </div>
                                 <!-- /.info-box-content -->
                             </div>

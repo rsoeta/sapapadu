@@ -220,13 +220,17 @@ class DhkpModel21 extends Model
             return $this->findAll();
         } else {
             $builder = $this->db->table('pbb_dhkp21');
-            // $builder->select('*');
+            $builder->select('*');
             $builder->join('pbb_stasppt', 'pbb_stasppt.sta_id=pbb_dhkp21.ket');
             $builder->join('pbb_ajuan', 'pbb_ajuan.pa_id=pbb_dhkp21.dhkp_ajuan');
-            // $builder->orderBy('nama_wp', 'asc');
+            $builder->orderBy('nama_wp', 'asc');
 
             $query = $builder->getWhere(['id' => $id]);
             return $query;
+
+            // 32.07.040.011.156-2468.0
+
+            // return $this->db->table('pbb_dhkp21')->where(['id' => $id]);
         }
     }
 

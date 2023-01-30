@@ -258,12 +258,14 @@ class Trx22 extends BaseController
         $db = \Config\Database::connect();
         // $nofaktur = "#KDPSL010170001";
         $nofaktur = $this->request->getVar('nofaktur');
+        $tahun_ini = date('Y');
 
         $tempTr = $db->table('pbb_temptrans21');
         $queryTampil = $tempTr
             ->select('pbb_temptrans21.id as id, pbb_dhkp22.nama_wp, pbb_dhkp22.nama_ktp, pbb_dhkp22.alamat_wp, pbb_dhkp22.alamat_op, dettr_faktur, pbb_temptrans21.nop, pbb_temptrans21.pajak, pbb_temptrans21.ket, dettr_subtotal as subtotal')
             ->join('pbb_dhkp22', 'pbb_temptrans21.nop = pbb_dhkp22.nop')
             ->where('dettr_faktur', $nofaktur)
+            ->where('pd_tahun', $tahun_ini)
             ->orderBy('id', 'desc');
 
         $data = [
@@ -323,30 +325,32 @@ class Trx22 extends BaseController
     {
         if ($this->request->isAJAX()) {
             $keywordnop = $this->request->getPost('keywordnop');
+            $keyTahun = date('Y');
 
             $request = Services::request();
             $modelTerhutang = new ModelPbbTerhutang($request);
             if ($request->getMethod(true) == 'POST') {
-                $lists = $modelTerhutang->get_datatables($keywordnop);
+                $lists = $modelTerhutang->get_datatables($keywordnop, $keyTahun);
                 $data = [];
                 $no = $request->getPost("start");
                 foreach ($lists as $list) {
                     $no++;
                     $row = [];
                     $row[] = $no;
+                    $row[] = $list->id;
                     $row[] = $list->nop;
                     $row[] = $list->nama_wp;
                     $row[] = $list->alamat_op;
                     $row[] = number_format($list->pajak, 0, ",", ",");
                     $row[] = $list->pd_ket;
                     // $row[] = $list->td_kadus_nama;
-                    $row[] = "<button type=\"button\" class=\"btn btn-sm btn-primary\" onclick=\"pilihitem('" . $list->nop . "', '" . $list->nama_wp . "')\">Pilih</button>";
+                    $row[] = "<button type=\"button\" class=\"btn btn-sm btn-primary\" onclick=\"pilihitem('" . $list->id . "', '" . $list->nop . "', '" . $list->nama_wp . "')\">Pilih</button>";
                     $data[] = $row;
                 }
                 $output = [
                     "draw" => $request->getPost('draw'),
-                    "recordsTotal" => $modelTerhutang->count_all($keywordnop),
-                    "recordsFiltered" => $modelTerhutang->count_filtered($keywordnop),
+                    "recordsTotal" => $modelTerhutang->count_all($keywordnop, $keyTahun),
+                    "recordsFiltered" => $modelTerhutang->count_filtered($keywordnop, $keyTahun),
                     "data" => $data
                 ];
                 echo json_encode($output);
@@ -358,14 +362,16 @@ class Trx22 extends BaseController
     {
         if ($this->request->isAJAX()) {
             $db = \Config\Database::connect();
+            $id = $this->request->getPost('id');
             $nop = $this->request->getPost('nop');
             $nama_wp = $this->request->getPost('nama_wp');
+            $tahun_ini = date('Y');
             $nofaktur = $this->request->getPost('nofaktur');
 
-            if (strlen($nama_wp) > 0) {
-                $queryCekData = $db->table('pbb_dhkp22')->where('nop', $nop)->where('nama_wp', $nama_wp)->get();
+            if (strlen($nama_wp && $tahun_ini) > 0) {
+                $queryCekData = $db->table('pbb_dhkp22')->where('id', $id)->where('nop', $nop)->where('nama_wp', $nama_wp)->where('pd_tahun', $tahun_ini)->get();
             } else {
-                $queryCekData = $db->table('pbb_dhkp22')->like('nop', $nop)->orLike('nama_wp', $nop)->get();
+                $queryCekData = $db->table('pbb_dhkp22')->where('pd_tahun', $tahun_ini)->like('nop', $nop)->orLike('nama_wp', $nop)->get();
             }
 
             $totalData = $queryCekData->getNumRows();

@@ -171,7 +171,7 @@ class Dhkp22 extends BaseController
             'pu_kode_desa' => $pu_kode_desa,
 
             'namaApp' => 'KolektorPBB',
-            'title' => 'PBB 2022',
+            'title' => 'PBB',
             'title_tab' => 'PBB Terutang',
             'data_desa' => $this->DesaModel->where('district_id', $pu_kode_kec)->orderBy('name', 'asc')->findAll(),
             'dusun' => $dusun->where(['td_kode_desa' => $pu_kode_desa])->orderBy('td_kode_dusun', 'asc')->findAll(),
@@ -204,7 +204,7 @@ class Dhkp22 extends BaseController
         $filter5 = $this->request->getPost('data_tahun');
 
         $listing = $model->get_datatables($filter0, $filter1, $filter2, $filter3, $filter4, $filter5);
-        $jumlah_semua = $model->jumlah_semua();
+        $jumlah_semua = $model->jumlah_semua($filter0, $filter5);
         $jumlah_filter = $model->jumlah_filter($filter0, $filter1, $filter2, $filter3, $filter4, $filter5);
 
         $data = array();
@@ -485,7 +485,7 @@ class Dhkp22 extends BaseController
             $valid = $this->validate([
                 'nop' => [
                     'label' => 'N.O.P',
-                    'rules' => 'required|is_unique[pbb_dhkp22.nop]',
+                    'rules' => 'required|is_unique[pbb_dhkp_view.nop,id,{id}|min_length[24]|max_length[24]]',
                     'errors' => [
                         'required' => '{field} tidak boleh kosong',
                         'is_unique' => '{field} sudah terdaftar'
@@ -620,6 +620,8 @@ class Dhkp22 extends BaseController
                     'dusun' => $this->request->getVar('no_dusun'),
                     'rw' => $this->request->getVar('no_rw'),
                     'rt' => $this->request->getVar('no_rt'),
+                    'pd_tahun' => date('Y'),
+                    'pd_bulan' => date('n'),
                     'pd_creator' => $pd_creator,
                     'pd_updater' => $pd_updater,
                     'dhkp_ajuan' => $this->request->getVar('dhkp_ajuan'),
@@ -1170,7 +1172,7 @@ class Dhkp22 extends BaseController
 
     public function getSppt()
     {
-        $model = new DhkpModel21();
+        $model = new DhkpModel22();
         $pu_kode_desa = detailUser()->pu_kode_desa;
 
         $request = service('request');
@@ -1180,7 +1182,7 @@ class Dhkp22 extends BaseController
 
         $data = array();
 
-        $builder = $model->table("pbb_dhkp21")->where("pd_desa", $pu_kode_desa);
+        $builder = $model->table("pbb_dhkp22")->where("pd_desa", $pu_kode_desa)->orderby("nop", "asc");
 
         $countries = [];
 
@@ -1191,7 +1193,6 @@ class Dhkp22 extends BaseController
             // Fetch record
             $builder->select('*');
             $builder->like('nop', $query);
-            $builder->orLike('nama_wp', $query);
             $query = $builder->get();
             $data = $query->getResult();
         } else {

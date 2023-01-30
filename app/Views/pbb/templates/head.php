@@ -81,8 +81,8 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.9/css/fixedHeader.bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css">
 
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="<?= base_url(); ?>/assets/plugins/select2/css/select2.min.css">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> -->
+    <!-- <link rel="stylesheet" href="<?= base_url(); ?>/assets/plugins/select2/css/select2.min.css"> -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/dt-1.11.4/datatables.min.css" />
 
     <!-- sweetalert -->
@@ -99,7 +99,6 @@
     <!-- DataTables -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-    <script src="<?= base_url('assets/js/jquery-3.6.0.min.js'); ?>"></script>
     <!-- <style>
         @keyframes growProgressBar {
     
@@ -381,5 +380,9 @@
     <script src="<?= base_url('assets/js/moment.js'); ?>"></script>
     <script src="<?= base_url('assets/js/moment-with-locales.js'); ?>" charset="UTF-8"></script>
     <script src="<?= base_url('assets/js/script.js'); ?>"></script>
+
+    <!-- SELECT2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 </head>

@@ -7,9 +7,9 @@
 
 <!-- jQuery -->
 
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> -->
 
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->
 
 <!-- Modal -->
 <div class="modal fade" id="modalTambah" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
@@ -23,8 +23,8 @@
                 <div class="form-group row nopadding mb-2">
                     <label class="col-4 col-sm-2 col-md-2 col-form-label" for="dataCari">Cari Data</label>
                     <div class="col-8 col-sm-10 col-md-10">
-                        <select name="dd_country" id="dd_country" class="form-control form-control-sm" style="width: 300px;">
-                            <option value='0'>-- Select --</option>
+                        <select name="dataCari" id="dataCari" class="form-control form-control-sm" style="width: 300px;">
+                            <option value='0'>-- Pilih --</option>
                         </select>
                     </div>
                 </div>
@@ -171,7 +171,7 @@
 </div>
 
 <script>
-    $('#dd_country').on('change', (event) => {
+    $('#dataCari').on('change', (event) => {
         // console.log(event.target.value);
         getData(event.target.value).then(data => {
             $('#nop').val(data.nop);
@@ -187,13 +187,15 @@
             $('#no_dusun').val(data.dusun);
             $('#no_rw').val(data.rw);
             $('#no_rt').val(data.rt);
-            $('#ket').val(data.sta_keterangan);
-            $('#dhkp_ajuan').val(data.pa_keterangan);
+            // $('#ket').val(data.sta_keterangan);
+            // $('#dhkp_ajuan').val(data.pa_keterangan);
+            $('#ket').val(data.pd_ket);
+            $('#dhkp_ajuan').val(data.dhkp_ajuan);
         });
     });
 
     async function getData(id) {
-        let response = await fetch('/api/home/' + id)
+        let response = await fetch('/api_pbb/' + id)
         let data = await response.json();
 
         return data;
@@ -201,10 +203,10 @@
 
     $(document).ready(function() {
         // Initialize select2
-        $("#dd_country").select2({
+        $("#dataCari").select2({
             dropdownParent: $('#modalTambah'),
             ajax: {
-                url: "<?= site_url('getSppt') ?>",
+                url: "<?= base_url('getSppt') ?>",
                 type: "post",
                 delay: 250,
                 dataType: 'json',

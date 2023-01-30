@@ -23,7 +23,7 @@ class ModelPbbTerhutang extends Model
         $this->request = $request;
     }
 
-    private function _get_datatables_query($keywordnop)
+    private function _get_datatables_query($keywordnop, $keyTahun)
     {
         $pd_desa = detailUser()->pu_kode_desa;
         if (strlen($keywordnop) == 0) {
@@ -34,6 +34,7 @@ class ModelPbbTerhutang extends Model
             $this->dt = $this->db->table($this->table)
                 // ->join('tb_dusun', 'tb_dusun.td_kode_dusun=pbb_dhkp22.dusun')
                 ->where('pd_desa', $pd_desa)
+                ->where('pd_tahun', $keyTahun)
                 ->like('nop', $keywordnop)
                 ->orLike('nama_wp', $keywordnop);
         }
@@ -60,28 +61,29 @@ class ModelPbbTerhutang extends Model
         }
     }
 
-    function get_datatables($keywordnop)
+    function get_datatables($keywordnop, $keyTahun)
     {
-        $this->_get_datatables_query($keywordnop);
+        $this->_get_datatables_query($keywordnop, $keyTahun);
         if ($this->request->getPost('length') != -1)
             $this->dt->limit($this->request->getPost('length'), $this->request->getPost('start'));
         $query = $this->dt->get();
         return $query->getResult();
     }
 
-    function count_filtered($keywordnop)
+    function count_filtered($keywordnop, $keyTahun)
     {
-        $this->_get_datatables_query($keywordnop);
+        $this->_get_datatables_query($keywordnop, $keyTahun);
         return $this->dt->countAllResults();
     }
 
-    public function count_all($keywordnop)
+    public function count_all($keywordnop, $keyTahun)
     {
         $pd_desa = detailUser()->pu_kode_desa;
         if (strlen($keywordnop) == 0) {
             $tbl_storage = $this->db->table($this->table)
                 // ->join('tb_dusun', 'tb_dusun.td_kode_dusun=pbb_dhkp22.dusun')
-                ->where('pd_desa', $pd_desa);
+                ->where('pd_desa', $pd_desa)
+                ->where('pd_tahun', $keyTahun);
             // $tbl_storage = $this->db->select('*')->from('pbb_dhkp22')
             //     ->join('tb_dusun', 'tb_dusun.td_kode_dusun = pbb_dhkp22.dusun')
             //     ->join('tbl_rw', 'tbl_rw.no_rw = pbb_dhkp22.rw')
@@ -90,6 +92,7 @@ class ModelPbbTerhutang extends Model
             $tbl_storage = $this->db->table($this->table)
                 // ->join('tb_dusun', 'tb_dusun.td_kode_dusun=pbb_dhkp22.dusun')
                 ->where('pd_desa', $pd_desa)
+                ->where('pd_tahun', $keyTahun)
                 ->like('nop', $keywordnop)
                 ->orLike('nama_wp', $keywordnop);
         }

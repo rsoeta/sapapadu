@@ -150,7 +150,7 @@ $role = detailUser()->pu_role_id;
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="card-title">Rekap PBB 2022</h5>
+                            <h5 class="card-title">Rekap PBB</h5>
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                     <i class="fas fa-minus"></i>
@@ -295,7 +295,7 @@ $role = detailUser()->pu_role_id;
                                 <div class="tab-pane fade show active" id="dataPbb" role="tabpanel" aria-labelledby="dataPbb-tab">
                                     <div class="row">
                                         <div class="col-12 mb-2">
-                                            <div class="btn-group">
+                                            <div class="btn-group float-right">
                                                 <button type="button" class="btn btn-secondary">Pilih Aksi</button>
                                                 <button type="button" class="btn btn-secondary dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
                                                     <span class="sr-only">Toggle Dropdown</span>
@@ -354,7 +354,7 @@ $role = detailUser()->pu_role_id;
                                             <tfoot>
                                                 <tr>
                                                     <th colspan="7" style="text-align:center; text-decoration: black;">TOTAL</th>
-                                                    <th id="total_order"></th>
+                                                    <th style="text-align: right;" id="total_order"></th>
                                                     <th colspan="6"></th>
                                                 </tr>
                                             </tfoot>
@@ -818,6 +818,9 @@ $role = detailUser()->pu_role_id;
     moment.locale("id");
 
     table = $('#tb_dhkp22').DataTable({
+        'order': [
+            [3, 'asc']
+        ],
         'fixedHeader': true,
         'searching': true,
         'paging': true,
@@ -858,6 +861,10 @@ $role = detailUser()->pu_role_id;
             {
                 "visible": false,
                 "targets": [5, 9, 10, 11],
+            },
+            {
+                targets: [6, 7],
+                className: 'dt-right'
             }
         ],
         dom: 'lBfrtip',

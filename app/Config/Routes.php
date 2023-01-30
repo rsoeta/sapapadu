@@ -127,7 +127,7 @@ $routes->post('hitungTotalBayar', 'Trx22::hitungTotalBayar', ['filter' => 'authf
 $routes->get('initChart', 'Dhkp22::initChart');
 
 // API
-$routes->resource('api/home', ['controller' => 'Api\Home']);
+$routes->resource('api_pbb', ['controller' => 'Api\Home']);
 
 // $routes->get('inner-join', 'Site::innerJoinMethod');
 // $routes->get('left-join', 'Site::leftJoinMethod');

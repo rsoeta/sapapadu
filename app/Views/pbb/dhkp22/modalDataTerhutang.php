@@ -25,6 +25,7 @@
                         <thead>
                             <tr>
                                 <th>No.</th>
+                                <th>ID</th>
                                 <th>N.O.P</th>
                                 <th>Nama Wajib Pajak</th>
                                 <th>Alamat Objek Pajak</th>
@@ -67,7 +68,8 @@
         });
     });
 
-    function pilihitem(nop, nama_wp) {
+    function pilihitem(id, nop, nama_wp) {
+        $('#id').val(id);
         $('#nop').val(nop);
         $('#nama_wp').val(nama_wp);
         $('#modalterhutang').on('hidden.bs.modal', function(event) {

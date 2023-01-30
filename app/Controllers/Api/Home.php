@@ -2,7 +2,7 @@
 
 namespace App\Controllers\Api;
 
-use App\Models\Pbb\DhkpModel21;
+use App\Models\Pbb\DhkpModel22;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\RESTful\ResourceController;
 
@@ -12,8 +12,8 @@ class Home extends ResourceController
 
     public function show($id = null)
     {
-        $model = new DhkpModel21();
-        $data = $model->getBiodata($id)->getRow();
+        $model = new DhkpModel22();
+        $data = $model->getBiodata($id)->getRowArray();
 
         // var_dump($data);
         // die;

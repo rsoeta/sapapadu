@@ -23,7 +23,7 @@
                             <div class="" style="border-bottom: 5px double black;">
                                 <div class="row">
                                     <div class="col-2">
-                                        <img src="<?= base_url('favicon.png') ?>" alt="" class="" style="opacity: .8; text-align: center; width:130px;" width="100">
+                                        <img src="<?= base_url('favicon.png') ?>" alt="" class="" style="opacity: .8; text-align: center; width:75%;" width="100">
                                     </div>
                                     <div class="col" id="kop-surat">
                                         <h1 style="font-size: 4em; letter-spacing: 0.5em;"><?= namaApp(); ?></h1>
@@ -32,7 +32,7 @@
                                         <h6><?= !empty($sekretariat['lp_sekretariat']) ? $sekretariat['lp_sekretariat'] : ''; ?></h6>
                                     </div>
                                     <div class="col-2">
-                                        <img src="<?= base_url('img/logo-garutkab.jpg') ?>" alt="" class="" style="opacity: .8; text-align: center; width:150px;" width="100">
+                                        <img src="<?= base_url('img/logo-garutkab.jpg') ?>" alt="" class="" style="opacity: .8; text-align: center; width:75%;" width="100">
                                     </div>
                                 </div>
                             </div>
@@ -56,7 +56,7 @@
                     </div>
                     <!-- info row -->
                     <strong>
-                        <h6 style="font-size: 20px;">Kuitansi PBB Tahun 2022</h6>
+                        <h6 style="font-size: 20px;">Kuitansi PBB Tahun <?= date('Y'); ?></h6>
                     </strong>
                     <div class="row invoice-info">
                         <div class="col-4 invoice-col">
