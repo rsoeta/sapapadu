@@ -16,7 +16,7 @@
 <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
 <!-- <script src="<?= base_url('assets') ?>/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script> -->
 
-<script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.bootstrap5.min.js"></script>
+<!-- <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.bootstrap5.min.js"></script> -->
 <!-- <script src="<?= base_url('assets') ?>/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script> -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
@@ -33,8 +33,9 @@
 <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
 <!-- <script src="<?= base_url('assets') ?>/plugins/datatables-buttons/js/buttons.print.min.js"></script> -->
 
-<script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.colVis.min.js"></script>
+<!-- <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.colVis.min.js"></script> -->
 <!-- <script src="<?= base_url('assets') ?>/plugins/datatables-buttons/js/buttons.colVis.min.js"></script> -->
+<script src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.colVis.min.js"></script>
 
 <script src="https://cdn.datatables.net/fixedheader/3.1.9/js/dataTables.fixedHeader.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
@@ -43,6 +44,7 @@
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap.min.js"></script>
 <!-- <script src="<?= base_url('assets') ?>/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script> -->
 
+<!-- <script src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.colVis.min.js"></script> -->
 
 <script src="<?= base_url(); ?>/assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 
@@ -343,9 +345,6 @@ $role = detailUser()->pu_role_id;
                                                     <th>Bumi</th>
                                                     <th>Pajak (Rp.)</th>
                                                     <th>Nama Pemilik</th>
-                                                    <th>Dusun</th>
-                                                    <th>RW</th>
-                                                    <th>RT</th>
                                                     <th>Ket</th>
                                                     <th>Aksi</th>
                                                 </tr>
@@ -355,7 +354,7 @@ $role = detailUser()->pu_role_id;
                                                 <tr>
                                                     <th colspan="7" style="text-align:center; text-decoration: black;">TOTAL</th>
                                                     <th style="text-align: right;" id="total_order"></th>
-                                                    <th colspan="6"></th>
+                                                    <th colspan="3"></th>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -857,10 +856,10 @@ $role = detailUser()->pu_role_id;
                 "orderable": false,
                 "targets": [0]
             },
-            {
-                "visible": false,
-                "targets": [5, 9, 10, 11],
-            },
+            // {
+            //     "visible": false,
+            // "targets": [10],
+            // },
             {
                 targets: [6, 7],
                 className: 'dt-right'
@@ -868,6 +867,7 @@ $role = detailUser()->pu_role_id;
         ],
         dom: 'lBfrtip',
         buttons: [
+            'colvis',
             //'pageLength',
             <?php if (session()->get('level') == 1) { ?> {
                     // data_tahun = $('#data_tahun').val(),
@@ -915,6 +915,13 @@ $role = detailUser()->pu_role_id;
                 title: 'LAMPIRAN DATA PBB ' + $('#data_tahun').val(),
                 extend: 'print',
                 footer: true,
+                exportOptions: {
+                    columns: ':visible'
+                },
+                columnDefs: [{
+                    "visible": false,
+                    "targets": -1,
+                }, ],
                 messageTop: function() {
                     dataDesa = $('#data_desa').val();
                     dataDusun = $('#data_dusun').val();
@@ -930,7 +937,7 @@ $role = detailUser()->pu_role_id;
                         return 'DUSUN  : ' + dataDusun + '\nRW         : ' + dataRw + '\nRT           : ' + dataRt + ' | Dicetak pada :' + dataTanggal;
                     }
                 },
-            },
+            }
         ],
     });
 

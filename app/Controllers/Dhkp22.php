@@ -224,9 +224,6 @@ class Dhkp22 extends BaseController
             $row[] = number_format($key->bumi);
             $row[] = number_format($key->pajak);
             $row[] = $key->nama_ktp;
-            $row[] = $key->dusun;
-            $row[] = $key->rw;
-            $row[] = $key->rt;
             $row[] = '<span class="badge badge-' . $key->sta_class . '">' . $key->sta_keterangan . '</span>';
 
             if (detailUser()->pu_role_id > 2) {
