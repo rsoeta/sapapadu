@@ -15,8 +15,8 @@
 <div class="modal fade" id="modalTambah" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <img src="<?= logoApp(); ?>" alt="<?= namaApp(); ?> Logo" class="brand-image" style="opacity: .8; width:5%; margin-right: auto">
+            <div class="modal-header modal-header-primary">
+                <img src="<?= logoApp(); ?>" alt="<?= namaApp(); ?> Logo" class="brand-image" style="width:30px; margin-right: auto">
                 <h5 class="modal-title" id="modalTambahdhkpLabel"><b><?= $title; ?></b></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
