@@ -648,6 +648,7 @@ class Dhkp22 extends BaseController
             $row = $this->dhkpModel22->find($id);
 
             $data = [
+                'title' => 'Form. Edit Data',
                 'ket_bayar' => $this->KetBayarModel->findAll(),
                 'listAjuan' => $this->PengajuanModel->findAll(),
                 'id' => $row['id'],
