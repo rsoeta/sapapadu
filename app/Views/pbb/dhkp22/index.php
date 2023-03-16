@@ -2,6 +2,11 @@
 
 <?= $this->section('content'); ?>
 
+<style>
+    td.highlight {
+        background-color: aquamarine !important;
+    }
+</style>
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.1.0/css/buttons.dataTables.min.css">
@@ -785,6 +790,8 @@ $role = detailUser()->pu_role_id;
             table2.draw();
         });
 
+        var table = $('#tb_dhkp22').DataTable();
+
     });
 
     // Checkbox checked
@@ -825,7 +832,7 @@ $role = detailUser()->pu_role_id;
         'responsive': true,
         'processing': true,
         'serverSide': true,
-        "lengthMenu": [5, 10, 15, 20, 25, 50, 100, 200, 400, 500, 800, 900, 1000, 1600, 200, 3200],
+        "lengthMenu": [5, 10, 15, 20, 25, 50, 100, 200, 400, 500, 800, 900, 1000, 1600, 2000, 3200],
         "pageLength": 10,
 
         "ajax": {

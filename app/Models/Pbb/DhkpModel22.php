@@ -42,6 +42,7 @@ class DhkpModel22 extends Model
 
 
     var $column_order = array('', 'id', 'nama_wp', 'nop', 'alamat_wp', 'alamat_op', 'bumi', 'pajak', 'nama_ktp', 'dusun', 'rw', 'rt', 'pd_ket');
+    var $column_order2 = array('', 'nama_wp', 'nop', 'alamat_wp', 'alamat_op', 'bumi', 'pajak', 'updated_at');
     var $column_order1 = array('', 'nama_wp', 'nop', 'alamat_wp', 'alamat_op', 'bumi', 'pajak', 'nama_ktp', 'dusun', 'rw', 'rt');
     var $column_order0 = array('', 'nama_wp', 'nop', 'alamat_wp', 'alamat_op', 'bumi', 'pajak', 'nama_ktp', 'dusun', 'rw', 'rt');
 
@@ -242,7 +243,7 @@ class DhkpModel22 extends Model
 
         // order
         if (isset($_POST['order'])) {
-            $result_order = $this->column_order[$_POST['order']['0']['column']];
+            $result_order = $this->column_order2[$_POST['order']['0']['column']];
             $result_dir = $_POST['order']['0']['dir'];
         } else if ($this->order0) {
             $order0 = $this->order0;
