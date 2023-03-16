@@ -993,7 +993,7 @@ $role = detailUser()->pu_role_id;
         buttons: [
             //'pageLength',
             <?php if (session()->get('level') == 1) { ?> {
-                    title: 'LAMPIRAN DATA PBB LUNAS 2022',
+                    title: 'LAMPIRAN DATA PBB LUNAS 2023 DESA PASIRLANGU',
                     extend: 'excelHtml5',
                     footer: true,
                     messageTop: function() {
@@ -1007,15 +1007,15 @@ $role = detailUser()->pu_role_id;
                         var dataTanggal = moment().format("dddd, Do MMMM YYYY, h:mm:ss a"); // September 4 2017, 10:53:16 pagi
 
                         if (dataRw === '') {
-                            return 'Se-Desa Pasirlangu.' + ' | Dicetak pada : ' + dataTanggal;
+                            return 'Dicetak pada : ' + dataTanggal;
                         } else {
                             return 'DUSUN  : ' + dataDusun + '\nRW         : ' + dataRw + '\nRT           : ' + dataRt + ' | Dicetak pada :' + dataTanggal;
                         }
                     },
                 },
             <?php } ?> {
-                title: 'LAMPIRAN DATA PBB LUNAS 2022',
-                extend: 'pdfHtml5',
+                title: 'LAMPIRAN DATA PBB LUNAS 2023 DESA PASIRLANGU',
+                extend: 'excelHtml5',
                 footer: true,
                 messageTop: function() {
                     dataDesa = $('#data_desa').val();
@@ -1028,14 +1028,14 @@ $role = detailUser()->pu_role_id;
                     var dataTanggal = moment().format("dddd, Do MMMM YYYY, h:mm:ss a"); // September 4 2017, 10:53:16 pagi
 
                     if (dataRw === '') {
-                        return 'Se-Desa Pasirlangu.' + ' | Dicetak pada : ' + dataTanggal;
+                        return 'Dicetak pada : ' + dataTanggal;
                     } else {
                         return 'DUSUN  : ' + dataDusun + '\nRW         : ' + dataRw + '\nRT           : ' + dataRt + ' | Dicetak pada :' + dataTanggal;
                     }
                 },
             },
             {
-                title: 'LAMPIRAN DATA PBB LUNAS 2022',
+                title: 'LAMPIRAN DATA PBB LUNAS 2023 DESA PASIRLANGU',
                 extend: 'print',
                 footer: true,
                 messageTop: function() {
@@ -1049,7 +1049,7 @@ $role = detailUser()->pu_role_id;
                     var dataTanggal = moment().format("dddd, Do MMMM YYYY, h:mm:ss a"); // September 4 2017, 10:53:16 pagi
 
                     if (dataRw === '') {
-                        return 'Se-Desa Pasirlangu.' + ' | Dicetak pada : ' + dataTanggal;
+                        return 'Dicetak pada : ' + dataTanggal;
                     } else {
                         return 'DUSUN  : ' + dataDusun + '\nRW         : ' + dataRw + '\nRT           : ' + dataRt + ' | Dicetak pada :' + dataTanggal;
                     }
