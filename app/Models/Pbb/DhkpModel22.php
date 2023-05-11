@@ -43,12 +43,12 @@ class DhkpModel22 extends Model
 
     var $column_order = array('', 'id', 'nama_wp', 'nop', 'alamat_wp', 'alamat_op', 'bumi', 'pajak', 'nama_ktp', 'pd_ket', '');
     var $column_order0 = array('', 'nama_wp', 'pbb_dhkp22.nop', 'alamat_wp', 'alamat_op', 'bumi', 'pbb_dhkp22.pajak', 'updated_at', 'pbb_detailtrans21.dettr_faktur');
-    var $column_order1 = array('', 'nama_wp', 'nop', 'alamat_wp', 'alamat_op', 'bumi', 'pajak');
-    var $column_order2 = array('', 'nama_wp', 'nop', 'alamat_wp', 'alamat_op', 'bumi', 'pajak');
+    var $column_order1 = array('', 'nama_wp', 'pbb_dhkp22.nop', 'alamat_wp', 'alamat_op', 'bumi', 'pbb_dhkp22.pajak');
+    var $column_order2 = array('', 'nama_wp', 'pbb_dhkp22.nop', 'alamat_wp', 'alamat_op', 'bumi', 'pbb_dhkp22.pajak');
 
     var $order = array('nop' => 'asc');
+    var $order0 = array('updated_at' => 'desc');
     var $order1 = array('nama_wp' => 'asc');
-    var $order0 = array('updated_at' => 'asc');
 
     function get_datatables($filter0, $filter1, $filter2, $filter3, $filter4, $filter5)
     {
@@ -236,7 +236,7 @@ class DhkpModel22 extends Model
         // search
         if ($_POST['search']['value']) {
             $search = $_POST['search']['value'];
-            $kondisi_search = "(pbb_dhkp22.nop LIKE '%$search%' OR nama_wp LIKE '%$search%' OR alamat_wp LIKE '%$search%' OR alamat_op LIKE '%$search%' OR bumi LIKE '%$search%' OR pajak LIKE '%$search%' OR nik_wp LIKE '%$search%' OR nama_ktp LIKE '%$search%' OR created_at LIKE '%$search%' OR updated_at LIKE '%$search%') $kondisi_filter0 $kondisi_filter1 $kondisi_filter2 $kondisi_filter3 $kondisi_filter4 $kondisi_filter5";
+            $kondisi_search = "(pbb_dhkp22.nop LIKE '%$search%' OR nama_wp LIKE '%$search%' OR alamat_wp LIKE '%$search%' OR alamat_op LIKE '%$search%' OR bumi LIKE '%$search%' OR pbb_dhkp22.pajak LIKE '%$search%' OR nik_wp LIKE '%$search%' OR nama_ktp LIKE '%$search%' OR created_at LIKE '%$search%' OR updated_at LIKE '%$search%') $kondisi_filter0 $kondisi_filter1 $kondisi_filter2 $kondisi_filter3 $kondisi_filter4 $kondisi_filter5";
         } else {
             $kondisi_search = "pbb_dhkp22.id != '' $kondisi_filter0 $kondisi_filter1 $kondisi_filter2 $kondisi_filter3 $kondisi_filter4 $kondisi_filter5";
         }
@@ -324,7 +324,7 @@ class DhkpModel22 extends Model
         // kondisi search
         if ($_POST['search']['value']) {
             $search = $_POST['search']['value'];
-            $kondisi_search = "AND (pbb_dhkp22.nop LIKE '%$search%' OR nama_wp LIKE '%$search%' OR alamat_wp LIKE '%$search%' OR alamat_op LIKE '%$search%' OR bumi LIKE '%$search%' OR bgn LIKE '%$search%' OR pajak LIKE '%$search%' OR nik_wp LIKE '%$search%' OR nama_ktp LIKE '%$search%' OR created_at LIKE '%$search%' OR updated_at LIKE '%$search%') $kondisi_filter0 $kondisi_filter1 $kondisi_filter2 $kondisi_filter3 $kondisi_filter4 $kondisi_filter5";
+            $kondisi_search = "AND (pbb_dhkp22.nop LIKE '%$search%' OR nama_wp LIKE '%$search%' OR alamat_wp LIKE '%$search%' OR alamat_op LIKE '%$search%' OR bumi LIKE '%$search%' OR bgn LIKE '%$search%' OR pbb_dhkp22.pajak LIKE '%$search%' OR nik_wp LIKE '%$search%' OR nama_ktp LIKE '%$search%' OR created_at LIKE '%$search%' OR updated_at LIKE '%$search%') $kondisi_filter0 $kondisi_filter1 $kondisi_filter2 $kondisi_filter3 $kondisi_filter4 $kondisi_filter5";
         } else {
             $kondisi_search = "$kondisi_filter0 $kondisi_filter1 $kondisi_filter2 $kondisi_filter3 $kondisi_filter4 $kondisi_filter5";
         }
@@ -380,7 +380,7 @@ class DhkpModel22 extends Model
         // search
         if ($_POST['search']['value']) {
             $search = $_POST['search']['value'];
-            $kondisi_search = "(nop LIKE '%$search%' OR nama_wp LIKE '%$search%' OR alamat_wp LIKE '%$search%' OR alamat_op LIKE '%$search%' OR bumi LIKE '%$search%' OR bgn LIKE '%$search%' OR pajak LIKE '%$search%' OR nik_wp LIKE '%$search%' OR nama_ktp LIKE '%$search%' OR created_at LIKE '%$search%' OR updated_at LIKE '%$search%') $kondisi_filter0 $kondisi_filter1 $kondisi_filter2 $kondisi_filter3 $kondisi_filter4 $kondisi_filter5";
+            $kondisi_search = "(nop LIKE '%$search%' OR nama_wp LIKE '%$search%' OR alamat_wp LIKE '%$search%' OR alamat_op LIKE '%$search%' OR bumi LIKE '%$search%' OR bgn LIKE '%$search%' OR pbb_dhkp22.pajak LIKE '%$search%' OR nik_wp LIKE '%$search%' OR nama_ktp LIKE '%$search%' OR created_at LIKE '%$search%' OR updated_at LIKE '%$search%') $kondisi_filter0 $kondisi_filter1 $kondisi_filter2 $kondisi_filter3 $kondisi_filter4 $kondisi_filter5";
         } else {
             $kondisi_search = "ID != '' $kondisi_filter0 $kondisi_filter1 $kondisi_filter2 $kondisi_filter3 $kondisi_filter4 $kondisi_filter5";
         }
