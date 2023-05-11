@@ -130,9 +130,12 @@ $role = detailUser()->pu_role_id;
                                             <label for="data_ket" class="col-sm-3 col-form-label">Keterangan</label>
                                             <div class="col-sm-9">
                                                 <select class="form-control form-control-sm" name="data_ket" id="data_ket">
-                                                    <option value="">-Semua Keterangan-</option>
-                                                    <option value="1">Belum Bayar</option>
-                                                    <option value="0">Lunas</option>
+                                                    <option value="">- Semua -</option>
+                                                    <?php foreach ($ketBayar as $item) { ?>
+                                                        <option value="<?= $item['sta_id']; ?>"><?= $item['sta_keterangan']; ?></option>
+                                                    <?php } ?>
+                                                    <!-- <option value="1">Belum Bayar</option>
+                                                    <option value="0">Lunas</option> -->
                                                 </select>
                                             </div>
                                         </div>

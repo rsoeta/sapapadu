@@ -163,6 +163,7 @@ class Dhkp22 extends BaseController
         $data_dusun = $this->request->getPost('data_dusun');
         $dusun = new DusunModel();
         $dhkpModel22 = new DhkpModel22();
+        $ketBayar = $this->KetBayarModel->findAll();
         // dd($data);
         $data = [
 
@@ -170,9 +171,9 @@ class Dhkp22 extends BaseController
             'pu_level' => $pu_level,
             'pu_kode_desa' => $pu_kode_desa,
 
-            'namaApp' => 'KolektorPBB',
             'title' => 'PBB',
             'title_tab' => 'PBB Terutang',
+            'ketBayar' => $ketBayar,
             'data_desa' => $this->DesaModel->where('district_id', $pu_kode_kec)->orderBy('name', 'asc')->findAll(),
             'dusun' => $dusun->where(['td_kode_desa' => $pu_kode_desa])->orderBy('td_kode_dusun', 'asc')->findAll(),
             'rw' => $this->rw->where(['kode_desa' => $pu_kode_desa, 'no_dusun' => $data_dusun])->orderBy('no_rw', 'asc')->distinct()->findAll(),
