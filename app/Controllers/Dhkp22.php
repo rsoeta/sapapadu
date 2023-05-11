@@ -376,6 +376,8 @@ class Dhkp22 extends BaseController
         $jumlah_semua = $model->jumlah_semua0();
         $jumlah_filter = $model->jumlah_filter0($filter0, $filter1, $filter2, $filter3, $filter4, $filter5);
 
+        // var_dump($listing);
+        // die;
         $data = array();
         $no = $_POST['start'];
         $total_order = 0;
@@ -393,6 +395,7 @@ class Dhkp22 extends BaseController
             $row[] = number_format($key->pajak);
             $total_order = $total_order + floatval($key->pajak);
             $row[] = $key->updated_at;
+            $row[] = $key->dettr_faktur;
             $data[] = $row;
         }
         // if($key->ket) == 1 {$lunas}

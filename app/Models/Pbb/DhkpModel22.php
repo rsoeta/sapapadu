@@ -41,10 +41,10 @@ class DhkpModel22 extends Model
     protected $skipValidation   = false;
 
 
-    var $column_order = array('', 'id', 'nama_wp', 'nop', 'alamat_wp', 'alamat_op', 'bumi', 'pajak', 'nama_ktp', 'dusun', 'rw', 'rt', 'pd_ket');
-    var $column_order2 = array('', 'nama_wp', 'nop', 'alamat_wp', 'alamat_op', 'bumi', 'pajak', 'updated_at');
-    var $column_order1 = array('', 'nama_wp', 'nop', 'alamat_wp', 'alamat_op', 'bumi', 'pajak', 'nama_ktp', 'dusun', 'rw', 'rt');
-    var $column_order0 = array('', 'nama_wp', 'nop', 'alamat_wp', 'alamat_op', 'bumi', 'pajak', 'nama_ktp', 'dusun', 'rw', 'rt');
+    var $column_order = array('', 'id', 'nama_wp', 'nop', 'alamat_wp', 'alamat_op', 'bumi', 'pajak', 'nama_ktp', 'pd_ket', '');
+    var $column_order0 = array('', 'nama_wp', 'pbb_dhkp22.nop', 'alamat_wp', 'alamat_op', 'bumi', 'pbb_dhkp22.pajak', 'updated_at', 'pbb_detailtrans21.dettr_faktur');
+    var $column_order1 = array('', 'nama_wp', 'nop', 'alamat_wp', 'alamat_op', 'bumi', 'pajak');
+    var $column_order2 = array('', 'nama_wp', 'nop', 'alamat_wp', 'alamat_op', 'bumi', 'pajak');
 
     var $order = array('nop' => 'asc');
     var $order1 = array('nama_wp' => 'asc');
@@ -243,7 +243,7 @@ class DhkpModel22 extends Model
 
         // order
         if (isset($_POST['order'])) {
-            $result_order = $this->column_order2[$_POST['order']['0']['column']];
+            $result_order = $this->column_order0[$_POST['order']['0']['column']];
             $result_dir = $_POST['order']['0']['dir'];
         } else if ($this->order0) {
             $order0 = $this->order0;
@@ -254,9 +254,9 @@ class DhkpModel22 extends Model
         if ($_POST['length'] != -1);
         $db = db_connect();
         $builder = $db->table('pbb_dhkp22');
-        $query = $builder->select('pbb_dhkp22.id, nama_wp, pbb_dhkp22.nop, alamat_wp, alamat_op, bumi, pajak, nama_ktp, dusun, rw, rt, updated_at')
+        $query = $builder->select('pbb_dhkp22.id, nama_wp, pbb_dhkp22.nop, alamat_wp, alamat_op, bumi, pbb_dhkp22.pajak, nama_ktp, dusun, rw, rt, updated_at, pbb_detailtrans21.dettr_faktur, pbb_detailtrans21.nop')
             ->join('pbb_stasppt', 'pbb_stasppt.sta_id=pbb_dhkp22.pd_ket')
-            // ->join('pbb_detailtrans21', 'pbb_detailtrans21.nop=pbb_dhkp22.nop')
+            ->join('pbb_detailtrans21', 'pbb_detailtrans21.nop=pbb_dhkp22.nop')
             // ->join('pekerjaan_kondisi_pekerjaan', 'pekerjaan_kondisi_pekerjaan.IDKondisi=individu_data.KondisiPekerjaan')
             // ->join('pendidikan_pend_tinggi', 'pendidikan_pend_tinggi.IDPendidikan=individu_data.PendTertinggi')
             // ->join('ket_verivali', 'ket_verivali.id_ketvv=individu_data.ket_verivali')
@@ -265,6 +265,7 @@ class DhkpModel22 extends Model
             ->limit($_POST['length'], $_POST['start'])
             ->get();
 
+        // var_dump($query->getResult());
         return $query->getResult();
     }
 
@@ -386,7 +387,7 @@ class DhkpModel22 extends Model
 
         // order
         if (isset($_POST['order'])) {
-            $result_order = $this->column_order[$_POST['order']['0']['column']];
+            $result_order = $this->column_order1[$_POST['order']['0']['column']];
             $result_dir = $_POST['order']['0']['dir'];
         } else if ($this->order1) {
             $order1 = $this->order1;
@@ -526,7 +527,7 @@ class DhkpModel22 extends Model
 
         // order
         if (isset($_POST['order'])) {
-            $result_order = $this->column_order[$_POST['order']['0']['column']];
+            $result_order = $this->column_order2[$_POST['order']['0']['column']];
             $result_dir = $_POST['order']['0']['dir'];
         } else if ($this->order1) {
             $order1 = $this->order1;

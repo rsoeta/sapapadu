@@ -405,6 +405,7 @@ $role = detailUser()->pu_role_id;
                                                                 <th>Bumi</th>
                                                                 <th>Pajak (Rp.)</th>
                                                                 <th>Tgl Pelunasan</th>
+                                                                <th>No. Kuitansi</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody></tbody>
@@ -417,6 +418,7 @@ $role = detailUser()->pu_role_id;
                                                                 <th>-</th>
                                                                 <th>-</th>
                                                                 <th id="total_order0"></th>
+                                                                <th>-</th>
                                                                 <th>-</th>
                                                             </tr>
                                                         </tfoot>
@@ -962,7 +964,7 @@ $role = detailUser()->pu_role_id;
         ],
         "pageLength": 10,
         "ajax": {
-            "url": "<?= site_url('tb_dhkp22_lunas'); ?>",
+            "url": "<?= site_url('/tb_dhkp22_lunas'); ?>",
             "type": "POST",
             "data": {
                 "csrf_test_name": $('input[name=csrf_test_name]').val()
