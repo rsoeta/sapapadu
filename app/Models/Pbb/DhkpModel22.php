@@ -254,9 +254,9 @@ class DhkpModel22 extends Model
         if ($_POST['length'] != -1);
         $db = db_connect();
         $builder = $db->table('pbb_dhkp22');
-        $query = $builder->select('pbb_dhkp22.id, nama_wp, pbb_dhkp22.nop, alamat_wp, alamat_op, bumi, pbb_dhkp22.pajak, nama_ktp, dusun, rw, rt, updated_at, pbb_detailtrans21.dettr_faktur, pbb_detailtrans21.nop')
+        $query = $builder->select('pbb_dhkp22.id, nama_wp, pbb_dhkp22.nop, alamat_wp, alamat_op, bumi, pbb_dhkp22.pajak, nama_ktp, dusun, rw, rt, updated_at')
             ->join('pbb_stasppt', 'pbb_stasppt.sta_id=pbb_dhkp22.pd_ket')
-            ->join('pbb_detailtrans21', 'pbb_detailtrans21.nop=pbb_dhkp22.nop')
+            // ->join('pbb_detailtrans21', 'pbb_detailtrans21.nop=pbb_dhkp22.nop')
             // ->join('pekerjaan_kondisi_pekerjaan', 'pekerjaan_kondisi_pekerjaan.IDKondisi=individu_data.KondisiPekerjaan')
             // ->join('pendidikan_pend_tinggi', 'pendidikan_pend_tinggi.IDPendidikan=individu_data.PendTertinggi')
             // ->join('ket_verivali', 'ket_verivali.id_ketvv=individu_data.ket_verivali')

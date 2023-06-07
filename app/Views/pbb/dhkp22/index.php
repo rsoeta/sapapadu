@@ -408,7 +408,7 @@ $role = detailUser()->pu_role_id;
                                                                 <th>Bumi</th>
                                                                 <th>Pajak (Rp.)</th>
                                                                 <th>Tgl Pelunasan</th>
-                                                                <th>No. Kuitansi</th>
+                                                                <!-- <th>No. Kuitansi</th> -->
                                                             </tr>
                                                         </thead>
                                                         <tbody></tbody>
@@ -422,7 +422,7 @@ $role = detailUser()->pu_role_id;
                                                                 <th>-</th>
                                                                 <th id="total_order0"></th>
                                                                 <th>-</th>
-                                                                <th>-</th>
+                                                                <!-- <th>-</th> -->
                                                             </tr>
                                                         </tfoot>
                                                     </table>

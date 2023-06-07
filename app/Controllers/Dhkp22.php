@@ -396,7 +396,7 @@ class Dhkp22 extends BaseController
             $row[] = number_format($key->pajak);
             $total_order = $total_order + floatval($key->pajak);
             $row[] = $key->updated_at;
-            $row[] = $key->dettr_faktur;
+            // $row[] = $key->dettr_faktur;
             $data[] = $row;
         }
         // if($key->ket) == 1 {$lunas}
