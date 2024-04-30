@@ -461,7 +461,8 @@ class Dhkp22 extends BaseController
                 'ket_bayar' => $this->KetBayarModel->findAll(),
                 'listAjuan' => $this->PengajuanModel->findAll(),
             ];
-            // var_dump('tampildata');
+            // var_dump('ket_bayar');
+
             $msg = [
                 'data' => view('pbb/dhkp22/modalAdd', $data)
             ];
@@ -1174,7 +1175,9 @@ class Dhkp22 extends BaseController
 
     public function getSppt()
     {
-        $model = new DhkpModel22();
+        $db = \Config\Database::connect();
+
+        $request = service('request');
         $pu_kode_desa = detailUser()->pu_kode_desa;
 
         $request = service('request');
@@ -1184,8 +1187,9 @@ class Dhkp22 extends BaseController
 
         $data = array();
 
-        $builder = $model->table("pbb_dhkp22")->where("pd_desa", $pu_kode_desa)->orderby("nop", "asc");
+        // $builder = $model->table('pbb_dhkp')->where('pd_desa', $pu_kode_desa)->orderby('nop', 'asc');
 
+        $builder = $db->table('pbb_caridata')->where('pd_desa', $pu_kode_desa)->orderby('nop', 'asc');
         $countries = [];
 
         if (isset($postData['query'])) {
@@ -1207,8 +1211,8 @@ class Dhkp22 extends BaseController
 
         foreach ($data as $country) {
             $countries[] = array(
-                "id" => $country->id,
-                "text" => $country->nop . ' - ' . $country->nama_wp,
+                'id' => $country->id,
+                'text' => $country->nop . ' - ' . $country->nama_wp,
             );
         }
 

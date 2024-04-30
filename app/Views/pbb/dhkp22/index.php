@@ -341,7 +341,7 @@ $role = detailUser()->pu_role_id;
                                     <?php } ?>
                                     <div id="msg"></div>
                                     <div class="table-responsive">
-                                        <table id="tb_dhkp22" class="table table-sm nowrap compact" style="width: 100%;">
+                                        <table id="tb_dhkp22" class="table table-hover table-sm nowrap compact" style="width: 100%;">
                                             <thead style="background-color: cyan; color: dark;">
                                                 <tr role="row">
                                                     <th><input type="checkbox" class='checkall' id='checkall'></th>
@@ -397,7 +397,7 @@ $role = detailUser()->pu_role_id;
                                                     </div>
                                                 <?php } ?>
                                                 <div class="table-responsive">
-                                                    <table id="tb_dhkp22_0" class="table nowrap compact" style="width: 100%;">
+                                                    <table id="tb_dhkp22_0" class="table table-hover nowrap compact" style="width: 100%;">
                                                         <thead style="background-color: green; color: whitesmoke;">
                                                             <tr role="row">
                                                                 <th>No</th>
@@ -463,7 +463,7 @@ $role = detailUser()->pu_role_id;
                                                     </div>
                                                 <?php } ?>
                                                 <div class="table-responsive">
-                                                    <table id="tb_dhkp22_1" class="table nowrap compact" style="width: 100%;">
+                                                    <table id="tb_dhkp22_1" class="table table-hover nowrap compact" style="width: 100%;">
                                                         <thead style="background-color: red; color: floralwhite;">
                                                             <tr role="row">
                                                                 <th>No</th>
@@ -515,7 +515,7 @@ $role = detailUser()->pu_role_id;
                                                 </div>
                                             <?php } ?>
                                             <div class="table-responsive">
-                                                <table id="tb_dhkp22_2" class="table nowrap compact" style="width: 100%;">
+                                                <table id="tb_dhkp22_2" class="table table-hover nowrap compact" style="width: 100%;">
                                                     <thead style="background-color: yellow; color: black;">
                                                         <tr role="row">
                                                             <th>No</th>

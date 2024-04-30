@@ -670,60 +670,6 @@ class DhkpModel22 extends Model
         return $query;
     }
 
-    // function jumlahLunas()
-    // {
-    //     $sQuery = "SELECT COUNT(id) as jumlahLunas FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket=0";
-    //     $db = db_connect();
-    //     $query = $db->query($sQuery)->getRow();
-
-    //     return $query;
-    // }
-
-    // public function jumlahTotalLunas()
-    // {
-    //     $sQuery = "SELECT SUM(pajak) as jumlahTotalLunas FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket=0";
-    //     $db = db_connect();
-    //     $query = $db->query($sQuery)->getRow();
-
-    //     return $query;
-    // }
-
-    // function jumlahBelumLunas()
-    // {
-    //     $sQuery = "SELECT COUNT(id) as jumlahBelumLunas FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket=1";
-    //     $db = db_connect();
-    //     $query = $db->query($sQuery)->getRow();
-
-    //     return $query;
-    // }
-
-    // public function jumlahTotalBelumLunas()
-    // {
-    //     $sQuery = "SELECT SUM(pajak) as jumlahTotalBelumLunas FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket=1";
-    //     $db = db_connect();
-    //     $query = $db->query($sQuery)->getRow();
-
-    //     return $query;
-    // }
-
-    // function jumlahBermasalah()
-    // {
-    //     $sQuery = "SELECT COUNT(id) as jumlahBermasalah FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket>1";
-    //     $db = db_connect();
-    //     $query = $db->query($sQuery)->getRow();
-
-    //     return $query;
-    // }
-
-    // public function jumlahTotalBermasalah()
-    // {
-    //     $sQuery = "SELECT SUM(pajak) as jumlahTotalBermasalah FROM pbb_dhkp22 WHERE pbb_dhkp22.pd_ket>1";
-    //     $db = db_connect();
-    //     $query = $db->query($sQuery)->getRow();
-
-    //     return $query;
-    // }
-
     public function getDataRekDes()
     {
         $sql = 'SELECT tb_villages.name AS desaNama,
@@ -1017,4 +963,5 @@ class DhkpModel22 extends Model
             // return $this->db->table('pbb_dhkp21')->where(['id' => $id]);
         }
     }
+
 }

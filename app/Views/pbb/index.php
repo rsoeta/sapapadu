@@ -303,9 +303,9 @@
     </div>
 
     <div class="viewmodal" style="display: none;"></div>
-    <script src="<?= base_url() ?>/assets/dist/js/adminlte.min.js"></script>
+    <script src="<?= base_url('assets/dist/js/adminlte.min.js') ?>"></script>
     <!-- AdminLTE for demo purposes -->
-    <script src="<?= base_url() ?>/assets/dist/js/demo.js"></script>
+    <script src="<?= base_url('assets/dist/js/demo.js') ?>"></script>
 
     <!-- <script src="//code.jquery.com/jquery-1.11.1.min.js"></script> -->
     <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->

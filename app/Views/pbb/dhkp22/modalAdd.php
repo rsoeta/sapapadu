@@ -147,7 +147,14 @@
                         <div class="form-group row nopadding">
                             <label class="col-4 col-form-label" for="ket">Keterangan</label>
                             <div class="col-8">
-                                <input type="text" name="ket" id="ket" class="form-control form-control-sm">
+                                <select name="ket" id="ket" class="form-control form-control-sm" disabled>
+                                    <?php
+                                    foreach ($ket_bayar as $row) { ?>
+                                        <option <?= ($row['sta_id'] == 1) ? 'selected' : ''; ?> value="<?= $row['sta_id']; ?>"><?= $row['sta_keterangan']; ?></option>
+                                        <!-- <input type="text" name="ket" id="ket" class="form-control form-control-sm"> -->
+                                    <?php }
+                                    ?>
+                                </select>
                                 <div class="invalid-feedback errorket">
                                 </div>
                             </div>
@@ -189,7 +196,7 @@
             $('#no_dusun').val(data.dusun);
             $('#no_rw').val(data.rw);
             $('#no_rt').val(data.rt);
-            $('#ket').val(data.sta_keterangan);
+            // $('#ket').val(data.sta_keterangan);
             $('#dhkp_ajuan').val(data.pa_keterangan);
             // $('#ket').val(data.pd_ket);
             // $('#dhkp_ajuan').val(data.dhkp_ajuan);
@@ -233,6 +240,7 @@
 
         $('.btnsimpan').click(function(e) {
             e.preventDefault();
+            let $ket = $('#ket').removeAttr('disabled', '');
             let form = $('.formsimpan')[0];
             let data = new FormData(form);
 
