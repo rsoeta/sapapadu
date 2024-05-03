@@ -190,7 +190,7 @@ $role = detailUser()->pu_role_id;
                                             <div class="row">
                                                 <div class="col-12 border-right">
                                                     <div class="description-block">
-                                                        <h5 class="description-header" id="jumlahTotal">Rp. </h5>
+                                                        <h5 class="description-header" id=jumlahTotal>Rp. </h5>
                                                     </div>
                                                 </div>
                                             </div>
@@ -799,8 +799,25 @@ $role = detailUser()->pu_role_id;
 
         var table = $('#tb_dhkp22').DataTable();
 
+        // Tambahkan event listener untuk memperbarui judul laporan saat perubahan tahun terjadi
+        $('#data_tahun').on('change', function() {
+            var tahun = $(this).val();
+            updateReportTitle(tahun);
+        });
     });
 
+    // Fungsi untuk memperbarui judul laporan
+    function updateReportTitle(tahun) {
+        // Update judul laporan untuk setiap tombol ekspor
+        var excelButton = $('#example').DataTable().buttons(0).inst.s.buttons[0];
+        excelButton.title = 'LAMPIRAN PBB TAHUN ' + tahun;
+
+        var pdfButton = $('#example').DataTable().buttons(0).inst.s.buttons[1];
+        pdfButton.title = 'LAMPIRAN PBB TAHUN ' + tahun;
+
+        var printButton = $('#example').DataTable().buttons(0).inst.s.buttons[2];
+        printButton.title = 'LAMPIRAN PBB TAHUN ' + tahun;
+    }
     // Checkbox checked
     function checkcheckbox() {
 
@@ -840,8 +857,7 @@ $role = detailUser()->pu_role_id;
         'processing': true,
         'serverSide': true,
         'lengthMenu': [
-            [15, 30, 45, -1],
-            [15, 30, 45, "All"]
+            15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 225, 240, 255, 270, 285, 300, 315, 330, 345, 360, 375, 390, 405, 420, 435, 450, 465, 480, 495, 510, 525, 540, 555, 570, 585, 600, 615, 630, 645, 660, 675, 690, 705, 720, 735, 750, 765, 780, 795, 810, 825, 840, 855, 870, 885, 900, 915, 930, 945, 960, 975, 990, 1005, 1020, 1035, 1050, 1065, 1080, 1095, 1110, 1125, 1140, 1155, 1170, 1185, 1200, 1215, 1230, 1245, 1260, 1275, 1290, 1305, 1320, 1335, 1350, 1365, 1380, 1395, 1410, 1425, 1440, 1455, 1470, 1485, 1500, 1515, 1530, 1545, 1560, 1575, 1590, 1605, 1620, 1635, 1650, 1665, 1680, 1695, 1710, 1725, 1740, 1755, 1770, 1785, 1800, 1815, 1830, 1845, 1860, 1875, 1890, 1905, 1920, 1935, 1950, 1965, 1980, 1995, 2010, 2025, 2040, 2055, 2070, 2085, 2100, 2115, 2130, 2145, 2160, 2175, 2190, 2205, 2220, 2235, 2250, 2265, 2280, 2295, 2310, 2325, 2340, 2355, 2370, 2385, 2400, 2415, 2430, 2445, 2460, 2475, 2490, 2505, 2520, 2535, 2550, 2565, 2580, 2595, 2610, 2625, 2640, 2655, 2670, 2685, 2700, 2715, 2730, 2745, 2760, 2775, 2790, 2805, 2820, 2835, 2850, 2865, 2880, 2895, 2910, 2925, 2940, 2955, 2970, 2985, 3000, 3015, 3030, 3045, 3060, 3075, 3090, 3105, 3120, 3135, 3150, 3165, 3180, 3195, 3210, 3225, 3240, 3255, 3270, 3285, 3300, 3315, 3330, 3345, 3360, 3375, 3390, 3405, 3420, 3435, 3450, 3465, 3480, 3495, 3510,
         ],
         'pageLength': 15,
 
@@ -888,7 +904,9 @@ $role = detailUser()->pu_role_id;
             //'pageLength',
             <?php if (session()->get('level') == 1) { ?> {
                     // data_tahun = $('#data_tahun').val(),
-                    title: 'LAMPIRAN DATA PBB ' + $('#data_tahun').val(),
+                    title: function() {
+                        return 'LAMPIRAN PBB TAHUN ' + $('#data_tahun').val();
+                    },
                     extend: 'excelHtml5',
                     footer: true,
                     messageTop: function() {
@@ -909,27 +927,9 @@ $role = detailUser()->pu_role_id;
                     },
                 },
             <?php } ?> {
-                title: 'LAMPIRAN DATA PBB ' + $('#data_tahun').val(),
-                extend: 'pdfHtml5',
-                footer: true,
-                messageTop: function() {
-                    dataDesa = $('#data_desa').val();
-                    dataDusun = $('#data_dusun').val();
-                    dataRw = $('#data_rw').val();
-                    dataRt = $('#data_rt').val();
-                    dataKet = $('#data_ket').val();
-                    // set a variable
-                    var dataTanggal = moment().format("dddd, Do MMMM YYYY, h:mm:ss a"); // September 4 2017, 10:53:16 pagi
-
-                    if (dataRw === '') {
-                        return 'Se-Desa Pasirlangu.' + ' | Dicetak pada : ' + dataTanggal;
-                    } else {
-                        return 'DUSUN  : ' + dataDusun + '\nRW         : ' + dataRw + '\nRT           : ' + dataRt + ' | Dicetak pada :' + dataTanggal;
-                    }
+                title: function() {
+                    return 'LAMPIRAN PBB TAHUN ' + $('#data_tahun').val();
                 },
-            },
-            {
-                title: 'LAMPIRAN DATA PBB ' + $('#data_tahun').val(),
                 extend: 'print',
                 footer: true,
                 exportOptions: {
@@ -948,8 +948,10 @@ $role = detailUser()->pu_role_id;
                     // set a variable
                     var dataTanggal = moment().format("dddd, Do MMMM YYYY, h:mm:ss a"); // September 4 2017, 10:53:16 pagi
 
-                    if (dataRw === '') {
+                    if (dataDusun === '') {
                         return 'Se-Desa Pasirlangu.' + ' | Dicetak pada : ' + dataTanggal;
+                    } else if (dataDusun !== '' && dataRw !== '') {
+                        return 'DUSUN  : ' + dataDusun + '\nRW         : ' + dataRw + '\nRT           : ' + dataRt + ' | Dicetak pada :' + dataTanggal;
                     } else {
                         return 'DUSUN  : ' + dataDusun + '\nRW         : ' + dataRw + '\nRT           : ' + dataRt + ' | Dicetak pada :' + dataTanggal;
                     }
@@ -1003,7 +1005,9 @@ $role = detailUser()->pu_role_id;
         buttons: [
             //'pageLength',
             <?php if (session()->get('level') == 1) { ?> {
-                    title: 'LAMPIRAN DATA PBB LUNAS 2023 DESA PASIRLANGU',
+                    title: function() {
+                        return 'LAMPIRAN PBB LUNAS TAHUN ' + $('#data_tahun').val();
+                    },
                     extend: 'excelHtml5',
                     footer: true,
                     messageTop: function() {
@@ -1016,36 +1020,19 @@ $role = detailUser()->pu_role_id;
                         // set a variable
                         var dataTanggal = moment().format("dddd, Do MMMM YYYY, h:mm:ss a"); // September 4 2017, 10:53:16 pagi
 
-                        if (dataRw === '') {
-                            return 'Dicetak pada : ' + dataTanggal;
+                        if (dataDusun === '') {
+                            return 'Se-Desa Pasirlangu.' + ' | Dicetak pada : ' + dataTanggal;
+                        } else if (dataDusun !== '' && dataRw !== '') {
+                            return 'DUSUN  : ' + dataDusun + '\nRW         : ' + dataRw + '\nRT           : ' + dataRt + ' | Dicetak pada :' + dataTanggal;
                         } else {
                             return 'DUSUN  : ' + dataDusun + '\nRW         : ' + dataRw + '\nRT           : ' + dataRt + ' | Dicetak pada :' + dataTanggal;
                         }
                     },
                 },
             <?php } ?> {
-                title: 'LAMPIRAN DATA PBB LUNAS 2023 DESA PASIRLANGU',
-                extend: 'excelHtml5',
-                footer: true,
-                messageTop: function() {
-                    dataDesa = $('#data_desa').val();
-                    dataDusun = $('#data_dusun').val();
-                    dataRw = $('#data_rw').val();
-                    dataRt = $('#data_rt').val();
-                    dataKet = $('#data_ket').val();
-                    dataTahun = $('#data_tahun').val();
-                    // set a variable
-                    var dataTanggal = moment().format("dddd, Do MMMM YYYY, h:mm:ss a"); // September 4 2017, 10:53:16 pagi
-
-                    if (dataRw === '') {
-                        return 'Dicetak pada : ' + dataTanggal;
-                    } else {
-                        return 'DUSUN  : ' + dataDusun + '\nRW         : ' + dataRw + '\nRT           : ' + dataRt + ' | Dicetak pada :' + dataTanggal;
-                    }
+                title: function() {
+                    return 'LAMPIRAN PBB LUNAS TAHUN ' + $('#data_tahun').val();
                 },
-            },
-            {
-                title: 'LAMPIRAN DATA PBB LUNAS 2023 DESA PASIRLANGU',
                 extend: 'print',
                 footer: true,
                 messageTop: function() {
@@ -1058,8 +1045,10 @@ $role = detailUser()->pu_role_id;
                     // set a variable
                     var dataTanggal = moment().format("dddd, Do MMMM YYYY, h:mm:ss a"); // September 4 2017, 10:53:16 pagi
 
-                    if (dataRw === '') {
-                        return 'Dicetak pada : ' + dataTanggal;
+                    if (dataDusun === '') {
+                        return 'Se-Desa Pasirlangu.' + ' | Dicetak pada : ' + dataTanggal;
+                    } else if (dataDusun !== '' && dataRw !== '') {
+                        return 'DUSUN  : ' + dataDusun + '\nRW         : ' + dataRw + '\nRT           : ' + dataRt + ' | Dicetak pada :' + dataTanggal;
                     } else {
                         return 'DUSUN  : ' + dataDusun + '\nRW         : ' + dataRw + '\nRT           : ' + dataRt + ' | Dicetak pada :' + dataTanggal;
                     }
@@ -1121,7 +1110,9 @@ $role = detailUser()->pu_role_id;
             //'pageLength',
             // 'excel', 'pdf', 'print',
             <?php if (session()->get('level') == 1) { ?> {
-                    title: 'LAMPIRAN DATA PBB BELUM LUNAS 2022',
+                    title: function() {
+                        return 'LAMPIRAN PBB BELUM LUNAS TAHUN ' + $('#data_tahun').val();
+                    },
                     extend: 'excelHtml5',
                     messageTop: function() {
                         dataDesa = $('#data_desa').val();
@@ -1133,8 +1124,10 @@ $role = detailUser()->pu_role_id;
                         // set a variable
                         var dataTanggal = moment().format("dddd, Do MMMM YYYY, h:mm:ss a"); // September 4 2017, 10:53:16 pagi
 
-                        if (dataRw === '') {
+                        if (dataDusun === '') {
                             return 'Se-Desa Pasirlangu.' + ' | Dicetak pada : ' + dataTanggal;
+                        } else if (dataDusun !== '' && dataRw !== '') {
+                            return 'DUSUN  : ' + dataDusun + '\nRW         : ' + dataRw + '\nRT           : ' + dataRt + ' | Dicetak pada :' + dataTanggal;
                         } else {
                             return 'DUSUN  : ' + dataDusun + '\nRW         : ' + dataRw + '\nRT           : ' + dataRt + ' | Dicetak pada :' + dataTanggal;
                         }
@@ -1142,27 +1135,10 @@ $role = detailUser()->pu_role_id;
                     footer: true
                 },
             <?php } ?> {
-                title: 'LAMPIRAN DATA PBB BELUM LUNAS 2022',
-                extend: 'pdfHtml5',
-                messageTop: function() {
-                    dataDesa = $('#data_desa').val();
-                    dataDusun = $('#data_dusun').val();
-                    dataRw = $('#data_rw').val();
-                    dataRt = $('#data_rt').val();
-                    dataKet = $('#data_ket').val();
-                    dataTahun = $('#data_tahun').val();
-                    // set a variable
-                    var dataTanggal = moment().format("dddd, Do MMMM YYYY, h:mm:ss a"); // September 4 2017, 10:53:16 pagi
-
-                    if (dataRw === '') {
-                        return 'Se-Desa Pasirlangu.' + ' | Dicetak pada : ' + dataTanggal;
-                    } else {
-                        return 'DUSUN  : ' + dataDusun + '\nRW         : ' + dataRw + '\nRT           : ' + dataRt + ' | Dicetak pada :' + dataTanggal;
-                    }
+                title: 'LAMPIRAN PBB BELUM LUNAS TAHUN ' + $('#data_tahun').val(),
+                title: function() {
+                    return 'LAMPIRAN PBB BELUM LUNAS TAHUN ' + $('#data_tahun').val();
                 },
-                footer: true
-            }, {
-                title: 'LAMPIRAN DATA PBB BELUM LUNAS 2022',
                 extend: 'print',
                 messageTop: function() {
                     dataDesa = $('#data_desa').val();
@@ -1174,8 +1150,10 @@ $role = detailUser()->pu_role_id;
                     // set a variable
                     var dataTanggal = moment().format("dddd, Do MMMM YYYY, h:mm:ss a"); // September 4 2017, 10:53:16 pagi
 
-                    if (dataRw === '') {
+                    if (dataDusun === '') {
                         return 'Se-Desa Pasirlangu.' + ' | Dicetak pada : ' + dataTanggal;
+                    } else if (dataDusun !== '' && dataRw !== '') {
+                        return 'DUSUN  : ' + dataDusun + '\nRW         : ' + dataRw + '\nRT           : ' + dataRt + ' | Dicetak pada :' + dataTanggal;
                     } else {
                         return 'DUSUN  : ' + dataDusun + '\nRW         : ' + dataRw + '\nRT           : ' + dataRt + ' | Dicetak pada :' + dataTanggal;
                     }
@@ -1236,10 +1214,10 @@ $role = detailUser()->pu_role_id;
         buttons: [
             //'pageLength',
             // 'excel', 'pdf', 'print',
-            <?php if (session()->get('level') == 1) { ?>
-
-                {
-                    title: 'LAMPIRAN DATA PBB BERMASALAH 2022',
+            <?php if (session()->get('level') == 1) { ?> {
+                    title: function() {
+                        return 'LAMPIRAN PBB BERMASALAH TAHUN ' + $('#data_tahun').val();
+                    },
                     extend: 'excelHtml5',
                     messageTop: function() {
                         dataDesa = $('#data_desa').val();
@@ -1251,8 +1229,10 @@ $role = detailUser()->pu_role_id;
                         // set a variable
                         var dataTanggal = moment().format("dddd, Do MMMM YYYY, h:mm:ss a"); // September 4 2017, 10:53:16 pagi
 
-                        if (dataRw === '') {
+                        if (dataDusun === '') {
                             return 'Se-Desa Pasirlangu.' + ' | Dicetak pada : ' + dataTanggal;
+                        } else if (dataDusun !== '' && dataRw !== '') {
+                            return 'DUSUN  : ' + dataDusun + '\nRW         : ' + dataRw + '\nRT           : ' + dataRt + ' | Dicetak pada :' + dataTanggal;
                         } else {
                             return 'DUSUN  : ' + dataDusun + '\nRW         : ' + dataRw + '\nRT           : ' + dataRt + ' | Dicetak pada :' + dataTanggal;
                         }
@@ -1260,27 +1240,9 @@ $role = detailUser()->pu_role_id;
                     footer: true
                 },
             <?php } ?> {
-                title: 'LAMPIRAN DATA PBB BERMASALAH 2022',
-                extend: 'pdfHtml5',
-                messageTop: function() {
-                    dataDesa = $('#data_desa').val();
-                    dataDusun = $('#data_dusun').val();
-                    dataRw = $('#data_rw').val();
-                    dataRt = $('#data_rt').val();
-                    dataKet = $('#data_ket').val();
-                    dataTahun = $('#data_tahun').val();
-                    // set a variable
-                    var dataTanggal = moment().format("dddd, Do MMMM YYYY, h:mm:ss a"); // September 4 2017, 10:53:16 pagi
-
-                    if (dataRw === '') {
-                        return 'Se-Desa Pasirlangu.' + ' | Dicetak pada : ' + dataTanggal;
-                    } else {
-                        return 'DUSUN  : ' + dataDusun + '\nRW         : ' + dataRw + '\nRT           : ' + dataRt + ' | Dicetak pada :' + dataTanggal;
-                    }
+                title: function() {
+                    return 'LAMPIRAN PBB BERMASALAH TAHUN ' + $('#data_tahun').val();
                 },
-                footer: true
-            }, {
-                title: 'LAMPIRAN DATA PBB BELUM LUNAS 2022',
                 extend: 'print',
                 messageTop: function() {
                     dataDesa = $('#data_desa').val();
@@ -1292,8 +1254,10 @@ $role = detailUser()->pu_role_id;
                     // set a variable
                     var dataTanggal = moment().format("dddd, Do MMMM YYYY, h:mm:ss a"); // September 4 2017, 10:53:16 pagi
 
-                    if (dataRw === '') {
+                    if (dataDusun === '') {
                         return 'Se-Desa Pasirlangu.' + ' | Dicetak pada : ' + dataTanggal;
+                    } else if (dataDusun !== '' && dataRw !== '') {
+                        return 'DUSUN  : ' + dataDusun + '\nRW         : ' + dataRw + '\nRT           : ' + dataRt + ' | Dicetak pada :' + dataTanggal;
                     } else {
                         return 'DUSUN  : ' + dataDusun + '\nRW         : ' + dataRw + '\nRT           : ' + dataRt + ' | Dicetak pada :' + dataTanggal;
                     }
@@ -1318,6 +1282,7 @@ $role = detailUser()->pu_role_id;
         table1.draw();
         table2.draw();
     });
+
     $('#data_dusun').change(function() {
         jumlahSppt();
         jumlahTotal();
@@ -1332,6 +1297,7 @@ $role = detailUser()->pu_role_id;
         table1.draw();
         table2.draw();
     });
+
     $('#data_rw').change(function() {
         jumlahSppt();
         jumlahTotal();
@@ -1346,6 +1312,7 @@ $role = detailUser()->pu_role_id;
         table1.draw();
         table2.draw();
     });
+
     $('#data_rt').change(function() {
         jumlahSppt();
         jumlahTotal();
@@ -1360,6 +1327,7 @@ $role = detailUser()->pu_role_id;
         table1.draw();
         table2.draw();
     });
+
     $('#data_ket').change(function() {
         jumlahSppt();
         jumlahTotal();
@@ -1374,6 +1342,7 @@ $role = detailUser()->pu_role_id;
         table1.draw();
         table2.draw();
     });
+
     $('#data_tahun').change(function() {
         jumlahSppt();
         jumlahTotal();
