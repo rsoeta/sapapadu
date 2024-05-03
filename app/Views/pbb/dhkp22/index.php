@@ -615,9 +615,9 @@ $role = detailUser()->pu_role_id;
         });
 
         $('#data_dusun').change(function() {
-            var desa = $('#data_desa').val();
-            var no_dusun = $('#data_dusun').val();
-            var action = 'get_rw';
+            let desa = $('#data_desa').val();
+            let no_dusun = $('#data_dusun').val();
+            let action = 'get_rw';
             if (no_dusun != '') {
                 $.ajax({
                     url: "<?php echo base_url('action'); ?>",
@@ -629,14 +629,15 @@ $role = detailUser()->pu_role_id;
                     },
                     dataType: "JSON",
                     success: function(data) {
-                        var html = '<option value="">-Semua RW-</option>';
+                        let html = '<option value="">-Semua RW-</option>';
 
-                        for (var count = 0; count < data.length; count++) {
+                        for (let count = 0; count < data.length; count++) {
 
                             html += '<option value="' + data[count].no_rw + '">' + data[count].no_rw + '</option>';
                         }
 
                         $('#data_rw').html(html);
+                        $('#data_rt').html('<option value="">-Semua RT-</option>');
                         jumlahSppt();
                         jumlahTotal();
                         jumlahLunas();
@@ -654,9 +655,9 @@ $role = detailUser()->pu_role_id;
         });
 
         $('#data_rw').change(function() {
-            var desa = $('#data_desa').val();
-            var no_rw = $('#data_rw').val();
-            var action = 'get_rt';
+            let desa = $('#data_desa').val();
+            let no_rw = $('#data_rw').val();
+            let action = 'get_rt';
             if (no_rw != '') {
                 $.ajax({
                     url: "<?php echo base_url('action'); ?>",
@@ -668,9 +669,9 @@ $role = detailUser()->pu_role_id;
                     },
                     dataType: "JSON",
                     success: function(data) {
-                        var html = '<option value="">-Semua RT-</option>';
+                        let html = '<option value="">-Semua RT-</option>';
 
-                        for (var count = 0; count < data.length; count++) {
+                        for (let count = 0; count < data.length; count++) {
 
                             html += '<option value="' + data[count].no_rt + '">' + data[count].no_rt + '</option>';
 
@@ -799,25 +800,8 @@ $role = detailUser()->pu_role_id;
 
         var table = $('#tb_dhkp22').DataTable();
 
-        // Tambahkan event listener untuk memperbarui judul laporan saat perubahan tahun terjadi
-        $('#data_tahun').on('change', function() {
-            var tahun = $(this).val();
-            updateReportTitle(tahun);
-        });
     });
 
-    // Fungsi untuk memperbarui judul laporan
-    function updateReportTitle(tahun) {
-        // Update judul laporan untuk setiap tombol ekspor
-        var excelButton = $('#example').DataTable().buttons(0).inst.s.buttons[0];
-        excelButton.title = 'LAMPIRAN PBB TAHUN ' + tahun;
-
-        var pdfButton = $('#example').DataTable().buttons(0).inst.s.buttons[1];
-        pdfButton.title = 'LAMPIRAN PBB TAHUN ' + tahun;
-
-        var printButton = $('#example').DataTable().buttons(0).inst.s.buttons[2];
-        printButton.title = 'LAMPIRAN PBB TAHUN ' + tahun;
-    }
     // Checkbox checked
     function checkcheckbox() {
 
