@@ -700,7 +700,7 @@ class DhkpModel22 extends Model
         $builder->orderBy('dusun', 'asc');
         $builder->distinct();
         $query = $builder->get();
-        return $query;
+        return $query->getResultArray();
     }
 
     public function getDataRekRw()
@@ -902,6 +902,20 @@ class DhkpModel22 extends Model
         return $query->getResult();
     }
 
+    function setoranPerDusun()
+    {
+        $kode_desa = detailUser()->pu_kode_desa;
+        $tahun_ini = date('Y');
+        $builder = $this->db->table('view_setoran_per_tahun_desa_dusun');
+        $builder->select('*');
+        $builder->where('desaKode', $kode_desa);
+        $builder->where('tahun', $tahun_ini);
+        $builder->orderBy('tahun', 'ASC');
+        $builder->orderBy('dusun', 'ASC');
+        $query = $builder->get()->getResult();
+        return $query;
+    }
+
     function getDiagramKecamatan()
     {
         // get chart by pbb_dhkp22.pd_kec
@@ -963,5 +977,4 @@ class DhkpModel22 extends Model
             // return $this->db->table('pbb_dhkp21')->where(['id' => $id]);
         }
     }
-
 }

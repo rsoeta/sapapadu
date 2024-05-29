@@ -77,21 +77,32 @@ class Pages extends BaseController
 
     public function index2()
     {
-        $diagramKecamatan = $this->DhkpModel22->getDiagramKecamatan();
-        $setoranPerDesa = $this->DhkpModel22->setoranPerDesa();
+        // $diagramKecamatan = $this->DhkpModel22->getDiagramKecamatan();
+        // $setoranPerDesa = $this->DhkpModel22->setoranPerDesa();
+        $setoranPerDusun = $this->DhkpModel22->setoranPerDusun();
         $getChartKecBulanan = $this->DhkpModel22->getChartKecBulanan();
         $getChartKecMingguan = $this->DhkpModel22->getChartKecMingguan();
         // dd($getChartKecBulanan);
         // $dataPerDesa = $this->DhkpModel22->jumlahSppt();
         // dd($dataPerDesa);
+
+        // Calculate remaining percentage
+        foreach ($setoranPerDusun as $key => $dusunData) {
+            $setoranPerDusun[$key]->dusun = sprintf('%03d', $dusunData->dusun); // Format dusun as 3-digit number
+            $setoranPerDusun[$key]->dataSisaPersentase = 100 - $dusunData->dataPersentase;
+        }
+
         $data = [
             'title' => 'Diagram Progres',
-            'diagramKecamatan' => $diagramKecamatan,
-            'setoranPerDesa' => $setoranPerDesa,
+            // 'diagramKecamatan' => $diagramKecamatan,
+            // 'setoranPerDesa' => $setoranPerDesa,
+            'setoranPerDusun' => $setoranPerDusun,
             'chartKecBulanan' => $getChartKecBulanan,
             'chartKecMingguan' => $getChartKecMingguan,
             // 'dataPerDesa' => $dataPerDesa,
         ];
+        // dd($data['setoranPerDusun']);
+
         return view('pbb/pages/index', $data);
     }
 

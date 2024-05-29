@@ -143,12 +143,12 @@
                         if (response.sukses == 'berhasil') {
                             Swal.fire({
                                 title: 'Cetak Invoice',
-                                text: "Apakah Anda akan mencetak Invoice?",
+                                text: "Apakah Anda sudah mencetak Invoice?",
                                 icon: 'warning',
                                 showCancelButton: true,
                                 confirmButtonColor: '#3085d6',
                                 cancelButtonColor: '#d33',
-                                confirmButtonText: 'Ya, Cetak!',
+                                confirmButtonText: 'Ya, Sudah!',
                                 cancelButtonText: 'Tidak!'
                             }).then((result) => {
                                 if (result.isConfirmed) {

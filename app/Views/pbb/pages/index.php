@@ -8,6 +8,7 @@
 </style>
 <script src="<?= base_url('assets/plugins/chart.js/3.7.0/chart.min.js'); ?>"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper mt-1">
@@ -20,14 +21,14 @@
                 </h3>
                 <div class="card-tools">
                     <ul class="nav nav-pills ml-auto">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#thread-kecamatan" data-toggle="tab">Tingkat Kecamatan</a>
-                        </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
+                            <a class="nav-link" href="#thread-kecamatan" data-toggle="tab">Tingkat Kecamatan</a>
+                        </li> -->
+                        <!-- <li class="nav-item">
                             <a class="nav-link" href="#thread-desa" data-toggle="tab">Tingkat Desa</a>
-                        </li>
+                        </li> -->
                         <li class="nav-item">
-                            <a class="nav-link" href="#thread-dusun" data-toggle="tab">Tingkat Dusun</a>
+                            <a class="nav-link active" href="#thread-dusun" data-toggle="tab">Tingkat Dusun</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#thread_rw" data-toggle="tab">Tingkat RW</a>
@@ -40,114 +41,76 @@
             </div>
             <div class="card-body">
                 <div class="tab-content p-0">
-                    <!-- Morris chart - Sales -->
-                    <div class="chart tab-pane active" id="thread-kecamatan">
+
+                    <div class="chart tab-pane active" id="thread-dusun">
                         <div class="row">
-                            <div class="col-12 col-sm-12 col-md-3">
-                                <h4 class="text-center">
-                                    <strong>Chart Kecamatan</strong>
-                                </h4>
-                                <div class="chart-container" style="position: relative; height:60vh;">
-                                    <canvas id="chart_kecamatan"></canvas>
-                                </div>
-                                <div class="card-footer text-muted">
-                                    <?php foreach ($diagramKecamatan as $row) : ?>
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <span class="description-text">Target</span>
-                                            </div>
-                                            <div class="col-6">
-                                                <span class="description-text float-end">Rp. <?= number_format($row->target, 0, ',', '.'); ?></span>
-                                            </div>
-                                            <hr class="solid">
-                                            <div class="col-6">
-                                                <span class="description-text">Capaian</span>
-                                            </div>
-                                            <div class="col-6">
-                                                <span class="description-text float-end">Rp. <?= number_format($row->capaian, 0, ',', '.'); ?></span>
-                                            </div>
-                                            <hr class="solid">
-                                            <div class="col-6">
-                                                <span class="description-text">Bermasalah</span>
-                                            </div>
-                                            <div class="col-6">
-                                                <span class="description-text float-end">Rp. <?= number_format($row->bermasalah, 0, ',', '.'); ?></span>
-                                            </div>
-                                            <hr class="solid">
-                                            <div class="col-6">
-                                                <span class="description-text">Sisa</span>
-                                            </div>
-                                            <div class="col-6">
-                                                <span class="description-text float-end">Rp. <?= number_format($row->sisa, 0, ',', '.'); ?></span>
-                                            </div>
-                                            <hr class="solid">
-                                        </div>
-                                    <?php endforeach; ?>
-                                </div>
-                            </div>
-                            <div class="col-12 col-sm-12 col-md-9">
-                                <h4 class="text-center">
-                                    <strong>Diagram Bulanan</strong>
-                                </h4>
-                                <div class="chart-container">
-                                    <canvas id="chart_bulanan"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12 col-sm-12 col-md-12">
-                                <h4 class="text-center">
-                                    <strong>Diagram Mingguan</strong>
-                                </h4>
-                                <div class="chart-container">
-                                    <canvas id="chart_mingguan"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="chart tab-pane" id="thread-desa">
-                        <div class="row">
-                            <div class="col-12 col-sm-12 col-md-7">
-                                <h4 class="text-center">
-                                    <strong>Chart Desa</strong>
-                                </h4>
-                                <div class="chart-container" style="position: relative; height:50vh; width:100%">
-                                    <canvas id="thread-desa-canvas" style="width: 100%;"></canvas>
-                                </div>
-                            </div>
-                            <div class="col-12 col-sm-12 col-md-5">
-                                <div class="table-responsive">
-                                    <table class="table table-hover table-sm" style="width: 100%;">
-                                        <thead class="text-center">
-                                            <tr>
-                                                <th>No</th>
-                                                <th>Desa</th>
-                                                <th>Target</th>
-                                                <th>Capaian</th>
-                                                <th>Data Bermasalah</th>
-                                                <th>Persentase</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <!-- looping setoranPerDesa -->
-                                            <?php $i = 1; ?>
-                                            <?php foreach ($setoranPerDesa as $setoran) : ?>
+                            <div class="col-12 col-sm-8 col-md-7">
+                                <div class="card card-primary">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Tabel Per-Dusun</h3>
+                                    </div>
+
+                                    <div class="card-body p-0">
+                                        <table class="table table-striped">
+                                            <thead>
                                                 <tr>
-                                                    <td><?= $i; ?></td>
-                                                    <td><?= $setoran->desaNama; ?></td>
-                                                    <td style="text-align:right;"><?= number_format($setoran->dataTarget, 0, ',', '.'); ?></td>
-                                                    <td style="text-align:right;"><?= number_format($setoran->dataCapaian, 0, ',', '.'); ?></td>
-                                                    <td style="text-align:right;"><?= number_format($setoran->dataBermasalah, 0, ',', '.'); ?></td>
-                                                    <td style="text-align:right;"><?= number_format($setoran->dataPersentase, 2, ',', '.') . ' %'; ?></td>
+                                                    <th style="width: 10px;">No.</th>
+                                                    <th>Dusun</th>
+                                                    <th>Target</th>
+                                                    <th>Capaian</th>
+                                                    <th>Progres</th>
+                                                    <th style="width: 40px">Persentase</th>
                                                 </tr>
-                                                <?php $i++; ?>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                <?php $i = 1; ?>
+                                                <?php foreach ($setoranPerDusun as $row) { ?>
+                                                    <tr>
+                                                        <td style="text-align: center;"><?= $i; ?></td>
+                                                        <td style="text-align: center;"><?= sprintf('%03d', $row->dusun); ?></td>
+                                                        <td style="text-align: right;"><?= 'Rp. ' . number_format($row->dataTarget, 0, ',', '.'); ?></td>
+                                                        <td style="text-align: right;"><?= 'Rp. ' . number_format($row->dataCapaian, 0, ',', '.'); ?></td>
+                                                        <td>
+                                                            <div class="progress">
+                                                                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: <?= $row->dataPersentase; ?>%"></div>
+                                                            </div>
+                                                        </td>
+                                                        <td><span class="badge bg-primary"><?= number_format($row->dataPersentase, 2, '.', ','); ?>%</span></td>
+                                                    </tr>
+                                                    <?php $i++ ?>
+                                                <?php } ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-4 col-md-5">
+                                <div class="card card-primary">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Stacked Bar Chart</h3>
+                                        <div class="card-tools">
+                                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart">
+                                            <div class="chartjs-size-monitor">
+                                                <div class="chartjs-size-monitor-expand">
+                                                    <div class=""></div>
+                                                </div>
+                                                <div class="chartjs-size-monitor-shrink">
+                                                    <div class=""></div>
+                                                </div>
+                                            </div>
+                                            <canvas id="stackedBarChart" style="min-height: 250px; height: 350px; max-height: 500px; max-width: 100%; display: block; width: 329px;" width="658" height="500" class="chartjs-render-monitor"></canvas>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -160,6 +123,70 @@
     </section>
 </div>
 <script>
+    $(document).ready(function() {
+        // Ambil data dari PHP
+        const data = <?= json_encode($setoranPerDusun) ?>;
+
+        // Ekstrak label dan data dari data yang diterima
+        var labels = <?= json_encode(array_column($setoranPerDusun, 'dusun')) ?>;
+        var capaianData = <?= json_encode(array_column($setoranPerDusun, 'dataPersentase')) ?>;
+        var sisaData = <?= json_encode(array_column($setoranPerDusun, 'dataSisaPersentase')) ?>;
+
+        // Setup Chart.js
+        const ctx = document.getElementById('stackedBarChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                        label: 'Capaian',
+                        data: capaianData,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Sisa',
+                        data: sisaData,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    x: {
+                        stacked: true
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        max: 100
+                    }
+                },
+                responsive: true,
+                plugins: {
+                    datalabels: {
+                        display: true,
+                        color: 'black', // Warna font hitam
+                        formatter: function(value, context) {
+                            return value + '%';
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.dataset.label + ': ' + tooltipItem.raw + '%';
+                            }
+                        }
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        });
+    });
+
     function addCommas(nStr) {
         nStr += '';
         x = nStr.split('.');
@@ -171,184 +198,5 @@
         }
         return x1 + x2;
     }
-
-    // setup
-    const data_chart_bulanan = {
-        labels: [
-            <?php foreach ($chartKecBulanan as $row) : ?> '<?= $row->bulan; ?>',
-            <?php endforeach; ?>
-        ],
-        datasets: [{
-            label: '2022',
-            data: [
-                <?php foreach ($chartKecBulanan as $row) : ?>
-                    <?= $row->tr_totalbersih; ?>,
-                <?php endforeach; ?>
-            ],
-            fill: {
-                target: 'start',
-                above: 'rgb(255, 99,132)', // Area will be red above the origin
-            },
-            borderColor: 'rgb(75, 192, 192)',
-            tension: 0.1
-        }]
-    };
-
-    // config
-    const config_chart_bulanan = {
-        type: 'line',
-        data: data_chart_bulanan,
-    };
-
-    // render
-    const chartchartKecBulanan = new Chart(
-        document.getElementById('chart_bulanan'),
-        config_chart_bulanan
-    );
-
-    // setup
-    const data_chart_mingguan = {
-        labels: [
-            <?php foreach ($chartKecMingguan as $row) : ?> '<?= $row->pekan; ?>',
-            <?php endforeach; ?>
-        ],
-        datasets: [{
-            label: '2022',
-            data: [
-                <?php foreach ($chartKecMingguan as $row) : ?>
-                    <?= $row->tr_totalbersih; ?>,
-                <?php endforeach; ?>
-            ],
-            fill: {
-                target: 'origin',
-                above: 'rgb(255, 99,132)', // Area will be red above the origin
-            },
-            borderColor: 'rgb(75, 192, 192)',
-            tension: 0.1
-        }]
-    };
-
-    // config
-    const config_chart_mingguan = {
-        type: 'line',
-        data: data_chart_mingguan,
-    };
-
-    // render
-    const chartchartKecMingguan = new Chart(
-        document.getElementById('chart_mingguan'),
-        config_chart_mingguan
-    );
-
-
-    // setup 
-    const data_kecamatan = {
-        labels: ['Data Capaian', 'Data Bermasalah', 'Data Sisa'],
-        datasets: [{
-            label: 'Diagram',
-            data: [
-                <?php foreach ($diagramKecamatan as $row) { ?> '<?= $row->capaianPersentase; ?>',
-                    '<?= $row->bermasalahPersentase; ?>',
-                    '<?= $row->sisaPersentase; ?>'
-                <?php } ?>
-            ],
-            backgroundColor: [
-                'rgb(255, 99, 132)',
-                'rgb(54, 162, 235)',
-                'rgb(255, 206, 86)'
-            ],
-            borderColor: [
-                'rgb(255, 99, 132)',
-                'rgb(54, 162, 235)',
-                'rgb(255, 206, 86)'
-            ],
-            borderWidth: 1,
-            hoverOffset: 5
-        }]
-    };
-
-    // config
-    const config_kecamatan = {
-        type: 'pie',
-        data: data_kecamatan,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-        },
-    };
-
-    // render init block
-    const chartKecamatan = new Chart(
-        document.getElementById('chart_kecamatan'),
-        config_kecamatan
-    );
-    // setup 
-    const data_desa = {
-        labels: [
-            <?php foreach ($setoranPerDesa  as $row) : ?> '<?= $row->desaNama; ?>', <?php endforeach ?>
-        ],
-        datasets: [{
-                label: 'Target',
-                data: [
-                    <?php
-                    foreach ($setoranPerDesa  as $row) : ?>
-                        <?php echo '"' . $row->dataTarget . '",'; ?>
-                    <?php endforeach ?>
-                ],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                ],
-                borderWidth: 1
-            },
-            {
-                label: 'Capaian',
-                data: [
-                    <?php
-                    foreach ($setoranPerDesa  as $row) : ?>
-                        <?php echo '"' . $row->dataCapaian . '",'; ?>
-                    <?php endforeach ?>
-                ],
-                backgroundColor: [
-                    'rgba(54, 162, 235, 0.2)',
-                ],
-                borderColor: [
-                    'rgba(54, 162, 235, 1)',
-                ],
-                borderWidth: 1
-            }
-        ]
-    };
-
-    // config 
-    const config_desa = {
-        type: 'bar',
-        data: data_desa,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-            // responsive: true,
-            // tooltips: {
-            //     callbacks: {
-            //         label: function(tooltipItem, data_desa) {
-            //             return tooltipItem.yLabel.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-            //         }
-            //     }
-            // },
-        }
-    };
-
-    // render init block
-    const chartDesa = new Chart(
-        document.getElementById('thread-desa-canvas'),
-        config_desa
-    );
 </script>
 <?= $this->endSection(); ?>

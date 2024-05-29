@@ -119,7 +119,7 @@
                                 <div class="info-box-content">
                                     <span class="info-box-number">Grafik</span>
                                     <div class="text-info-box">
-                                        <p>Grafik Progres Pajak Bumi dan Bangunan di Kecamatan Pakenjeng Kabupaten Garut</p>
+                                        <p>Grafik Progres Pajak Bumi dan Bangunan</p>
                                     </div>
                                 </div>
                             </div>
