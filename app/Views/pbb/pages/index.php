@@ -64,7 +64,14 @@
                                             </thead>
                                             <tbody>
                                                 <?php $i = 1; ?>
-                                                <?php foreach ($setoranPerDusun as $row) { ?>
+                                                <?php
+                                                $totalTarget = 0;
+                                                $totalCapaian = 0;
+                                                ?>
+                                                <?php foreach ($setoranPerDusun as $row) {
+                                                    $totalTarget += $row->dataTarget;
+                                                    $totalCapaian += $row->dataCapaian;
+                                                ?>
                                                     <tr>
                                                         <td style="text-align: center;"><?= $i; ?></td>
                                                         <td style="text-align: center;"><?= sprintf('%03d', $row->dusun); ?></td>
@@ -79,10 +86,18 @@
                                                     </tr>
                                                     <?php $i++ ?>
                                                 <?php } ?>
+                                                <!-- Baris jumlah total -->
+                                                <tr>
+                                                    <td style="text-align: center;" colspan="2"><strong>Total</strong></td>
+                                                    <td style="text-align: right;"><strong><?= 'Rp. ' . number_format($totalTarget, 0, ',', '.'); ?></strong></td>
+                                                    <td style="text-align: right;"><strong><?= 'Rp. ' . number_format($totalCapaian, 0, ',', '.'); ?></strong></td>
+                                                    <td colspan="2"></td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
+
                             </div>
 
                             <div class="col-12 col-sm-4 col-md-5">
