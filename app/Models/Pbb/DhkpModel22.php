@@ -908,10 +908,41 @@ class DhkpModel22 extends Model
         $tahun_ini = date('Y');
         $builder = $this->db->table('view_setoran_per_tahun_desa_dusun');
         $builder->select('*');
-        $builder->where('desaKode', $kode_desa);
         $builder->where('tahun', $tahun_ini);
+        $builder->where('desaKode', $kode_desa);
         $builder->orderBy('tahun', 'ASC');
-        $builder->orderBy('dusun', 'ASC');
+        $builder->orderBy('dusunNama', 'ASC');
+        $query = $builder->get()->getResult();
+        return $query;
+    }
+
+    function setoranPerRw()
+    {
+        $kode_desa = detailUser()->pu_kode_desa;
+        $tahun_ini = date('Y');
+        $builder = $this->db->table('view_setoran_per_tahun_desa_dusun_rw');
+        $builder->select('*');
+        $builder->where('tahun', $tahun_ini);
+        $builder->where('desaKode', $kode_desa);
+        $builder->orderBy('tahun', 'ASC');
+        $builder->orderBy('dusunNama', 'ASC');
+        $builder->orderBy('rwNama', 'ASC');
+        $query = $builder->get()->getResult();
+        return $query;
+    }
+
+    function setoranPerRt()
+    {
+        $kode_desa = detailUser()->pu_kode_desa;
+        $tahun_ini = date('Y');
+        $builder = $this->db->table('view_setoran_per_tahun_desa_dusun_rw_rt');
+        $builder->select('*');
+        $builder->where('tahun', $tahun_ini);
+        $builder->where('desaKode', $kode_desa);
+        $builder->orderBy('tahun', 'ASC');
+        $builder->orderBy('dusunNama', 'ASC');
+        $builder->orderBy('rwNama', 'ASC');
+        $builder->orderBy('rtNama', 'ASC');
         $query = $builder->get()->getResult();
         return $query;
     }

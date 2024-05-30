@@ -80,16 +80,30 @@ class Pages extends BaseController
         // $diagramKecamatan = $this->DhkpModel22->getDiagramKecamatan();
         // $setoranPerDesa = $this->DhkpModel22->setoranPerDesa();
         $setoranPerDusun = $this->DhkpModel22->setoranPerDusun();
-        $getChartKecBulanan = $this->DhkpModel22->getChartKecBulanan();
-        $getChartKecMingguan = $this->DhkpModel22->getChartKecMingguan();
+        $setoranPerRw = $this->DhkpModel22->setoranPerRw();
+        $setoranPerRt = $this->DhkpModel22->setoranPerRt();
+        // $getChartKecBulanan = $this->DhkpModel22->getChartKecBulanan();
+        // $getChartKecMingguan = $this->DhkpModel22->getChartKecMingguan();
         // dd($getChartKecBulanan);
         // $dataPerDesa = $this->DhkpModel22->jumlahSppt();
         // dd($dataPerDesa);
 
-        // Calculate remaining percentage
+        // Calculate remaining percentage dusun
         foreach ($setoranPerDusun as $key => $dusunData) {
-            $setoranPerDusun[$key]->dusun = sprintf('%03d', $dusunData->dusun); // Format dusun as 3-digit number
+            $setoranPerDusun[$key]->dusun = sprintf('%03d', $dusunData->dusunNama); // Format dusun as 3-digit number
             $setoranPerDusun[$key]->dataSisaPersentase = 100 - $dusunData->dataPersentase;
+        }
+
+        // Calculate remaining percentage rw
+        foreach ($setoranPerRw as $key => $rwData) {
+            $setoranPerRw[$key]->rw = sprintf('%03d', $rwData->rwNama); // Format dusun as 3-digit number
+            $setoranPerRw[$key]->dataSisaPersentase = 100 - $rwData->dataPersentase;
+        }
+
+        // Calculate remaining percentage rt
+        foreach ($setoranPerRt as $key => $rtData) {
+            $setoranPerRt[$key]->rt = sprintf('%03d', $rtData->rtNama); // Format dusun as 3-digit number
+            $setoranPerRt[$key]->dataSisaPersentase = 100 - $rtData->dataPersentase;
         }
 
         $data = [
@@ -97,8 +111,10 @@ class Pages extends BaseController
             // 'diagramKecamatan' => $diagramKecamatan,
             // 'setoranPerDesa' => $setoranPerDesa,
             'setoranPerDusun' => $setoranPerDusun,
-            'chartKecBulanan' => $getChartKecBulanan,
-            'chartKecMingguan' => $getChartKecMingguan,
+            'setoranPerRw' => $setoranPerRw,
+            'setoranPerRt' => $setoranPerRt,
+            // 'chartKecBulanan' => $getChartKecBulanan,
+            // 'chartKecMingguan' => $getChartKecMingguan,
             // 'dataPerDesa' => $dataPerDesa,
         ];
         // dd($data['setoranPerDusun']);
