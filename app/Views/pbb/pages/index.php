@@ -95,7 +95,13 @@
                                                     <td style="text-align: center;" colspan="2"><strong>Total</strong></td>
                                                     <td style="text-align: right;"><strong><?= 'Rp. ' . number_format($totalTarget, 0, ',', '.'); ?></strong></td>
                                                     <td style="text-align: right;"><strong><?= 'Rp. ' . number_format($totalCapaian, 0, ',', '.'); ?></strong></td>
-                                                    <td colspan="2"></td>
+                                                    <?php $totalPersentase = ($totalCapaian / $totalTarget) * 100 ?>
+                                                    <td>
+                                                        <div class="progress">
+                                                            <div class="progress-bar bg-secondary progress-bar-striped progress-bar-animated" style="width: <?= $totalPersentase; ?>%"></div>
+                                                        </div>
+                                                    </td>
+                                                    <td><span class="badge bg-secondary"><?= number_format($totalPersentase, 2, '.', ','); ?>%</span></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -193,7 +199,13 @@
                                                     <td style="text-align: center;" colspan="3"><strong>Total</strong></td>
                                                     <td style="text-align: right;"><strong><?= 'Rp. ' . number_format($totalTarget, 0, ',', '.'); ?></strong></td>
                                                     <td style="text-align: right;"><strong><?= 'Rp. ' . number_format($totalCapaian, 0, ',', '.'); ?></strong></td>
-                                                    <td colspan="2"></td>
+                                                    <?php $totalPersentase = ($totalCapaian / $totalTarget) * 100 ?>
+                                                    <td>
+                                                        <div class="progress">
+                                                            <div class="progress-bar bg-secondary progress-bar-striped progress-bar-animated" style="width: <?= $totalPersentase; ?>%"></div>
+                                                        </div>
+                                                    </td>
+                                                    <td><span class="badge bg-secondary"><?= number_format($totalPersentase, 2, '.', ','); ?>%</span></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -248,7 +260,7 @@
                                     </div>
 
                                     <div class="card-body p-0">
-                                        <table class="table table-striped">
+                                        <table class="table table-striped" style="width: 100%;">
                                             <thead>
                                                 <tr>
                                                     <th style="width: 10px;">No.</th>
@@ -257,7 +269,6 @@
                                                     <th style="text-align: center;">RT</th>
                                                     <th style="text-align: center;">Target</th>
                                                     <th style="text-align: center;">Capaian</th>
-                                                    <th style="text-align: center;">Progres</th>
                                                     <th style="text-align: center; width: 20px">Persentase</th>
                                                 </tr>
                                             </thead>
@@ -278,11 +289,6 @@
                                                         <td style="text-align: center;"><?= sprintf('%03d', $row->rtNama); ?></td>
                                                         <td style="text-align: right;"><?= 'Rp. ' . number_format($row->dataTarget, 0, ',', '.'); ?></td>
                                                         <td style="text-align: right;"><?= 'Rp. ' . number_format($row->dataCapaian, 0, ',', '.'); ?></td>
-                                                        <td>
-                                                            <div class="progress">
-                                                                <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" style="width: <?= $row->dataPersentase; ?>%"></div>
-                                                            </div>
-                                                        </td>
                                                         <td><span class="badge bg-success"><?= number_format($row->dataPersentase, 2, '.', ','); ?>%</span></td>
                                                     </tr>
                                                     <?php $i++ ?>
@@ -292,7 +298,8 @@
                                                     <td style="text-align: center;" colspan="4"><strong>Total</strong></td>
                                                     <td style="text-align: right;"><strong><?= 'Rp. ' . number_format($totalTarget, 0, ',', '.'); ?></strong></td>
                                                     <td style="text-align: right;"><strong><?= 'Rp. ' . number_format($totalCapaian, 0, ',', '.'); ?></strong></td>
-                                                    <td colspan="2"></td>
+                                                    <?php $totalPersentase = ($totalCapaian / $totalTarget) * 100 ?>
+                                                    <td><span class="badge bg-secondary"><?= number_format($totalPersentase, 2, '.', ','); ?>%</span></td>
                                                 </tr>
                                             </tbody>
                                         </table>
