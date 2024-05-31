@@ -63,7 +63,7 @@
                                                     <th style="text-align: center;">Target</th>
                                                     <th style="text-align: center;">Capaian</th>
                                                     <th style="text-align: center;">Progres</th>
-                                                    <th style="text-align: center; width: 40px">Persentase</th>
+                                                    <th style="text-align: center; width: 20px">Persentase</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -127,7 +127,7 @@
                                                     <div class=""></div>
                                                 </div>
                                             </div>
-                                            <canvas id="dusunChart" style="min-height: 250px; height: 350px; max-height: 500px; max-width: 100%; display: block; width: 329px;" width="658" height="500" class="chartjs-render-monitor"></canvas>
+                                            <canvas id="dusunChart" style="min-height: 250px; height: 350px; max-height: 500px; max-width: 100%; display: block; width: 329px;" width="1000" height="500" class="chartjs-render-monitor"></canvas>
                                         </div>
                                     </div>
                                 </div>
@@ -160,7 +160,7 @@
                                                     <th style="text-align: center;">Target</th>
                                                     <th style="text-align: center;">Capaian</th>
                                                     <th style="text-align: center;">Progres</th>
-                                                    <th style="text-align: center; width: 40px">Persentase</th>
+                                                    <th style="text-align: center; width: 20px">Persentase</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -224,7 +224,7 @@
                                                     <div class=""></div>
                                                 </div>
                                             </div>
-                                            <canvas id="rwChart" style="min-height: 300px; height: 450px; max-height: 500px; max-width: 100%; display: block; width: 329px;" width="658" height="500" class="chartjs-render-monitor"></canvas>
+                                            <canvas id="rwChart" style="min-height: 300px; height: 450px; max-height: 500px; max-width: 100%; display: block; width: 329px;" width="1000" height="500" class="chartjs-render-monitor"></canvas>
                                         </div>
                                     </div>
                                 </div>
@@ -258,7 +258,7 @@
                                                     <th style="text-align: center;">Target</th>
                                                     <th style="text-align: center;">Capaian</th>
                                                     <th style="text-align: center;">Progres</th>
-                                                    <th style="text-align: center; width: 40px">Persentase</th>
+                                                    <th style="text-align: center; width: 20px">Persentase</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -323,7 +323,7 @@
                                                     <div class=""></div>
                                                 </div>
                                             </div>
-                                            <canvas id="rtChart" style="min-height: 300px; height: 500px; max-height: 750px; max-width: 100%; display: block; width: 329px;" width="658" height="500" class="chartjs-render-monitor"></canvas>
+                                            <canvas id="rtChart" style="min-height: 500px; height: 500px; max-height: 750px; max-width: 100%; display: block; width: 400px;" width="1000" height="500" class="chartjs-render-monitor"></canvas>
                                         </div>
                                     </div>
                                 </div>
