@@ -6,9 +6,10 @@
         font-weight: bold;
     }
 </style>
-<script src="<?= base_url('assets/plugins/chart.js/3.7.0/chart.min.js'); ?>"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/date-fns@2.22.1"></script>
+<script src="https://cdn.jsdelivr.net/npm/date-fns@2.22.1/locale/id/index.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
 <!-- Content Wrapper. Contains page content -->
@@ -47,7 +48,7 @@
                             <div class="col-12">
                                 <div class="card card-success">
                                     <div class="card-header">
-                                        <h3 class="card-title">Diagram Timeline</h3>
+                                        <h3 class="card-title">Timeline Capaian</h3>
                                         <div class="card-tools">
                                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                                 <i class="fas fa-minus"></i>
@@ -382,6 +383,87 @@
 </div>
 <!-- /.card -->
 <script>
+    // Data setoran dari PHP ke JavaScript
+    var dataSetoran = <?= json_encode($timelineChart); ?>;
+    console.log(dataSetoran); // Periksa apakah ini array di console
+
+    // Pastikan dataSetoran adalah array
+    if (Array.isArray(dataSetoran)) {
+        // Mengambil elemen canvas
+        var ctx = document.getElementById('timelineChart').getContext('2d');
+
+        // Ekstrak tanggal dan jumlah setoran
+        var labels = dataSetoran.map(setoran => setoran.tr_tgl);
+        var data = dataSetoran.map(setoran => setoran.tr_totalkotor);
+
+        // Konfigurasi chart
+        var config = {
+            type: 'line', // Menggunakan line chart untuk timeline
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Jumlah Setoran',
+                    data: data,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                    fill: false,
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            tooltipFormat: 'dd-MM-yyyy HH:mm:ss', // Format tampilan di tooltip
+                            displayFormats: {
+                                day: 'dd-MM-yyyy' // Format tampilan di sumbu X
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Tanggal'
+                        },
+                        ticks: {
+                            source: 'data' // Menggunakan data asli untuk ticks
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Jumlah Setoran'
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                var label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += new Intl.NumberFormat('id-ID', {
+                                        style: 'currency',
+                                        currency: 'IDR'
+                                    }).format(context.parsed.y);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        // Membuat chart
+        new Chart(ctx, config);
+    } else {
+        console.error('Data setoran bukan array:', dataSetoran);
+    }
+
+
     $(document).ready(function() {
         $('body').addClass('sidebar-collapse');
         $('.displayNone').css('display', 'none');
@@ -579,56 +661,6 @@
             plugins: [ChartDataLabels]
         });
 
-        // Data setoran dari PHP ke JavaScript
-        var dataSetoran = <?= json_encode($timelineChart); ?>;
-        console.log(dataSetoran); // Log data untuk memeriksa
-
-        // Mengambil elemen canvas
-        var ctx = document.getElementById('timelineChart').getContext('2d');
-
-        // Ekstrak tanggal dan jumlah setoran
-        var labels = dataSetoran.map(setoran => setoran.tr_tgl);;
-        var data = dataSetoran.map(setoran => setoran.tr_totalkotor);
-
-        // Konfigurasi chart
-        var config = {
-            type: 'line', // Menggunakan line chart untuk timeline
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Timeline Setor PBB-P2',
-                    data: data,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 2,
-                    fill: false,
-                }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        type: 'time',
-                        time: {
-                            unit: 'month'
-                        },
-                        title: {
-                            display: true,
-                            text: 'Tanggal'
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Jumlah Setoran'
-                        }
-                    }
-                }
-            }
-        };
-
-        // Membuat chart
-        new Chart(ctx, config);
-
     });
 
 
@@ -643,5 +675,8 @@
         }
         return x1 + x2;
     }
+</script>
+<script>
+    window.dateFnsLocaleId = dateFns.locale.id;
 </script>
 <?= $this->endSection(); ?>
