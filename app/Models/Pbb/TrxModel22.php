@@ -108,4 +108,13 @@ class TrxModel22 extends Model
         // dd($query);
         return $query;
     }
+
+    public function timelineChart()
+    {
+        $builder = $this->db->table('pbb_transaksi22');
+        $builder->select('tr_tgl, tr_totalkotor');
+        $query = $builder->get();
+
+        return $query->getResult();
+    }
 }

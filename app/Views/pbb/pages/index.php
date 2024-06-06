@@ -8,6 +8,7 @@
 </style>
 <script src="<?= base_url('assets/plugins/chart.js/3.7.0/chart.min.js'); ?>"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
 <!-- Content Wrapper. Contains page content -->
@@ -26,6 +27,9 @@
             <div class="card-header p-0 border-bottom-0">
                 <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
                     <li class="nav-item">
+                        <a class="nav-link" id="custom-tabs-four-timeline-tab" data-toggle="pill" href="#custom-tabs-four-timeline" role="tab" aria-controls="custom-tabs-four-timeline" aria-selected="false">Timeline</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="false">Tingkat Dusun</a>
                     </li>
                     <li class="nav-item">
@@ -38,7 +42,39 @@
             </div>
             <div class="card-body">
                 <div class="tab-content" id="custom-tabs-four-tabContent">
-                    <div class="tab-pane fade active show" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
+                    <div class="tab-pane fade active show" id="custom-tabs-four-timeline" role="tabpanel" aria-labelledby="custom-tabs-four-timeline-tab">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card card-success">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Diagram Timeline</h3>
+                                        <div class="card-tools">
+                                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart">
+                                            <div class="chartjs-size-monitor">
+                                                <div class="chartjs-size-monitor-expand">
+                                                    <div class=""></div>
+                                                </div>
+                                                <div class="chartjs-size-monitor-shrink">
+                                                    <div class=""></div>
+                                                </div>
+                                            </div>
+                                            <canvas id="timelineChart" style="min-height: 250px; height: 350px; max-height: 500px; max-width: 100%; display: block; width: 329px;" width="1000" height="500" class="chartjs-render-monitor"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
                         <div class="row">
                             <div class="col-12 col-sm-7">
                                 <div class="card card-danger">
@@ -337,6 +373,7 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -348,6 +385,7 @@
     $(document).ready(function() {
         $('body').addClass('sidebar-collapse');
         $('.displayNone').css('display', 'none');
+
         // kode disini
         // Ambil data Dusun
         var data = <?= json_encode($setoranPerDusun) ?>;
@@ -540,7 +578,59 @@
             },
             plugins: [ChartDataLabels]
         });
+
+        // Data setoran dari PHP ke JavaScript
+        var dataSetoran = <?= json_encode($timelineChart); ?>;
+        console.log(dataSetoran); // Log data untuk memeriksa
+
+        // Mengambil elemen canvas
+        var ctx = document.getElementById('timelineChart').getContext('2d');
+
+        // Ekstrak tanggal dan jumlah setoran
+        var labels = dataSetoran.map(setoran => setoran.tr_tgl);;
+        var data = dataSetoran.map(setoran => setoran.tr_totalkotor);
+
+        // Konfigurasi chart
+        var config = {
+            type: 'line', // Menggunakan line chart untuk timeline
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Timeline Setor PBB-P2',
+                    data: data,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                    fill: false,
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'month'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Tanggal'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Jumlah Setoran'
+                        }
+                    }
+                }
+            }
+        };
+
+        // Membuat chart
+        new Chart(ctx, config);
+
     });
+
 
     function addCommas(nStr) {
         nStr += '';

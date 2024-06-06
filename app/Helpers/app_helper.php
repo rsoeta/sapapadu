@@ -5,6 +5,11 @@ function namaApp()
     return 'SAPA PADU';
 }
 
+function appVersion()
+{
+    return 'v2.3.2';
+}
+
 function deskApp()
 {
     return 'Sistem Aplikasi Pajak Bumi dan Bangunan Pakenjeng Terpadu';

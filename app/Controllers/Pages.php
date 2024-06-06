@@ -8,6 +8,8 @@ use App\Models\Pbb\DhkpModel21;
 use App\Models\Pbb\DhkpModel22;
 use App\Models\Pbb\UserModel;
 use App\Models\Pbb\TransactionModel21;
+use App\Models\Pbb\TrxModel22;
+use DateTime;
 
 class Pages extends BaseController
 {
@@ -19,6 +21,7 @@ class Pages extends BaseController
         $this->DhkpModel22 = new DhkpModel22();
         $this->userModel = new UserModel();
         $this->trans = new TransactionModel21();
+        $this->TrxModel22 = new TrxModel22();
     }
     public function register()
     {
@@ -82,6 +85,7 @@ class Pages extends BaseController
         $setoranPerDusun = $this->DhkpModel22->setoranPerDusun();
         $setoranPerRw = $this->DhkpModel22->setoranPerRw();
         $setoranPerRt = $this->DhkpModel22->setoranPerRt();
+        $timelineChart = $this->TrxModel22->timelineChart();
         // $getChartKecBulanan = $this->DhkpModel22->getChartKecBulanan();
         // $getChartKecMingguan = $this->DhkpModel22->getChartKecMingguan();
         // dd($getChartKecBulanan);
@@ -106,6 +110,25 @@ class Pages extends BaseController
             $setoranPerRt[$key]->dataSisaPersentase = 100 - $rtData->dataPersentase;
         }
 
+        // Contoh data setoran
+        // $timelineChart = [
+        //     ['tr_tgl' => '2023-01-01', 'tr_totalkotor' => 100],
+        //     ['tr_tgl' => '2023-02-01', 'tr_totalkotor' => 200],
+        //     ['tr_tgl' => '2023-03-01', 'tr_totalkotor' => 150],
+        //     ['tr_tgl' => '2023-04-01', 'tr_totalkotor' => 300],
+        // ];
+
+        // Dapatkan semua data setoran dari model Anda
+        $allData = $this->TrxModel22->timelineChart();
+
+        // Tahun berjalan
+        $currentYear = (new DateTime())->format('Y');
+
+        // Filter data untuk tahun berjalan
+        $timelineChart = array_filter($allData, function ($item) use ($currentYear) {
+            return (new DateTime($item->tr_tgl))->format('Y') == $currentYear;
+        });
+
         $data = [
             'title' => 'Diagram Progres',
             // 'diagramKecamatan' => $diagramKecamatan,
@@ -113,11 +136,12 @@ class Pages extends BaseController
             'setoranPerDusun' => $setoranPerDusun,
             'setoranPerRw' => $setoranPerRw,
             'setoranPerRt' => $setoranPerRt,
+            'timelineChart' => array_values($timelineChart),
             // 'chartKecBulanan' => $getChartKecBulanan,
             // 'chartKecMingguan' => $getChartKecMingguan,
             // 'dataPerDesa' => $dataPerDesa,
         ];
-        // dd($data['setoranPerDusun']);
+        // dd($data['timelineChart']);
 
         return view('pbb/pages/index', $data);
     }
