@@ -7,7 +7,7 @@ function namaApp()
 
 function appVersion()
 {
-    return 'v2.3.2-rev01';
+    return 'v2.3.2-rev02';
 }
 
 function deskApp()

@@ -8,8 +8,8 @@
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0"></script>
-<script src="https://cdn.jsdelivr.net/npm/date-fns@2.22.1"></script>
-<script src="https://cdn.jsdelivr.net/npm/date-fns@2.22.1/locale/id/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/date-fns@3.6.0/cdn.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/date-fns@3.6.0/locale/id/cdn.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
 <!-- Content Wrapper. Contains page content -->
@@ -46,6 +46,7 @@
                     <div class="tab-pane fade active show" id="custom-tabs-four-timeline" role="tabpanel" aria-labelledby="custom-tabs-four-timeline-tab">
                         <div class="row">
                             <div class="col-12">
+
                                 <div class="card card-success">
                                     <div class="card-header">
                                         <h3 class="card-title">Timeline Capaian</h3>
@@ -59,6 +60,17 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
+                                        <div class="col-12 col-sm-8 form-group row nopadding">
+                                            <label for="timeScale" class="col-6 col-sm-3 col-form-label">Pilih Skala Waktu:</label>
+                                            <div class="col-6 col-sm-5">
+                                                <select id="timeScale" class="form-control form-control">
+                                                    <option value="day">Hari</option>
+                                                    <option value="week">Minggu</option>
+                                                    <option value="month">Bulan</option>
+                                                    <option value="year">Tahun</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                         <div class="chart">
                                             <div class="chartjs-size-monitor">
                                                 <div class="chartjs-size-monitor-expand">
@@ -385,25 +397,63 @@
 <script>
     // Data setoran dari PHP ke JavaScript
     var dataSetoran = <?= json_encode($timelineChart); ?>;
-    console.log(dataSetoran); // Periksa apakah ini array di console
+    console.log('Data setoran:', dataSetoran);
 
-    // Pastikan dataSetoran adalah array
-    if (Array.isArray(dataSetoran)) {
-        // Mengambil elemen canvas
-        var ctx = document.getElementById('timelineChart').getContext('2d');
+    // Mengambil elemen canvas
+    var ctx = document.getElementById('timelineChart').getContext('2d');
 
-        // Ekstrak tanggal dan jumlah setoran
-        var labels = dataSetoran.map(setoran => setoran.tr_tgl);
-        var data = dataSetoran.map(setoran => setoran.tr_totalkotor);
+    // Fungsi untuk memperbarui data berdasarkan unit waktu
+    function aggregateData(timeUnit) {
+        var aggregatedLabels = [];
+        var aggregatedData = [];
+        var map = new Map();
 
-        // Konfigurasi chart
+        dataSetoran.forEach(function(setoran) {
+            var date = new Date(setoran.tr_tgl);
+            var amount = parseFloat(setoran.tr_totalkotor);
+            var key;
+
+            if (timeUnit === 'day') {
+                key = dateFns.format(date, 'yyyy-MM-dd');
+            } else if (timeUnit === 'week') {
+                key = dateFns.format(date, 'yyyy-II'); // ISO week
+            } else if (timeUnit === 'month') {
+                key = dateFns.format(date, 'yyyy-MM');
+            } else if (timeUnit === 'year') {
+                key = dateFns.format(date, 'yyyy');
+            }
+
+            if (map.has(key)) {
+                map.set(key, map.get(key) + amount);
+            } else {
+                map.set(key, amount);
+            }
+        });
+
+        map.forEach((value, key) => {
+            aggregatedLabels.push(key);
+            aggregatedData.push(value);
+        });
+
+        return {
+            labels: aggregatedLabels,
+            data: aggregatedData
+        };
+    }
+
+    // Fungsi untuk memperbarui chart
+    function updateChart(timeUnit) {
+        console.log('Updating chart with time unit:', timeUnit);
+
+        var aggregated = aggregateData(timeUnit);
+
         var config = {
-            type: 'line', // Menggunakan line chart untuk timeline
+            type: 'line',
             data: {
-                labels: labels,
+                labels: aggregated.labels,
                 datasets: [{
                     label: 'Jumlah Setoran',
-                    data: data,
+                    data: aggregated.data,
                     borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 2,
                     fill: false,
@@ -414,9 +464,13 @@
                     x: {
                         type: 'time',
                         time: {
-                            tooltipFormat: 'dd-MM-yyyy HH:mm:ss', // Format tampilan di tooltip
+                            unit: timeUnit,
+                            tooltipFormat: 'dd-MM-yyyy HH:mm:ss',
                             displayFormats: {
-                                day: 'dd-MM-yyyy' // Format tampilan di sumbu X
+                                day: 'dd-MM-yyyy',
+                                week: 'dd-MM-yyyy',
+                                month: 'MM-yyyy',
+                                year: 'yyyy'
                             }
                         },
                         title: {
@@ -424,7 +478,7 @@
                             text: 'Tanggal'
                         },
                         ticks: {
-                            source: 'data' // Menggunakan data asli untuk ticks
+                            source: 'data'
                         }
                     },
                     y: {
@@ -457,12 +511,19 @@
             }
         };
 
-        // Membuat chart
-        new Chart(ctx, config);
-    } else {
-        console.error('Data setoran bukan array:', dataSetoran);
+        if (window.myChart) {
+            window.myChart.destroy();
+        }
+        window.myChart = new Chart(ctx, config);
     }
 
+    updateChart('day');
+
+    document.getElementById('timeScale').addEventListener('change', function() {
+        var selectedTimeUnit = this.value;
+        console.log('Dropdown changed to:', selectedTimeUnit);
+        updateChart(selectedTimeUnit);
+    });
 
     $(document).ready(function() {
         $('body').addClass('sidebar-collapse');
