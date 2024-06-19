@@ -525,203 +525,197 @@
         updateChart(selectedTimeUnit);
     });
 
-    $(document).ready(function() {
-        $('body').addClass('sidebar-collapse');
-        $('.displayNone').css('display', 'none');
+    // kode disini
+    // Ambil data Dusun
+    var data = <?= json_encode($setoranPerDusun) ?>;
 
-        // kode disini
-        // Ambil data Dusun
-        var data = <?= json_encode($setoranPerDusun) ?>;
+    // Ekstrak label dan data dari data yang diterima
+    var labels = <?= json_encode(array_column($setoranPerDusun, 'dusun')) ?>;
+    var capaianData = <?= json_encode(array_column($setoranPerDusun, 'dataPersentase')) ?>;
+    var sisaData = <?= json_encode(array_column($setoranPerDusun, 'dataSisaPersentase')) ?>;
 
-        // Ekstrak label dan data dari data yang diterima
-        var labels = <?= json_encode(array_column($setoranPerDusun, 'dusun')) ?>;
-        var capaianData = <?= json_encode(array_column($setoranPerDusun, 'dataPersentase')) ?>;
-        var sisaData = <?= json_encode(array_column($setoranPerDusun, 'dataSisaPersentase')) ?>;
-
-        // Setup Chart.js
-        var ctx = document.getElementById('dusunChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                        label: 'Capaian',
-                        data: capaianData,
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Sisa',
-                        data: sisaData,
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1
-                    }
-                ]
+    // Setup Chart.js
+    var ctx = document.getElementById('dusunChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                    label: 'Capaian',
+                    data: capaianData,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Sisa',
+                    data: sisaData,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            scales: {
+                x: {
+                    stacked: true
+                },
+                y: {
+                    stacked: true,
+                    beginAtZero: true,
+                    max: 100
+                }
             },
-            options: {
-                scales: {
-                    x: {
-                        stacked: true
-                    },
-                    y: {
-                        stacked: true,
-                        beginAtZero: true,
-                        max: 100
+            responsive: true,
+            plugins: {
+                datalabels: {
+                    display: true,
+                    color: 'black', // Warna font hitam
+                    formatter: function(value, context) {
+                        return value + '%';
                     }
                 },
-                responsive: true,
-                plugins: {
-                    datalabels: {
-                        display: true,
-                        color: 'black', // Warna font hitam
-                        formatter: function(value, context) {
-                            return value + '%';
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(tooltipItem) {
-                                return tooltipItem.dataset.label + ': ' + tooltipItem.raw + '%';
-                            }
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.dataset.label + ': ' + tooltipItem.raw + '%';
                         }
                     }
                 }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+
+    // Ambil data RW
+    var data = <?= json_encode($setoranPerRw) ?>;
+
+    // Ekstrak label dan data dari data yang diterima
+    var labels = <?= json_encode(array_column($setoranPerRw, 'rwNama')) ?>;
+    var capaianData = <?= json_encode(array_column($setoranPerRw, 'dataPersentase')) ?>;
+    var sisaData = <?= json_encode(array_column($setoranPerRw, 'dataSisaPersentase')) ?>;
+
+    // Setup Chart.js
+    var ctx = document.getElementById('rwChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                    label: 'Capaian',
+                    data: capaianData,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Sisa',
+                    data: sisaData,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            scales: {
+                x: {
+                    stacked: true
+                },
+                y: {
+                    stacked: true,
+                    beginAtZero: true,
+                    max: 100
+                }
             },
-            plugins: [ChartDataLabels]
-        });
-
-        // Ambil data RW
-        var data = <?= json_encode($setoranPerRw) ?>;
-
-        // Ekstrak label dan data dari data yang diterima
-        var labels = <?= json_encode(array_column($setoranPerRw, 'rwNama')) ?>;
-        var capaianData = <?= json_encode(array_column($setoranPerRw, 'dataPersentase')) ?>;
-        var sisaData = <?= json_encode(array_column($setoranPerRw, 'dataSisaPersentase')) ?>;
-
-        // Setup Chart.js
-        var ctx = document.getElementById('rwChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                        label: 'Capaian',
-                        data: capaianData,
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Sisa',
-                        data: sisaData,
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1
-                    }
-                ]
-            },
-            options: {
-                scales: {
-                    x: {
-                        stacked: true
-                    },
-                    y: {
-                        stacked: true,
-                        beginAtZero: true,
-                        max: 100
+            responsive: true,
+            plugins: {
+                datalabels: {
+                    display: true,
+                    color: 'black', // Warna font hitam
+                    formatter: function(value, context) {
+                        return value + '%';
                     }
                 },
-                responsive: true,
-                plugins: {
-                    datalabels: {
-                        display: true,
-                        color: 'black', // Warna font hitam
-                        formatter: function(value, context) {
-                            return value + '%';
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(tooltipItem) {
-                                return tooltipItem.dataset.label + ': ' + tooltipItem.raw + '%';
-                            }
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.dataset.label + ': ' + tooltipItem.raw + '%';
                         }
                     }
                 }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+
+    // Ambil data RT
+    var data = <?= json_encode($setoranPerRt) ?>;
+
+    // Ekstrak label dan data dari data yang diterima
+    <?php
+    $labels = array_map(function ($item) {
+        return sprintf('%02d', $item->rtNama) . ' / ' . sprintf('%02d', $item->rwNama);
+    }, $setoranPerRt);
+    ?>
+
+    var labels = <?= json_encode($labels) ?>;
+    var capaianData = <?= json_encode(array_column($setoranPerRt, 'dataPersentase')) ?>;
+    var sisaData = <?= json_encode(array_column($setoranPerRt, 'dataSisaPersentase')) ?>;
+
+    // Setup Chart.js
+    var ctx = document.getElementById('rtChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                    label: 'Capaian',
+                    data: capaianData,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Sisa',
+                    data: sisaData,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            scales: {
+                x: {
+                    stacked: true
+                },
+                y: {
+                    stacked: true,
+                    beginAtZero: true,
+                    max: 100
+                }
             },
-            plugins: [ChartDataLabels]
-        });
-
-        // Ambil data RT
-        var data = <?= json_encode($setoranPerRt) ?>;
-
-        // Ekstrak label dan data dari data yang diterima
-        <?php
-        $labels = array_map(function ($item) {
-            return sprintf('%02d', $item->rtNama) . ' / ' . sprintf('%02d', $item->rwNama);
-        }, $setoranPerRt);
-        ?>
-
-        var labels = <?= json_encode($labels) ?>;
-        var capaianData = <?= json_encode(array_column($setoranPerRt, 'dataPersentase')) ?>;
-        var sisaData = <?= json_encode(array_column($setoranPerRt, 'dataSisaPersentase')) ?>;
-
-        // Setup Chart.js
-        var ctx = document.getElementById('rtChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                        label: 'Capaian',
-                        data: capaianData,
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Sisa',
-                        data: sisaData,
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1
-                    }
-                ]
-            },
-            options: {
-                scales: {
-                    x: {
-                        stacked: true
-                    },
-                    y: {
-                        stacked: true,
-                        beginAtZero: true,
-                        max: 100
+            responsive: true,
+            plugins: {
+                datalabels: {
+                    display: true,
+                    color: 'black', // Warna font hitam
+                    formatter: function(value, context) {
+                        return value + '%';
                     }
                 },
-                responsive: true,
-                plugins: {
-                    datalabels: {
-                        display: true,
-                        color: 'black', // Warna font hitam
-                        formatter: function(value, context) {
-                            return value + '%';
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(tooltipItem) {
-                                return tooltipItem.dataset.label + ': ' + tooltipItem.raw + '%';
-                            }
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.dataset.label + ': ' + tooltipItem.raw + '%';
                         }
                     }
                 }
-            },
-            plugins: [ChartDataLabels]
-        });
-
+            }
+        },
+        plugins: [ChartDataLabels]
     });
 
 
