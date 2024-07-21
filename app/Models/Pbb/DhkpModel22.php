@@ -1032,6 +1032,7 @@ class DhkpModel22 extends Model
         if ($filter6 !== "") {
             $builder->where('pd_tahun', $filter6);
         }
+        $builder->orderBy('nop', 'asc');
         $query = $builder->get();
 
         return $query;
