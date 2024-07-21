@@ -214,7 +214,10 @@
                                                                     <td><?= $menu['tm_parent_id']; ?></td>
                                                                     <td><?= $menu['tm_grup_akses']; ?></td>
                                                                     <td><?= $menu['tm_status']; ?></td>
-                                                                    <td><a class="btn btn-outline-warning mr-1" href="javascript:void(0)" title="Edit" onclick="edit_person(<?= $menu['tm_id']; ?>)"><i class="fa fa-edit"></i></a></td>
+                                                                    <td>
+                                                                        <a class="btn btn-outline-secondary mr-1" href="javascript:void(0)" title="Edit" onclick="edit_person(<?= $menu['tm_id']; ?>)"><i class="fa fa-edit"></i></a>
+                                                                        <button class="btn btn-outline-secondary" data-id="' . $key->idMenu . '" data-nama="' . $key->namaMenu . '" id="deleteMenu"><i class="far fa-trash-alt"></i></button>
+                                                                    </td>
                                                                 </tr>
                                                             <?php
                                                                 $i++;
@@ -349,5 +352,47 @@
             }
         });
     }
+
+    $(document).on('click', '#deleteMenu', function() {
+        var id = $(this).data('idMenu');
+        var nama = $(this).data('namaMenu');
+        // alert(id);
+        // $('.editIndividu').modal('show');
+        tanya = confirm(`HAPUS DATA "${nama}"?`);
+        if (tanya == true) {
+            $.ajax({
+                type: "POST",
+                url: "<?= site_url('deleteMenu'); ?>",
+                data: {
+                    id: id
+                },
+                dataType: "json",
+                success: function(response) {
+                    if (response.informasi) {
+                        alert(response.informasi);
+                    } else if (response.sukses) {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            }
+                        })
+                        Toast.fire({
+                            icon: 'success',
+                            title: response.sukses,
+                        });
+                        // window.location.reload();
+                        // table.draw();
+                        // tabel_padan.draw();
+                    }
+                }
+            });
+        }
+    });
 </script>
 <?= $this->endSection(); ?>

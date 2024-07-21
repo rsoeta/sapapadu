@@ -77,6 +77,8 @@ $role = detailUser()->pu_role_id;
                                 </button>
                             </div>
                         </div>
+                        <!-- start area export data -->
+                        <?= form_open('Dhkp22/exportExcel', ['target' => 'blank']); ?>
                         <div class="card-body">
                             <div class="col-12 col-sm-12">
                                 <div class="row mt-2">
@@ -153,6 +155,7 @@ $role = detailUser()->pu_role_id;
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -321,10 +324,16 @@ $role = detailUser()->pu_role_id;
                                                     <button type="button" id='delete_record' value='Delete' class="dropdown-item btn btn-danger rounded shadow">
                                                         <i class="fa fa-trash-alt mr-1"></i> Hapus Data Terpilih
                                                     </button>
+                                                    <div class="dropdown-divider"></div>
+                                                    <button type="submit" id='exportExcel' value='Export' class="dropdown-item btn btn-danger rounded shadow">
+                                                        <i class="fa fa-file-export mr-1"></i> Export Data
+                                                    </button>
+                                                    <?= form_close(); ?>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <!-- end area export -->
                                     <?php if (!empty(session()->getFlashdata('success'))) { ?>
                                         <div class="alert alert-success">
                                             <?php echo session()->getFlashdata('success'); ?>
@@ -1724,5 +1733,15 @@ $role = detailUser()->pu_role_id;
         });
 
     }
+
+    $(function() {
+        $('#exportExcel').click(function() {
+            var $elt = $('#data_desa').removeAttr('disabled', '');
+            setTimeout(function() {
+                $elt.attr('disabled', true);
+            }, 500);
+
+        });
+    });
 </script>
 <?= $this->endSection(); ?>

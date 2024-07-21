@@ -509,7 +509,33 @@ class Admin extends BaseController
             echo json_encode($msg);
         }
     }
+    public function deleteMenu()
+    {
+        if ($this->request->isAJAX()) {
+            $id = $this->request->getVar('idMenu');
+            $menu = $this->GenModel->find($id);
 
+            // Menghapus file foto_identitas jika ada
+            $foto_identitas_path = 'data/usulan/foto_identitas/' . $usulan['foto_identitas'];
+            if (file_exists($foto_identitas_path)) {
+                unlink($foto_identitas_path);
+            }
+
+            // Menghapus file foto_rumah jika ada
+            $foto_rumah_path = 'data/usulan/foto_rumah/' . $usulan['foto_rumah'];
+            if (file_exists($foto_rumah_path)) {
+                unlink($foto_rumah_path);
+            }
+
+            // Menghapus data dari database
+            $this->Usulan22Model->delete($id);
+
+            $msg = [
+                'sukses' => 'Data berhasil dihapus'
+            ];
+            echo json_encode($msg);
+        }
+    }
     public function updateMenu()
     {
         if ($this->request->isAJAX()) {

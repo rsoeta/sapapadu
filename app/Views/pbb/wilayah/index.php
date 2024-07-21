@@ -52,6 +52,7 @@
             }
         })
     }
+
     $(document).ready(function() {
         $('.tombolAdd').click(function(e) {
             e.preventDefault();

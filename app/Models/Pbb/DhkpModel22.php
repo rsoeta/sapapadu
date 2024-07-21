@@ -1008,4 +1008,32 @@ class DhkpModel22 extends Model
             // return $this->db->table('pbb_dhkp21')->where(['id' => $id]);
         }
     }
+
+    public function exportExcel($filter1, $filter2, $filter3, $filter4, $filter5, $filter6)
+    {
+        $builder = $this->db->table('pbb_dhkp22');
+        $builder->select('*');
+        $builder->join('tb_villages', 'tb_villages.id=pbb_dhkp22.pd_desa');
+        if ($filter1 !== "") {
+            $builder->where('pd_desa', $filter1);
+        }
+        if ($filter2 !== "") {
+            $builder->where('dusun', $filter2);
+        }
+        if ($filter3 !== "") {
+            $builder->where('rw', $filter3);
+        }
+        if ($filter4 !== "") {
+            $builder->where('rt', $filter4);
+        }
+        if ($filter5 !== "") {
+            $builder->where('pd_ket', $filter5);
+        }
+        if ($filter6 !== "") {
+            $builder->where('pd_tahun', $filter6);
+        }
+        $query = $builder->get();
+
+        return $query;
+    }
 }

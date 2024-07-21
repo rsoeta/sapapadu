@@ -103,8 +103,8 @@
                                 <span class="info-box-icon elevation-1"><i class="fas fa-wallet fa-lg biru"></i></span>
 
                                 <div class="info-box-content">
-                                    <span class="info-box-number">Pembayaran</span>
-                                    <p>Buat Invoice Pembayaran SPPT</p>
+                                    <span class="info-box-number">Data Transaksi</span>
+                                    <p>Cek Data Transaksi</p>
                                 </div>
                                 <!-- /.info-box-content -->
                             </div>

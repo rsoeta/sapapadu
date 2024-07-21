@@ -55,6 +55,7 @@ $routes->post('get_hitung', 'Admin::get_hitung', ['filter' => 'adminfilterpbb'])
 $routes->get('menu_web', 'Admin::menu_web', ['filter' => 'adminfilterpbb']);
 $routes->post('tb_menu', 'Admin::tb_menu', ['filter' => 'adminfilterpbb']);
 $routes->post('editMenu', 'Admin::editMenu', ['filter' => 'adminfilterpbb']);
+$routes->post('deleteMenu', 'Admin::deleteMenu', ['filter' => 'adminfilterpbb']);
 $routes->post('updateMenu', 'Admin::updateMenu', ['filter' => 'adminfilterpbb']);
 $routes->post('modalMenu', 'Admin::modalMenu', ['filter' => 'adminfilterpbb']);
 $routes->post('tambahMenu', 'Admin::tambahMenu', ['filter' => 'adminfilterpbb']);

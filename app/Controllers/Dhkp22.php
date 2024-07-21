@@ -1249,4 +1249,111 @@ class Dhkp22 extends BaseController
         ];
         return view('pbb/index', $data);
     }
+
+    public function exportExcel()
+    {
+        $desaModel = new DesaModel();
+
+        $filter1 = $this->request->getVar('data_desa');
+        $filter2 = $this->request->getVar('data_dusun');
+        $filter3 = $this->request->getVar('data_rw');
+        $filter4 = $this->request->getVar('data_rt');
+        $filter5 = $this->request->getVar('data_ket');
+        $filter6 = $this->request->getVar('data_tahun');
+
+        $data = $this->dhkpModel22->exportExcel($filter1, $filter2, $filter3, $filter4, $filter5, $filter6)->getResultArray();
+
+        $file_name = 'DHKP DESA ' . strtoupper(detailUser()->nm_desa) . ' TAHUN ' . $filter6 . '.xlsx';
+
+        $spreadsheet = new Spreadsheet();
+
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $sheet->setCellValue('A1', 'NO.');
+        $sheet->setCellValue('B1', 'NO. OBJEK PAJAK');
+        $sheet->setCellValue('C1', 'NAMA');
+        $sheet->setCellValue('D1', 'ALAMAT WAJIB PAJAK');
+        $sheet->setCellValue('E1', 'ALAMAT OBJEK PAJAK');
+        $sheet->setCellValue('F1', 'DESA/KEL');
+        $sheet->setCellValue('G1', 'TNH');
+        $sheet->setCellValue('H1', 'BGN');
+        $sheet->setCellValue('I1', "PAJAK\n(RP.)");
+        $sheet->setCellValue('J1', 'NIK');
+        $sheet->setCellValue('K1', 'ATASNAMA / PEMILIK');
+        $sheet->setCellValue('L1', 'DUSUN');
+        $sheet->setCellValue('M1', 'RW');
+        $sheet->setCellValue('N1', 'RT');
+
+        $styleArray = [
+            'font' => [
+                'bold' => true,
+                'color' => array('rgb' => 'FFFFFF'),
+            ],
+            'alignment' => [
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_BOTTOM,
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+                'wrapText'     => TRUE,
+            ],
+            'borders' => [
+                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                // 'rotation' => 90,
+                'startColor' => [
+                    'rgb' => '4472C4',
+                ],
+                'endColor' => [
+                    'rgb' => '4472C4',
+                ],
+            ],
+        ];
+
+        $spreadsheet->getActiveSheet()->getStyle('A1:N1')->applyFromArray($styleArray);
+        // Membekukan baris pertama
+        $spreadsheet->getActiveSheet()->freezePane('A2');
+        // Mengatur posisi aktif ke sel A1
+        $spreadsheet->getActiveSheet()->setSelectedCell('A1');
+
+        $count = 2;
+        foreach ($data as $row) {
+
+            $sheet->setCellValue('A'            . $count, $count - 1);
+            $sheet->setCellValue('B'            . $count, $row['nop']);
+            $sheet->setCellValue('C'            . $count, strtoupper($row['nama_wp']));
+            $sheet->setCellValue('D'            . $count, strtoupper($row['alamat_wp']));
+            $sheet->setCellValue('E'            . $count, strtoupper($row['alamat_op']));
+            $sheet->setCellValue('F'            . $count, strtoupper($row['name']));
+            $sheet->setCellValue('G'            . $count, $row['bumi']);
+            $sheet->setCellValue('H'            . $count, $row['bgn']);
+            $sheet->setCellValue('I'            . $count, $row['pajak']);
+            $sheet->setCellValueExplicit('J'    . $count, $row['nik_wp'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+            $sheet->setCellValue('K'            . $count, strtoupper($row['nama_ktp']));
+            $sheet->setCellValue('L'            . $count, $row['dusun']);
+            $sheet->setCellValue('M'            . $count, sprintf('%03d', $row['rw']));
+            $sheet->setCellValue('N'            . $count, sprintf('%03d', $row['rt']));
+
+            $count++;
+        }
+
+        foreach ($sheet->getColumnIterator() as $column) {
+            $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
+        }
+        $sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+        $sheet->setTitle('DATA');
+
+        $writer = new Xlsx($spreadsheet);
+        $writer->save($file_name);
+        header("Content-Type: application/vnd.ms-excel");
+        header('Content-Disposition: attachment; filename="' . basename($file_name) . '"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length:' . filesize($file_name));
+        flush();
+
+        readfile($file_name);
+
+        exit;
+    }
 }
