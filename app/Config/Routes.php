@@ -8,7 +8,7 @@ $routes = Services::routes();
 // Load the system's routing file first, so that the app and ENVIRONMENT
 // can override as needed.
 if (file_exists(SYSTEMPATH . 'Config/Routes.php')) {
-	require SYSTEMPATH . 'Config/Routes.php';
+    require SYSTEMPATH . 'Config/Routes.php';
 }
 
 /**
@@ -36,13 +36,13 @@ $routes->get('/', 'Landing::index');
 // $routes->post('users', 'Users::index');
 
 $routes->post('action', 'Wil::action');
-$routes->match(['get', 'post'], 'lockscreen', 'Lockscreen::index');
+$routes->match(['GET', 'POST'], 'lockscreen', 'Lockscreen::index');
 
 // $routes->get('/', 'Pbb\Auth::index', ['filter' => 'noauthfilterpbb']);
 $routes->post('cariPbb', 'Auth::cari');
-$routes->match(['get', 'post'], 'login', 'Auth::login', ['filter' => 'noauthfilterpbb']);
+$routes->match(['GET', 'POST'], 'login', 'Auth::login', ['filter' => 'noauthfilterpbb']);
 $routes->get('logout', 'Auth::logout');
-$routes->match(['get', 'post'], 'register', 'Auth::register', ['filter' => 'noauthfilterpbb']);
+$routes->match(['GET', 'POST'], 'register', 'Auth::register', ['filter' => 'noauthfilterpbb']);
 // $routes->get('pages', 'Pages::index', ['filter' => 'authfilterpbb']);
 $routes->get('home', 'Pages::index', ['filter' => 'authfilterpbb']);
 $routes->get('diagram', 'Pages::index2', ['filter' => 'authfilterpbb']);
@@ -62,7 +62,7 @@ $routes->post('tambahMenu', 'Admin::tambahMenu', ['filter' => 'adminfilterpbb'])
 
 $routes->get('dhkp', 'Dhkp::index', ['filter' => 'authfilterpbb']);
 $routes->get('dhkp/terhutang', 'Dhkp::terutang', ['filter' => 'authfilterpbb']);
-$routes->match(['get', 'post'], 'dhkp/pembayaran', 'Dhkp::index', ['filter' => 'authfilterpbb']);
+$routes->match(['GET', 'POST'], 'dhkp/pembayaran', 'Dhkp::index', ['filter' => 'authfilterpbb']);
 $routes->get('dhkp21', 'Dhkp21::index', ['filter' => 'authfilterpbb']);
 $routes->post('tb_dhkp21', 'Dhkp21::data_dhkp21', ['filter' => 'authfilterpbb']);
 $routes->get('dhkp21/terhutang', 'Dhkp21::terutang', ['filter' => 'authfilterpbb']);
@@ -111,7 +111,7 @@ $routes->post('deleteSelected', 'Dhkp22::deleteSelected', ['filter' => 'authfilt
 $routes->post('editPbb', 'Dhkp22::formedit', ['filter' => 'authfilterpbb']);
 $routes->post('updatedata', 'Dhkp22::updatedata', ['filter' => 'authfilterpbb']);
 $routes->add('expFile', 'Dhkp22::exportBelumLunas', ['filter' => 'authfilterpbb']);
-$routes->match(['get', 'post'], 'pbbterhutang', 'Dhkp22::pbbterhutang', ['filter' => 'authfilterpbb']);
+$routes->match(['GET', 'POST'], 'pbbterhutang', 'Dhkp22::pbbterhutang', ['filter' => 'authfilterpbb']);
 
 $routes->add('trx22', 'Trx22::index', ['filter' => 'authfilterpbb']);
 $routes->post('trx22AmbilData', 'Trx22::ambildata', ['filter' => 'authfilterpbb']);
@@ -123,7 +123,7 @@ $routes->post('modalBayar', 'Trx22::bayar', ['filter' => 'authfilterpbb']);
 $routes->post('simpanBayar', 'Trx22::simpanBayar', ['filter' => 'authfilterpbb']);
 $routes->post('dataTerhutang', 'Trx22::dataTerhutang', ['filter' => 'authfilterpbb']);
 $routes->post('listPbbTerhutang', 'Trx22::listPbbTerhutang', ['filter' => 'authfilterpbb']);
-$routes->match(['get', 'post'], 'simpanTemp', 'Trx22::simpanTemp', ['filter' => 'authfilterpbb']);
+$routes->match(['GET', 'POST'], 'simpanTemp', 'Trx22::simpanTemp', ['filter' => 'authfilterpbb']);
 $routes->post('hitungTotalBayar', 'Trx22::hitungTotalBayar', ['filter' => 'authfilterpbb']);
 $routes->get('initChart', 'Dhkp22::initChart');
 
@@ -150,5 +150,5 @@ $routes->resource('api_pbb', ['controller' => 'Api\Home']);
  * needing to reload it.
  */
 if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
-	require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
+    require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
 }

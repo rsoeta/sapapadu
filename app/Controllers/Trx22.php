@@ -235,20 +235,37 @@ class Trx22 extends BaseController
     public function buatFaktur()
     {
         $db = \Config\Database::connect();
-        // $tgl = date('Y-m-d');
-        $kode_desa = substr(detailUser()->pu_kode_desa, 9, 4);
+
+        // Ambil kode desa dari user, aman dari NULL
+        $kode_desa = substr((string) detailUser()->pu_kode_desa, 9, 4);
+
         $tgl = $this->tgl();
-        $query = $db->query("SELECT MAX(tr_faktur) AS nofaktur FROM pbb_transaksi22 WHERE DATE_FORMAT(tr_tgl, '%Y-%m-%d') ='$tgl' ");
+
+        // Ambil faktur terakhir pada tanggal terkait
+        $query = $db->query("
+        SELECT MAX(tr_faktur) AS nofaktur 
+        FROM pbb_transaksi22 
+        WHERE DATE_FORMAT(tr_tgl, '%Y-%m-%d') = '$tgl'
+    ");
+
         $hasil = $query->getRowArray();
-        $data = $hasil['nofaktur'];
+        $data = $hasil['nofaktur'] ?? null;
 
-        $lastNoUrut = substr($data, -3);
+        // Pastikan tidak error ketika $data = null
+        if (empty($data)) {
+            $lastNoUrut = 0;
+        } else {
+            $lastNoUrut = intval(substr($data, -3));
+        }
 
-        // nomor urut ditambah 1
-        $nextNoUrut = intval($lastNoUrut) + 1;
+        // nomor urut berikutnya
+        $nextNoUrut = $lastNoUrut + 1;
 
-        // membuat format nomor transaksi berikutnya
-        $fakturTransaksi = '#SAPAPADU' . $kode_desa . date('ymd', strtotime($tgl)) . sprintf('%03s', $nextNoUrut);
+        // Format: #SAPAPADU + kode desa + tanggal ymd + 001/002/003
+        $fakturTransaksi = '#SAPAPADU'
+            . $kode_desa
+            . date('ymd', strtotime($tgl))
+            . sprintf('%03s', $nextNoUrut);
 
         return $fakturTransaksi;
     }
@@ -416,20 +433,29 @@ class Trx22 extends BaseController
     public function hitungTotalBayar()
     {
         if ($this->request->isAJAX()) {
-            $db = \Config\Database::connect();
+
+            $db       = \Config\Database::connect();
             $nofaktur = $this->request->getPost('nofaktur');
 
-            $tblTempTrans = $db->table('pbb_temptrans21');
+            // Query total menggunakan Query Builder
+            $result = $db->table('pbb_temptrans21')
+                ->select('SUM(dettr_subtotal) AS totalbayar')
+                ->where('dettr_faktur', $nofaktur)
+                ->get()
+                ->getRow();
 
-            $queryTotal = $tblTempTrans->select('SUM(dettr_subtotal) as totalbayar')->where('dettr_faktur', $nofaktur)->get();
-            $rowTotal = $queryTotal->getRowArray();
+            // Antisipasi NULL dari SUM()
+            $total = (float) ($result->totalbayar ?? 0);
 
             $msg = [
-                'totalbayar' => number_format($rowTotal['totalbayar'], 0, ",", ".")
+                'totalbayar' => number_format($total, 0, ",", ".")
             ];
-            // dd($msg);
-            echo json_encode($msg);
+
+            return $this->response->setJSON($msg);
         }
+
+        // optional: handle non-AJAX request
+        return $this->fail('Invalid request type');
     }
 
     public function hapusItem()

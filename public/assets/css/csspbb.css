@@ -197,3 +197,17 @@ tr th td {
      border-top-left-radius: 5px;
      border-top-right-radius: 5px;
 }
+
+.shimmer {
+    display: inline-block;
+    color: #aaa;
+    font-style: italic;
+    font-size: 90%;
+    animation: shimmer 1.2s infinite linear;
+}
+
+@keyframes shimmer {
+    0% { opacity: 0.4; }
+    50% { opacity: 1; }
+    100% { opacity: 0.4; }
+}

@@ -2,12 +2,14 @@
 
 namespace PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel;
 
+use PhpOffice\PhpSpreadsheet\Calculation\ArrayEnabled;
 use PhpOffice\PhpSpreadsheet\Calculation\Exception;
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
 use PhpOffice\PhpSpreadsheet\Shared\Date as SharedDateHelper;
 
 class TimeParts
 {
+    use ArrayEnabled;
+
     /**
      * HOUROFDAY.
      *
@@ -19,15 +21,21 @@ class TimeParts
      *
      * @param mixed $timeValue Excel date serial value (float), PHP date timestamp (integer),
      *                                    PHP DateTime object, or a standard time string
+     *                         Or can be an array of date/time values
      *
-     * @return int|string Hour
+     * @return array<mixed>|int|string Hour
+     *         If an array of numbers is passed as the argument, then the returned result will also be an array
+     *            with the same dimensions
      */
-    public static function hour($timeValue)
+    public static function hour(mixed $timeValue): array|string|int
     {
+        if (is_array($timeValue)) {
+            return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $timeValue);
+        }
+
         try {
-            $timeValue = Functions::flattenSingleValue($timeValue);
             Helpers::nullFalseTrueToNumber($timeValue);
-            if (!is_numeric($timeValue)) {
+            if (is_string($timeValue) && !is_numeric($timeValue)) {
                 $timeValue = Helpers::getTimeValue($timeValue);
             }
             Helpers::validateNotNegative($timeValue);
@@ -38,6 +46,7 @@ class TimeParts
         // Execute function
         $timeValue = fmod($timeValue, 1);
         $timeValue = SharedDateHelper::excelToDateTimeObject($timeValue);
+        SharedDateHelper::roundMicroseconds($timeValue);
 
         return (int) $timeValue->format('H');
     }
@@ -53,15 +62,21 @@ class TimeParts
      *
      * @param mixed $timeValue Excel date serial value (float), PHP date timestamp (integer),
      *                                    PHP DateTime object, or a standard time string
+     *                         Or can be an array of date/time values
      *
-     * @return int|string Minute
+     * @return array<mixed>|int|string Minute
+     *         If an array of numbers is passed as the argument, then the returned result will also be an array
+     *            with the same dimensions
      */
-    public static function minute($timeValue)
+    public static function minute(mixed $timeValue): array|string|int
     {
+        if (is_array($timeValue)) {
+            return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $timeValue);
+        }
+
         try {
-            $timeValue = Functions::flattenSingleValue($timeValue);
             Helpers::nullFalseTrueToNumber($timeValue);
-            if (!is_numeric($timeValue)) {
+            if (is_string($timeValue) && !is_numeric($timeValue)) {
                 $timeValue = Helpers::getTimeValue($timeValue);
             }
             Helpers::validateNotNegative($timeValue);
@@ -72,6 +87,7 @@ class TimeParts
         // Execute function
         $timeValue = fmod($timeValue, 1);
         $timeValue = SharedDateHelper::excelToDateTimeObject($timeValue);
+        SharedDateHelper::roundMicroseconds($timeValue);
 
         return (int) $timeValue->format('i');
     }
@@ -87,15 +103,21 @@ class TimeParts
      *
      * @param mixed $timeValue Excel date serial value (float), PHP date timestamp (integer),
      *                                    PHP DateTime object, or a standard time string
+     *                         Or can be an array of date/time values
      *
-     * @return int|string Second
+     * @return array<mixed>|int|string Second
+     *         If an array of numbers is passed as the argument, then the returned result will also be an array
+     *            with the same dimensions
      */
-    public static function second($timeValue)
+    public static function second(mixed $timeValue): array|string|int
     {
+        if (is_array($timeValue)) {
+            return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $timeValue);
+        }
+
         try {
-            $timeValue = Functions::flattenSingleValue($timeValue);
             Helpers::nullFalseTrueToNumber($timeValue);
-            if (!is_numeric($timeValue)) {
+            if (is_string($timeValue) && !is_numeric($timeValue)) {
                 $timeValue = Helpers::getTimeValue($timeValue);
             }
             Helpers::validateNotNegative($timeValue);
@@ -106,6 +128,7 @@ class TimeParts
         // Execute function
         $timeValue = fmod($timeValue, 1);
         $timeValue = SharedDateHelper::excelToDateTimeObject($timeValue);
+        SharedDateHelper::roundMicroseconds($timeValue);
 
         return (int) $timeValue->format('s');
     }

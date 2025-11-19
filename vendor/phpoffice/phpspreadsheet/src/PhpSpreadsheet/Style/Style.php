@@ -2,66 +2,74 @@
 
 namespace PhpOffice\PhpSpreadsheet\Style;
 
+use PhpOffice\PhpSpreadsheet\Calculation\Functions;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\Chart\ChartColor;
+use PhpOffice\PhpSpreadsheet\Exception;
+use PhpOffice\PhpSpreadsheet\Shared\StringHelper;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class Style extends Supervisor
 {
     /**
      * Font.
-     *
-     * @var Font
      */
-    protected $font;
+    protected Font $font;
 
     /**
      * Fill.
-     *
-     * @var Fill
      */
-    protected $fill;
+    protected Fill $fill;
 
     /**
      * Borders.
-     *
-     * @var Borders
      */
-    protected $borders;
+    protected Borders $borders;
 
     /**
      * Alignment.
-     *
-     * @var Alignment
      */
-    protected $alignment;
+    protected Alignment $alignment;
 
     /**
      * Number Format.
-     *
-     * @var NumberFormat
      */
-    protected $numberFormat;
+    protected NumberFormat $numberFormat;
 
     /**
      * Protection.
-     *
-     * @var Protection
      */
-    protected $protection;
+    protected Protection $protection;
 
     /**
      * Index of style in collection. Only used for real style.
-     *
-     * @var int
      */
-    protected $index;
+    protected int $index;
 
     /**
      * Use Quote Prefix when displaying in cell editor. Only used for real style.
-     *
-     * @var bool
      */
-    protected $quotePrefix = false;
+    protected bool $quotePrefix = false;
+
+    /**
+     * Internal cache for styles
+     * Used when applying style on range of cells (column or row) and cleared when
+     * all cells in range is styled.
+     *
+     * PhpSpreadsheet will always minimize the amount of styles used. So cells with
+     * same styles will reference the same Style instance. To check if two styles
+     * are similar Style::getHashCode() is used. This call is expensive. To minimize
+     * the need to call this method we can cache the internal PHP object id of the
+     * Style in the range. Style::getHashCode() will then only be called when we
+     * encounter a unique style.
+     *
+     * @see Style::applyFromArray()
+     * @see Style::getHashCode()
+     *
+     * @var null|array<string, mixed[]>
+     */
+    private static ?array $cachedStyles = null;
 
     /**
      * Create a new Style.
@@ -73,14 +81,14 @@ class Style extends Supervisor
      *       Leave this value at default unless you understand exactly what
      *    its ramifications are
      */
-    public function __construct($isSupervisor = false, $isConditional = false)
+    public function __construct(bool $isSupervisor = false, bool $isConditional = false)
     {
         parent::__construct($isSupervisor);
 
         // Initialise values
         $this->font = new Font($isSupervisor, $isConditional);
         $this->fill = new Fill($isSupervisor, $isConditional);
-        $this->borders = new Borders($isSupervisor);
+        $this->borders = new Borders($isSupervisor, $isConditional);
         $this->alignment = new Alignment($isSupervisor, $isConditional);
         $this->numberFormat = new NumberFormat($isSupervisor, $isConditional);
         $this->protection = new Protection($isSupervisor, $isConditional);
@@ -99,13 +107,11 @@ class Style extends Supervisor
     /**
      * Get the shared style component for the currently active cell in currently active sheet.
      * Only used for style supervisor.
-     *
-     * @return Style
      */
-    public function getSharedComponent()
+    public function getSharedComponent(): self
     {
         $activeSheet = $this->getActiveSheet();
-        $selectedCell = $this->getActiveCell(); // e.g. 'A1'
+        $selectedCell = Functions::trimSheetFromCellReference($this->getActiveCell()); // e.g. 'A1'
 
         if ($activeSheet->cellExists($selectedCell)) {
             $xfIndex = $activeSheet->getCell($selectedCell)->getXfIndex();
@@ -113,27 +119,25 @@ class Style extends Supervisor
             $xfIndex = 0;
         }
 
-        return $this->parent->getCellXfByIndex($xfIndex);
+        return $activeSheet->getParentOrThrow()->getCellXfByIndex($xfIndex);
     }
 
     /**
      * Get parent. Only used for style supervisor.
-     *
-     * @return Spreadsheet
      */
-    public function getParent()
+    public function getParent(): Spreadsheet
     {
-        return $this->parent;
+        return $this->getActiveSheet()->getParentOrThrow();
     }
 
     /**
      * Build style array from subcomponents.
      *
-     * @param array $array
+     * @param mixed[] $array
      *
-     * @return array
+     * @return array{quotePrefix: mixed[]}
      */
-    public function getStyleArray($array)
+    public function getStyleArray(array $array): array
     {
         return ['quotePrefix' => $array];
     }
@@ -178,21 +182,29 @@ class Style extends Supervisor
      * );
      * </code>
      *
-     * @param array $pStyles Array containing style information
-     * @param bool $pAdvanced advanced mode for setting borders
+     * @param mixed[] $styleArray Array containing style information
+     * @param bool $advancedBorders advanced mode for setting borders
      *
      * @return $this
      */
-    public function applyFromArray(array $pStyles, $pAdvanced = true)
+    public function applyFromArray(array $styleArray, bool $advancedBorders = true): static
     {
         if ($this->isSupervisor) {
             $pRange = $this->getSelectedCells();
 
-            // Uppercase coordinate
+            // Uppercase coordinate and strip any Worksheet reference from the selected range
             $pRange = strtoupper($pRange);
+            if (str_contains($pRange, '!')) {
+                $pRangeWorksheet = StringHelper::strToUpper(substr($pRange, 0, (int) strrpos($pRange, '!')));
+                $pRangeWorksheet = Worksheet::unApostrophizeTitle($pRangeWorksheet);
+                if ($pRangeWorksheet !== '' && StringHelper::strToUpper($this->getActiveSheet()->getTitle()) !== $pRangeWorksheet) {
+                    throw new Exception('Invalid Worksheet for specified Range');
+                }
+                $pRange = strtoupper(Functions::trimSheetFromCellReference($pRange));
+            }
 
             // Is it a cell range or a single cell?
-            if (strpos($pRange, ':') === false) {
+            if (!str_contains($pRange, ':')) {
                 $rangeA = $pRange;
                 $rangeB = $pRange;
             } else {
@@ -216,36 +228,37 @@ class Style extends Supervisor
             }
 
             // ADVANCED MODE:
-            if ($pAdvanced && isset($pStyles['borders'])) {
+            if ($advancedBorders && isset($styleArray['borders'])) {
                 // 'allBorders' is a shorthand property for 'outline' and 'inside' and
                 //        it applies to components that have not been set explicitly
-                if (isset($pStyles['borders']['allBorders'])) {
+                /** @var mixed[][] $styleArray */
+                if (isset($styleArray['borders']['allBorders'])) {
                     foreach (['outline', 'inside'] as $component) {
-                        if (!isset($pStyles['borders'][$component])) {
-                            $pStyles['borders'][$component] = $pStyles['borders']['allBorders'];
+                        if (!isset($styleArray['borders'][$component])) {
+                            $styleArray['borders'][$component] = $styleArray['borders']['allBorders'];
                         }
                     }
-                    unset($pStyles['borders']['allBorders']); // not needed any more
+                    unset($styleArray['borders']['allBorders']); // not needed any more
                 }
                 // 'outline' is a shorthand property for 'top', 'right', 'bottom', 'left'
                 //        it applies to components that have not been set explicitly
-                if (isset($pStyles['borders']['outline'])) {
+                if (isset($styleArray['borders']['outline'])) {
                     foreach (['top', 'right', 'bottom', 'left'] as $component) {
-                        if (!isset($pStyles['borders'][$component])) {
-                            $pStyles['borders'][$component] = $pStyles['borders']['outline'];
+                        if (!isset($styleArray['borders'][$component])) {
+                            $styleArray['borders'][$component] = $styleArray['borders']['outline'];
                         }
                     }
-                    unset($pStyles['borders']['outline']); // not needed any more
+                    unset($styleArray['borders']['outline']); // not needed any more
                 }
                 // 'inside' is a shorthand property for 'vertical' and 'horizontal'
                 //        it applies to components that have not been set explicitly
-                if (isset($pStyles['borders']['inside'])) {
+                if (isset($styleArray['borders']['inside'])) {
                     foreach (['vertical', 'horizontal'] as $component) {
-                        if (!isset($pStyles['borders'][$component])) {
-                            $pStyles['borders'][$component] = $pStyles['borders']['inside'];
+                        if (!isset($styleArray['borders'][$component])) {
+                            $styleArray['borders'][$component] = $styleArray['borders']['inside'];
                         }
                     }
-                    unset($pStyles['borders']['inside']); // not needed any more
+                    unset($styleArray['borders']['inside']); // not needed any more
                 }
                 // width and height characteristics of selection, 1, 2, or 3 (for 3 or more)
                 $xMax = min($rangeEndIndexes[0] - $rangeStartIndexes[0] + 1, 3);
@@ -254,12 +267,12 @@ class Style extends Supervisor
                 // loop through up to 3 x 3 = 9 regions
                 for ($x = 1; $x <= $xMax; ++$x) {
                     // start column index for region
-                    $colStart = ($x == 3) ?
-                        Coordinate::stringFromColumnIndex($rangeEndIndexes[0])
+                    $colStart = ($x == 3)
+                        ? Coordinate::stringFromColumnIndex($rangeEndIndexes[0])
                         : Coordinate::stringFromColumnIndex($rangeStartIndexes[0] + $x - 1);
                     // end column index for region
-                    $colEnd = ($x == 1) ?
-                        Coordinate::stringFromColumnIndex($rangeStartIndexes[0])
+                    $colEnd = ($x == 1)
+                        ? Coordinate::stringFromColumnIndex($rangeStartIndexes[0])
                         : Coordinate::stringFromColumnIndex($rangeEndIndexes[0] - $xMax + $x);
 
                     for ($y = 1; $y <= $yMax; ++$y) {
@@ -283,18 +296,18 @@ class Style extends Supervisor
                         }
 
                         // start row index for region
-                        $rowStart = ($y == 3) ?
-                            $rangeEndIndexes[1] : $rangeStartIndexes[1] + $y - 1;
+                        $rowStart = ($y == 3)
+                            ? $rangeEndIndexes[1] : $rangeStartIndexes[1] + $y - 1;
 
                         // end row index for region
-                        $rowEnd = ($y == 1) ?
-                            $rangeStartIndexes[1] : $rangeEndIndexes[1] - $yMax + $y;
+                        $rowEnd = ($y == 1)
+                            ? $rangeStartIndexes[1] : $rangeEndIndexes[1] - $yMax + $y;
 
                         // build range for region
                         $range = $colStart . $rowStart . ':' . $colEnd . $rowEnd;
 
                         // retrieve relevant style array for region
-                        $regionStyles = $pStyles;
+                        $regionStyles = $styleArray;
                         unset($regionStyles['borders']['inside']);
 
                         // what are the inner edges of the region when looking at the selection
@@ -305,10 +318,14 @@ class Style extends Supervisor
                             switch ($innerEdge) {
                                 case 'top':
                                 case 'bottom':
+                                    /** @var mixed[][] $styleArray */
                                     // should pick up 'horizontal' border property if set
-                                    if (isset($pStyles['borders']['horizontal'])) {
-                                        $regionStyles['borders'][$innerEdge] = $pStyles['borders']['horizontal'];
+                                    if (isset($styleArray['borders']['horizontal'])) {
+                                        /** @var mixed[][] $regionStyles */
+                                        $regionStyles['borders'][$innerEdge]
+                                            = $styleArray['borders']['horizontal'];
                                     } else {
+                                        /** @var mixed[][] $regionStyles */
                                         unset($regionStyles['borders'][$innerEdge]);
                                     }
 
@@ -316,8 +333,8 @@ class Style extends Supervisor
                                 case 'left':
                                 case 'right':
                                     // should pick up 'vertical' border property if set
-                                    if (isset($pStyles['borders']['vertical'])) {
-                                        $regionStyles['borders'][$innerEdge] = $pStyles['borders']['vertical'];
+                                    if (isset($styleArray['borders']['vertical'])) {
+                                        $regionStyles['borders'][$innerEdge] = $styleArray['borders']['vertical'];
                                     } else {
                                         unset($regionStyles['borders'][$innerEdge]);
                                     }
@@ -341,27 +358,79 @@ class Style extends Supervisor
             // Selection type, inspect
             if (preg_match('/^[A-Z]+1:[A-Z]+1048576$/', $pRange)) {
                 $selectionType = 'COLUMN';
+
+                // Enable caching of styles
+                self::$cachedStyles = ['hashByObjId' => [], 'styleByHash' => []];
             } elseif (preg_match('/^A\d+:XFD\d+$/', $pRange)) {
                 $selectionType = 'ROW';
+
+                // Enable caching of styles
+                self::$cachedStyles = ['hashByObjId' => [], 'styleByHash' => []];
             } else {
                 $selectionType = 'CELL';
             }
 
             // First loop through columns, rows, or cells to find out which styles are affected by this operation
-            $oldXfIndexes = $this->getOldXfIndexes($selectionType, $rangeStartIndexes, $rangeEndIndexes, $columnStart, $columnEnd, $pStyles);
+            $oldXfIndexes = $this->getOldXfIndexes($selectionType, $rangeStartIndexes, $rangeEndIndexes, $columnStart, $columnEnd, $styleArray);
 
             // clone each of the affected styles, apply the style array, and add the new styles to the workbook
-            $workbook = $this->getActiveSheet()->getParent();
+            $workbook = $this->getActiveSheet()->getParentOrThrow();
             $newXfIndexes = [];
             foreach ($oldXfIndexes as $oldXfIndex => $dummy) {
                 $style = $workbook->getCellXfByIndex($oldXfIndex);
-                $newStyle = clone $style;
-                $newStyle->applyFromArray($pStyles);
 
-                if ($existingStyle = $workbook->getCellXfByHashCode($newStyle->getHashCode())) {
+                // $cachedStyles is set when applying style for a range of cells, either column or row
+                if (self::$cachedStyles === null) {
+                    // Clone the old style and apply style-array
+                    $newStyle = clone $style;
+                    $newStyle->applyFromArray($styleArray);
+
+                    // Look for existing style we can use instead (reduce memory usage)
+                    $existingStyle = $workbook->getCellXfByHashCode($newStyle->getHashCode());
+                } else {
+                    // Style cache is stored by Style::getHashCode(). But calling this method is
+                    // expensive. So we cache the php obj id -> hash.
+                    $objId = spl_object_id($style);
+
+                    // Look for the original HashCode
+                    $styleHash = self::$cachedStyles['hashByObjId'][$objId] ?? null;
+                    if ($styleHash === null) {
+                        // This object_id is not cached, store the hashcode in case encounter again
+                        $styleHash = self::$cachedStyles['hashByObjId'][$objId] = $style->getHashCode();
+                    }
+
+                    // Find existing style by hash.
+                    /** @var string $styleHash */
+                    $existingStyle = self::$cachedStyles['styleByHash'][$styleHash] ?? null;
+
+                    if (!$existingStyle) {
+                        // The old style combined with the new style array is not cached, so we create it now
+                        $newStyle = clone $style;
+                        $newStyle->applyFromArray($styleArray);
+
+                        // Look for similar style in workbook to reduce memory usage
+                        $existingStyle = $workbook->getCellXfByHashCode($newStyle->getHashCode());
+
+                        // Cache the new style by original hashcode
+                        self::$cachedStyles['styleByHash'][$styleHash] = $existingStyle instanceof self ? $existingStyle : $newStyle;
+                    }
+                }
+
+                if ($existingStyle) {
                     // there is already such cell Xf in our collection
+                    /** @var Style $existingStyle */
                     $newXfIndexes[$oldXfIndex] = $existingStyle->getIndex();
                 } else {
+                    if (!isset($newStyle)) {
+                        // Handle bug in PHPStan, see https://github.com/phpstan/phpstan/issues/5805
+                        // $newStyle should always be defined.
+                        // This block might not be needed in the future
+                        // @codeCoverageIgnoreStart
+                        $newStyle = clone $style;
+                        $newStyle->applyFromArray($styleArray);
+                        // @codeCoverageIgnoreEnd
+                    }
+
                     // we don't have such a cell Xf, need to add
                     $workbook->addCellXf($newStyle);
                     $newXfIndexes[$oldXfIndex] = $newStyle->getIndex();
@@ -374,8 +443,12 @@ class Style extends Supervisor
                     for ($col = $rangeStartIndexes[0]; $col <= $rangeEndIndexes[0]; ++$col) {
                         $columnDimension = $this->getActiveSheet()->getColumnDimensionByColumn($col);
                         $oldXfIndex = $columnDimension->getXfIndex();
+                        /** @var int[] $newXfIndexes */
                         $columnDimension->setXfIndex($newXfIndexes[$oldXfIndex]);
                     }
+
+                    // Disable caching of styles
+                    self::$cachedStyles = null;
 
                     break;
                 case 'ROW':
@@ -383,14 +456,18 @@ class Style extends Supervisor
                         $rowDimension = $this->getActiveSheet()->getRowDimension($row);
                         // row without explicit style should be formatted based on default style
                         $oldXfIndex = $rowDimension->getXfIndex() ?? 0;
+                        /** @var int[] $newXfIndexes */
                         $rowDimension->setXfIndex($newXfIndexes[$oldXfIndex]);
                     }
+
+                    // Disable caching of styles
+                    self::$cachedStyles = null;
 
                     break;
                 case 'CELL':
                     for ($col = $rangeStartIndexes[0]; $col <= $rangeEndIndexes[0]; ++$col) {
                         for ($row = $rangeStartIndexes[1]; $row <= $rangeEndIndexes[1]; ++$row) {
-                            $cell = $this->getActiveSheet()->getCellByColumnAndRow($col, $row);
+                            $cell = $this->getActiveSheet()->getCell([$col, $row]);
                             $oldXfIndex = $cell->getXfIndex();
                             $cell->setXfIndex($newXfIndexes[$oldXfIndex]);
                         }
@@ -400,74 +477,102 @@ class Style extends Supervisor
             }
         } else {
             // not a supervisor, just apply the style array directly on style object
-            if (isset($pStyles['fill'])) {
-                $this->getFill()->applyFromArray($pStyles['fill']);
+            /** @var array{
+             * alignment?: mixed[],
+             * fill?: array{fillType?: string, rotation?: float, startColor?: array{rgb?: string, argb?: string}, endColor?: array{rgb?: string, argb?: string}, color?: array{rgb?: string, argb?: string}},
+             * font?: array{name?: string, latin?: string, eastAsian?: string, complexScript?: string, bold?: bool, italic?: bool, superscript?: bool, subscript?: bool, underline?: bool|string, strikethrough?: bool, color?: string[], size?: ?int, chartColor?: ChartColor, scheme?: string, cap?: string},
+             * borders?: mixed[][],
+             * numberFormat?: string[],
+             * protection?: array{locked?: string, hidden?: string},
+             * quotePrefix?: bool} $styleArray */
+            if (isset($styleArray['fill'])) {
+                $this->getFill()
+                    ->applyFromArray($styleArray['fill']);
             }
-            if (isset($pStyles['font'])) {
-                $this->getFont()->applyFromArray($pStyles['font']);
+            if (isset($styleArray['font'])) {
+                $this->getFont()
+                    ->applyFromArray($styleArray['font']);
             }
-            if (isset($pStyles['borders'])) {
-                $this->getBorders()->applyFromArray($pStyles['borders']);
+            if (isset($styleArray['borders'])) {
+                $this->getBorders()
+                    ->applyFromArray($styleArray['borders']);
             }
-            if (isset($pStyles['alignment'])) {
-                $this->getAlignment()->applyFromArray($pStyles['alignment']);
+            if (isset($styleArray['alignment'])) {
+                $temp = $styleArray['alignment'];
+                $this->getAlignment()
+                    ->applyFromArray($temp);
             }
-            if (isset($pStyles['numberFormat'])) {
-                $this->getNumberFormat()->applyFromArray($pStyles['numberFormat']);
+            if (isset($styleArray['numberFormat'])) {
+                $this->getNumberFormat()
+                    ->applyFromArray($styleArray['numberFormat']);
             }
-            if (isset($pStyles['protection'])) {
-                $this->getProtection()->applyFromArray($pStyles['protection']);
+            if (isset($styleArray['protection'])) {
+                $this->getProtection()
+                    ->applyFromArray($styleArray['protection']);
             }
-            if (isset($pStyles['quotePrefix'])) {
-                $this->quotePrefix = $pStyles['quotePrefix'];
+            if (isset($styleArray['quotePrefix'])) {
+                $this->quotePrefix = $styleArray['quotePrefix'];
             }
         }
 
         return $this;
     }
 
-    private function getOldXfIndexes(string $selectionType, array $rangeStart, array $rangeEnd, string $columnStart, string $columnEnd, array $pStyles): array
+    /**
+     * @param mixed[] $rangeStart
+     * @param mixed[] $rangeEnd
+     * @param mixed[] $styleArray
+     *
+     * @return mixed[]
+     */
+    private function getOldXfIndexes(string $selectionType, array $rangeStart, array $rangeEnd, string $columnStart, string $columnEnd, array $styleArray): array
     {
         $oldXfIndexes = [];
         switch ($selectionType) {
             case 'COLUMN':
                 for ($col = $rangeStart[0]; $col <= $rangeEnd[0]; ++$col) {
+                    /** @var int $col */
                     $oldXfIndexes[$this->getActiveSheet()->getColumnDimensionByColumn($col)->getXfIndex()] = true;
                 }
                 foreach ($this->getActiveSheet()->getColumnIterator($columnStart, $columnEnd) as $columnIterator) {
                     $cellIterator = $columnIterator->getCellIterator();
                     $cellIterator->setIterateOnlyExistingCells(true);
                     foreach ($cellIterator as $columnCell) {
-                        if ($columnCell !== null) {
-                            $columnCell->getStyle()->applyFromArray($pStyles);
-                        }
+                        $columnCell->getStyle()
+                            ->applyFromArray($styleArray);
                     }
                 }
 
                 break;
             case 'ROW':
                 for ($row = $rangeStart[1]; $row <= $rangeEnd[1]; ++$row) {
+                    /** @var int $row */
                     if ($this->getActiveSheet()->getRowDimension($row)->getXfIndex() === null) {
                         $oldXfIndexes[0] = true; // row without explicit style should be formatted based on default style
                     } else {
                         $oldXfIndexes[$this->getActiveSheet()->getRowDimension($row)->getXfIndex()] = true;
                     }
                 }
-                foreach ($this->getActiveSheet()->getRowIterator((int) $rangeStart[1], (int) $rangeEnd[1]) as $rowIterator) {
+                /** @var float|int */
+                $temp1 = $rangeStart[1];
+                /** @var float|int */
+                $temp2 = $rangeEnd[1];
+                foreach ($this->getActiveSheet()->getRowIterator((int) $temp1, (int) $temp2) as $rowIterator) {
                     $cellIterator = $rowIterator->getCellIterator();
                     $cellIterator->setIterateOnlyExistingCells(true);
                     foreach ($cellIterator as $rowCell) {
-                        if ($rowCell !== null) {
-                            $rowCell->getStyle()->applyFromArray($pStyles);
-                        }
+                        $rowCell->getStyle()
+                            ->applyFromArray($styleArray);
                     }
                 }
 
                 break;
             case 'CELL':
                 for ($col = $rangeStart[0]; $col <= $rangeEnd[0]; ++$col) {
+                    /** @var int $col */
                     for ($row = $rangeStart[1]; $row <= $rangeEnd[1]; ++$row) {
-                        $oldXfIndexes[$this->getActiveSheet()->getCellByColumnAndRow($col, $row)->getXfIndex()] = true;
+                        /** @var int $row */
+                        $oldXfIndexes[$this->getActiveSheet()->getCell([$col, $row])->getXfIndex()] = true;
                     }
                 }
 
@@ -479,20 +584,16 @@ class Style extends Supervisor
 
     /**
      * Get Fill.
-     *
-     * @return Fill
      */
-    public function getFill()
+    public function getFill(): Fill
     {
         return $this->fill;
     }
 
     /**
      * Get Font.
-     *
-     * @return Font
      */
-    public function getFont()
+    public function getFont(): Font
     {
         return $this->font;
     }
@@ -502,7 +603,7 @@ class Style extends Supervisor
      *
      * @return $this
      */
-    public function setFont(Font $font)
+    public function setFont(Font $font): static
     {
         $this->font = $font;
 
@@ -511,30 +612,24 @@ class Style extends Supervisor
 
     /**
      * Get Borders.
-     *
-     * @return Borders
      */
-    public function getBorders()
+    public function getBorders(): Borders
     {
         return $this->borders;
     }
 
     /**
      * Get Alignment.
-     *
-     * @return Alignment
      */
-    public function getAlignment()
+    public function getAlignment(): Alignment
     {
         return $this->alignment;
     }
 
     /**
      * Get Number Format.
-     *
-     * @return NumberFormat
      */
-    public function getNumberFormat()
+    public function getNumberFormat(): NumberFormat
     {
         return $this->numberFormat;
     }
@@ -544,7 +639,7 @@ class Style extends Supervisor
      *
      * @return Conditional[]
      */
-    public function getConditionalStyles()
+    public function getConditionalStyles(): array
     {
         return $this->getActiveSheet()->getConditionalStyles($this->getActiveCell());
     }
@@ -552,33 +647,29 @@ class Style extends Supervisor
     /**
      * Set Conditional Styles. Only used on supervisor.
      *
-     * @param Conditional[] $pValue Array of conditional styles
+     * @param Conditional[] $conditionalStyleArray Array of conditional styles
      *
      * @return $this
      */
-    public function setConditionalStyles(array $pValue)
+    public function setConditionalStyles(array $conditionalStyleArray): static
     {
-        $this->getActiveSheet()->setConditionalStyles($this->getSelectedCells(), $pValue);
+        $this->getActiveSheet()->setConditionalStyles($this->getSelectedCells(), $conditionalStyleArray);
 
         return $this;
     }
 
     /**
      * Get Protection.
-     *
-     * @return Protection
      */
-    public function getProtection()
+    public function getProtection(): Protection
     {
         return $this->protection;
     }
 
     /**
      * Get quote prefix.
-     *
-     * @return bool
      */
-    public function getQuotePrefix()
+    public function getQuotePrefix(): bool
     {
         if ($this->isSupervisor) {
             return $this->getSharedComponent()->getQuotePrefix();
@@ -590,20 +681,20 @@ class Style extends Supervisor
     /**
      * Set quote prefix.
      *
-     * @param bool $pValue
-     *
      * @return $this
      */
-    public function setQuotePrefix($pValue)
+    public function setQuotePrefix(bool $quotePrefix): static
     {
-        if ($pValue == '') {
-            $pValue = false;
+        if ($quotePrefix == '') {
+            $quotePrefix = false;
         }
         if ($this->isSupervisor) {
-            $styleArray = ['quotePrefix' => $pValue];
-            $this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
+            $styleArray = ['quotePrefix' => $quotePrefix];
+            $this->getActiveSheet()
+                ->getStyle($this->getSelectedCells())
+                ->applyFromArray($styleArray);
         } else {
-            $this->quotePrefix = (bool) $pValue;
+            $this->quotePrefix = (bool) $quotePrefix;
         }
 
         return $this;
@@ -614,40 +705,37 @@ class Style extends Supervisor
      *
      * @return string Hash code
      */
-    public function getHashCode()
+    public function getHashCode(): string
     {
         return md5(
-            $this->fill->getHashCode() .
-            $this->font->getHashCode() .
-            $this->borders->getHashCode() .
-            $this->alignment->getHashCode() .
-            $this->numberFormat->getHashCode() .
-            $this->protection->getHashCode() .
-            ($this->quotePrefix ? 't' : 'f') .
-            __CLASS__
+            $this->fill->getHashCode()
+            . $this->font->getHashCode()
+            . $this->borders->getHashCode()
+            . $this->alignment->getHashCode()
+            . $this->numberFormat->getHashCode()
+            . $this->protection->getHashCode()
+            . ($this->quotePrefix ? 't' : 'f')
+            . __CLASS__
         );
     }
 
     /**
      * Get own index in style collection.
-     *
-     * @return int
      */
-    public function getIndex()
+    public function getIndex(): int
     {
         return $this->index;
     }
 
     /**
      * Set own index in style collection.
-     *
-     * @param int $pValue
      */
-    public function setIndex($pValue): void
+    public function setIndex(int $index): void
     {
-        $this->index = $pValue;
+        $this->index = $index;
     }
 
+    /** @return mixed[] */
     protected function exportArray1(): array
     {
         $exportedArray = [];
@@ -657,7 +745,7 @@ class Style extends Supervisor
         $this->exportArray2($exportedArray, 'font', $this->getFont());
         $this->exportArray2($exportedArray, 'numberFormat', $this->getNumberFormat());
         $this->exportArray2($exportedArray, 'protection', $this->getProtection());
-        $this->exportArray2($exportedArray, 'quotePrefx', $this->getQuotePrefix());
+        $this->exportArray2($exportedArray, 'quotePrefix', $this->getQuotePrefix());
 
         return $exportedArray;
     }
