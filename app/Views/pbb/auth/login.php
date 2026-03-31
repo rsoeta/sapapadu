@@ -58,17 +58,15 @@
 
 
                     <div class="input-group mb-3">
-                        <input type="password" class="form-control" placeholder="Password" name="password">
+                        <input type="password" class="form-control" placeholder="Password" name="password" id="pu_password">
                     </div>
 
 
-                    <div class="form-check">
-                        <label class="form-check-label">
-                            <input type="checkbox" name="remember" class="form-check-input">
-                            Remember Me
-                        </label>
+                    <!-- checkbox -->
+                    <div class="custom-control custom-checkbox mb-3">
+                        <input type="checkbox" class="custom-control-input" id="customCheck1">
+                        <label class="custom-control-label" for="customCheck1">Tampilkan Password</label>
                     </div>
-
 
                     <div class="right-bkij my-2">
                         <button type="submit" class="btn btn-success btn-round">Login</button>
@@ -78,11 +76,22 @@
                 <?= form_close(); ?>
                 <br><br>
                 <hr class="mt-2">
-                <div class="row no-margin past mt-2 float-right">
-                    <a href="<?= base_url(); ?>" style="color: blue;">
-                        <p>Back to Home</p>
-                    </a>
+                <div class="row no-margin past d-flex justify-content-between">
+
+                    <div class="col-auto p-0">
+                        <a href="/forgot-password" style="color: blue;">
+                            <p class="m-0">Lupa Password?</p>
+                        </a>
+                    </div>
+
+                    <div class="col-auto p-0 text-right">
+                        <a href="<?= base_url(); ?>" style="color: blue;">
+                            <p class="m-0">Back to Home</p>
+                        </a>
+                    </div>
+
                 </div>
+
             </div>
             <div class="col-lg-6 col-md-6 box-de">
                 <div class="ditk-inf">
@@ -95,6 +104,18 @@
     </div>
 </div>
 <script>
+    // show password
+    var pu_password = document.getElementById("pu_password")
+    var show = document.getElementById("customCheck1")
+    show.addEventListener('click', function() {
+        if (pu_password.type === "password") {
+            pu_password.type = "text";
+        } else {
+            pu_password.type = "password";
+        }
+    })
+
+    // fade out alert
     window.setTimeout(function() {
         $(".alert").fadeTo(500, 0).slideUp(500, function() {
             $(this).remove();

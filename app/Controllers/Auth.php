@@ -178,7 +178,6 @@ class Auth extends BaseController
         return view('pbb/auth/login', $data);
     }
 
-
     private function setUserSession($user)
     {
         $data = [
@@ -202,7 +201,6 @@ class Auth extends BaseController
         session()->set($data);
         return true;
     }
-
 
     public function register()
     {
@@ -318,7 +316,6 @@ class Auth extends BaseController
         return view('pbb/auth/register', $data);
     }
 
-
     public function logout()
     {
         session()->remove('logPbb');
@@ -330,5 +327,209 @@ class Auth extends BaseController
         session()->destroy();
         session()->setFlashdata('info', 'Logout sukses..');
         return redirect()->to(base_url());
+    }
+
+    public function forgotPassword()
+    {
+        return view('pbb/auth/forgot_password', [
+            'title' => 'Lupa Password'
+        ]);
+    }
+
+    public function sendResetLink()
+    {
+        $email = $this->request->getPost('email');
+        $nik = $this->request->getPost('nik');
+        $fullname = $this->request->getPost('fullname');
+
+        $user = $this->authModel
+            ->where('pu_email', $email)
+            ->where('pu_nik', $nik)
+            ->where('pu_fullname', $fullname)
+            ->first();
+
+        if (!$user) {
+            return redirect()->back()->with('message', 'Data tidak ditemukan. Pastikan semuanya sesuai.');
+        }
+
+        $token = bin2hex(random_bytes(32));
+        $expires = date('Y-m-d H:i:s', time() + 3600); // 1 jam
+
+        $db = \Config\Database::connect();
+        $db->table('password_reset_tokens')->insert([
+            'email'      => $email,
+            'token'      => $token,
+            'expires_at' => $expires,
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
+
+        $resetLink = base_url("reset-password/$token");
+
+        // Kirim email
+        $waNumber = $user['pu_nope']; // Ambil nomor WA dari database
+
+        $this->sendResetEmail(
+            $email,
+            $user['pu_fullname'],
+            $resetLink,
+            $waNumber // dikirim ke fungsi
+        );
+
+
+        return redirect()->to('/login')->with('success', 'Link reset password telah dikirim ke email Anda.');
+    }
+
+    public function resetPassword($token)
+    {
+        $db = \Config\Database::connect();
+        $row = $db->table('password_reset_tokens')
+            ->where('token', $token)
+            ->where('used', 0)
+            ->get()
+            ->getRow();
+
+        if (!$row || strtotime($row->expires_at) < time()) {
+            return redirect()->to('/login')->with('message', 'Token tidak valid atau sudah kedaluwarsa.');
+        }
+
+        return view('pbb/auth/reset_password', [
+            'title' => 'Reset Password',
+            'token' => $token
+        ]);
+    }
+
+    public function processResetPassword()
+    {
+        $token = $this->request->getPost('token');
+        $password = $this->request->getPost('password');
+        $confirm = $this->request->getPost('confirm');
+
+        if ($password !== $confirm) {
+            return redirect()->back()->with('message', 'Password tidak sama.');
+        }
+
+        $db = \Config\Database::connect();
+        $row = $db->table('password_reset_tokens')
+            ->where('token', $token)
+            ->where('used', 0)
+            ->get()
+            ->getRow();
+
+        if (!$row || strtotime($row->expires_at) < time()) {
+            return redirect()->to('/login')->with('message', 'Token tidak valid atau kadaluwarsa.');
+        }
+
+        // Update password
+        $hash = password_hash($password, PASSWORD_DEFAULT);
+
+        $db->table('pbb_users')->where('pu_email', $row->email)->update([
+            'pu_password' => $hash,
+            'pu_updated_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        // Tandai token terpakai
+        $db->table('password_reset_tokens')
+            ->where('token', $token)
+            ->update(['used' => 1]);
+
+        return redirect()->to('/login')->with('success', 'Password berhasil direset. Silakan login kembali.');
+    }
+
+    private function sendResetEmail($email, $fullname, $resetLink, $waNumber = null)
+    {
+        $emailService = \Config\Services::email();
+
+        // Setup email
+        $emailService->setFrom('no-reply@sapapadu.pasirlangu.desa.id', 'SAPAPADU');
+        $emailService->setTo($email);
+        $emailService->setSubject('Reset Password SAPAPADU');
+
+        $message = "
+        <div style='font-family: Arial, sans-serif; max-width: 600px; margin: auto; border:1px solid #e3e3e3; border-radius:8px;'>
+            <div style='background:#0066cc; padding:20px; color:white; text-align:center; font-size:22px;'>
+                <strong>SAPAPADU</strong>
+            </div>
+
+            <div style='padding:25px; font-size:15px; color:#333;'>
+                <p>Halo <strong>$fullname</strong>,</p>
+                <p>Kami menerima permintaan untuk mereset password akun Anda.</p>
+                <p>Silakan klik tombol di bawah ini untuk membuat password baru:</p>
+
+                <div style='text-align:center; margin:30px 0;'>
+                    <a href='$resetLink' 
+                       style='background:#28a745; padding:12px 22px; color:white; text-decoration:none; border-radius:5px; font-size:16px;'>
+                       Reset Password
+                    </a>
+                </div>
+
+                <p>Link ini hanya berlaku selama <strong>1 jam</strong>.</p>
+                <p>Jika Anda tidak merasa melakukan permintaan ini, abaikan saja email ini.</p>
+
+                <br>
+                <p>Salam Hangat,<br>
+                <strong>Desa Pasirlangu</strong></p>
+            </div>
+
+            <div style='text-align:center; padding:15px; font-size:12px; color:#777; background:#f7f7f7;'>
+                Email ini dikirim otomatis oleh sistem SAPAPADU.
+            </div>
+        </div>
+    ";
+
+        $emailService->setMessage($message);
+        $emailService->setMailType('html');
+
+        // 🟢 Coba kirim email
+        if ($emailService->send()) {
+            return true;
+        }
+
+        // 🔴 Email gagal → fallback WhatsApp
+        if ($waNumber) {
+
+            try {
+                $waMsg = "Halo *$fullname*,\n\n"
+                    . "Kami menerima permintaan untuk mereset password akun SAPAPADU.\n\n"
+                    . "Klik link berikut untuk mereset password (berlaku 1 jam):\n"
+                    . "$resetLink\n\n"
+                    . "Jika Anda tidak merasa meminta reset ini, abaikan pesan ini.\n\n"
+                    . "- Desa Pasirlangu";
+
+                // kirim WA
+                $this->sendWhatsAppMessage($waNumber, $waMsg);
+
+                return true;
+            } catch (\Exception $e) {
+                log_message('error', '😢 WhatsApp reset password gagal: ' . $e->getMessage());
+                return false;
+            }
+        }
+
+        return false;
+    }
+
+    private function sendWhatsAppMessage($phone, $message)
+    {
+        $apiKey = getenv('alatwa.api_key');
+        $sender = getenv('alatwa.sender');
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_URL => "https://api.alatwa.com/api/send-message",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => [
+                'api_key' => $apiKey,
+                'sender'  => $sender,
+                'number'  => $phone,
+                'message' => $message,
+            ]
+        ]);
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        return $response;
     }
 }

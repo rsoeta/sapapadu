@@ -44,6 +44,12 @@ $routes->match(['GET', 'POST'], 'login', 'Auth::login', ['filter' => 'noauthfilt
 $routes->get('logout', 'Auth::logout');
 $routes->match(['GET', 'POST'], 'register', 'Auth::register', ['filter' => 'noauthfilterpbb']);
 // $routes->get('pages', 'Pages::index', ['filter' => 'authfilterpbb']);
+$routes->get('forgot-password', 'Auth::forgotPassword', ['filter' => 'noauthfilterpbb']);
+$routes->post('forgot-password', 'Auth::sendResetLink', ['filter' => 'noauthfilterpbb']);
+
+$routes->get('reset-password/(:segment)', 'Auth::resetPassword/$1', ['filter' => 'noauthfilterpbb']);
+$routes->post('reset-password', 'Auth::processResetPassword', ['filter' => 'noauthfilterpbb']);
+
 $routes->get('home', 'Pages::index', ['filter' => 'authfilterpbb']);
 $routes->get('diagram', 'Pages::index2', ['filter' => 'authfilterpbb']);
 // $routes->get('home', 'Dhkp22::index', ['filter' => 'authfilterpbb']);
