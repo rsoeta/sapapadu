@@ -31,6 +31,7 @@ class DhkpModel22 extends Model
         'dhkp_ajuan',
         'pd_tahun',
         'pd_bulan',
+        'foto', // ✅ tambahkan ini
         'created_at',
         'updated_at',
         'pd_creator',

@@ -577,6 +577,14 @@ class Dhkp22 extends BaseController
                 //         'required' => '{field} tidak boleh kosong'
                 //     ]
                 // ]
+                'foto' => [
+                    'rules' => 'permit_empty|is_image[foto]|max_size[foto,2048]|mime_in[foto,image/jpg,image/jpeg,image/png]',
+                    'errors' => [
+                        'is_image' => 'File harus berupa gambar',
+                        'max_size' => 'Max 2MB',
+                        'mime_in' => 'Format tidak valid'
+                    ]
+                ]
             ]);
 
             if (!$valid) {
@@ -605,6 +613,40 @@ class Dhkp22 extends BaseController
                 } else {
                     $namaPemilik = $nama_ktp;
                 }
+
+                $file = $this->request->getFile('foto');
+                $namaFile = null;
+
+                if ($file && $file->isValid() && !$file->hasMoved()) {
+
+                    // validasi manual (karena optional)
+                    $allowedTypes = ['image/jpg', 'image/jpeg', 'image/png'];
+                    if (!in_array($file->getMimeType(), $allowedTypes)) {
+                        return $this->response->setJSON([
+                            'error' => ['foto' => 'Format harus JPG/JPEG/PNG']
+                        ]);
+                    }
+
+                    if ($file->getSize() > 2048 * 1024) {
+                        return $this->response->setJSON([
+                            'error' => ['foto' => 'Ukuran maksimal 2MB']
+                        ]);
+                    }
+
+                    // 🔥 ambil NOP + tanggal
+                    $nop = $this->request->getVar('nop');
+                    $tanggal = date('Ymd_His');
+
+                    // ambil extension
+                    $ext = $file->getExtension();
+
+                    // format nama: NOP_tanggal
+                    $namaFile = $nop . '_' . $tanggal . '.jpg';
+
+                    // simpan file
+                    $this->processImage($file, $namaFile);
+                }
+
                 $simpandata = [
                     'nop' => $this->request->getVar('nop'),
                     'nama_wp' => strtoupper($this->request->getVar('nama_wp')),
@@ -624,6 +666,7 @@ class Dhkp22 extends BaseController
                     'rt' => $this->request->getVar('no_rt'),
                     'pd_tahun' => date('Y'),
                     'pd_bulan' => date('n'),
+                    'foto' => $namaFile,
                     'pd_creator' => $pd_creator,
                     'pd_updater' => $pd_updater,
                     'dhkp_ajuan' => $this->request->getVar('dhkp_ajuan'),
@@ -643,19 +686,25 @@ class Dhkp22 extends BaseController
             return view('lockscreen');
         }
     }
-
     public function formedit()
     {
         if ($this->request->isAJAX()) {
-            $id = $this->request->getVar('id');
 
-            // $dhkpModel22 = new DhkpModel22();
+            $id = $this->request->getVar('id');
             $row = $this->dhkpModel22->find($id);
+
+            // 🔒 optional safety (biar tidak error kalau data tidak ada)
+            if (!$row) {
+                return $this->response->setJSON([
+                    'error' => 'Data tidak ditemukan'
+                ]);
+            }
 
             $data = [
                 'title' => 'Form. Edit Data',
                 'ket_bayar' => $this->KetBayarModel->findAll(),
                 'listAjuan' => $this->PengajuanModel->findAll(),
+
                 'id' => $row['id'],
                 'nop' => $row['nop'],
                 'nama_wp' => $row['nama_wp'],
@@ -670,14 +719,15 @@ class Dhkp22 extends BaseController
                 'no_rw' => $row['rw'],
                 'no_rt' => $row['rt'],
                 'ket' => $row['pd_ket'],
-                'dhkp_ajuan' => $row['dhkp_ajuan']
+                'dhkp_ajuan' => $row['dhkp_ajuan'],
+
+                // 🔥 WAJIB TAMBAH INI
+                'foto' => $row['foto'] ?? null,
             ];
 
-            $msg = [
+            return $this->response->setJSON([
                 'sukses' => view('pbb/dhkp22/modaledit', $data)
-            ];
-
-            echo json_encode($msg);
+            ]);
         }
     }
 
@@ -685,6 +735,41 @@ class Dhkp22 extends BaseController
     {
         if ($this->request->isAJAX()) {
             $user = detailUser()->pu_nik;
+
+            $file = $this->request->getFile('foto');
+            $fotoLama = $this->request->getVar('foto_lama');
+            $namaFile = $fotoLama;
+
+            if ($file && $file->isValid() && !$file->hasMoved()) {
+
+                $allowedTypes = ['image/jpg', 'image/jpeg', 'image/png'];
+
+                if (!in_array($file->getMimeType(), $allowedTypes)) {
+                    return $this->response->setJSON([
+                        'error' => ['foto' => 'Format harus JPG/JPEG/PNG']
+                    ]);
+                }
+
+                $nop = $this->request->getVar('nop');
+                $tanggal = date('Ymd_His');
+                $ext = $file->getExtension();
+
+                $namaFile = $nop . '_' . $tanggal . '.jpg';
+
+                // upload baru
+                $this->processImage($file, $namaFile);
+
+                // 🔥 FIX: jangan hapus kalau nama sama
+                if (
+                    $fotoLama
+                    && $fotoLama != $namaFile
+                    && file_exists(FCPATH . 'sppt_img/' . $fotoLama)
+                ) {
+
+                    unlink(FCPATH . 'sppt_img/' . $fotoLama);
+                }
+            }
+
             $simpandata = [
                 'nop' => $this->request->getVar('nop'),
                 'nama_wp' => strtoupper($this->request->getVar('nama_wp')),
@@ -699,6 +784,7 @@ class Dhkp22 extends BaseController
                 'rw' => $this->request->getVar('no_rw'),
                 'rt' => $this->request->getVar('no_rt'),
                 'pd_ket' => $this->request->getVar('ket'),
+                'foto' => $namaFile,
                 'pd_updater' => $user,
                 'dhkp_ajuan' => $this->request->getVar('dhkp_ajuan')
             ];
@@ -1355,5 +1441,19 @@ class Dhkp22 extends BaseController
         readfile($file_name);
 
         exit;
+    }
+
+    private function processImage($file, $namaFile)
+    {
+        $path = FCPATH . 'sppt_img/';
+
+        // simpan original dulu
+        $file->move($path, $namaFile);
+
+        // resize + compress
+        \Config\Services::image()
+            ->withFile($path . $namaFile)
+            ->resize(1200, 1200, true, 'width') // maintain ratio
+            ->save($path . $namaFile, 75); // quality 75%
     }
 }

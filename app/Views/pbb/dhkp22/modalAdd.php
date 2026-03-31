@@ -1,3 +1,59 @@
+<style>
+    .modal-content {
+        height: 90vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .modal-body {
+        overflow-y: auto;
+        flex: 1 1 auto;
+        /* 🔥 INI KUNCI */
+        background: #fff;
+        /* 🔥 ini kunci */
+        max-height: calc(90vh - 120px);
+        /* header + footer buffer */
+    }
+
+    .modal-footer {
+        flex-shrink: 0;
+        background: #fff;
+    }
+
+    .modal-body::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    #previewFoto {
+        width: 100%;
+        max-width: 550px;
+        max-height: 60vh;
+        /* 🔥 lebih fleksibel */
+        object-fit: contain;
+
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        cursor: zoom-in;
+    }
+
+    #lightboxImage {
+        transition: transform 0.3s ease;
+    }
+
+    @media (max-width: 576px) {
+        #previewFoto {
+            max-width: 100%;
+            max-height: 40vh;
+            /* 🔥 jangan terlalu tinggi */
+            transition: all 0.3s ease;
+
+        }
+
+        .modal-dialog {
+            margin: 10px;
+        }
+    }
+</style>
 <!-- Modal -->
 <div class="modal fade" id="modalTambah" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -155,6 +211,36 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-12 mt-3">
+
+                        <!-- PREVIEW (FULL CONTROL, TIDAK IKUT GRID FORM) -->
+                        <div class="d-flex justify-content-center mb-3">
+                            <img id="previewFoto"
+                                src=""
+                                style="
+                                        width: 100%;
+                                        max-width: 550px;
+                                        max-height: 450px;
+                                        object-fit: contain;
+                                        display: none;
+                                        border-radius:8px;
+                                        border:1px solid #ddd;
+                                        padding:4px;
+                                        background:#fff;
+                                    ">
+                        </div>
+
+                        <!-- INPUT FILE (TETAP GRID FORM) -->
+                        <div class="form-group row nopadding">
+                            <label class="col-4 col-form-label" for="foto">Foto SPPT</label>
+                            <div class="col-8">
+                                <input type="file" name="foto" id="foto" class="form-control form-control-sm" accept="image/*">
+                                <small class="text-muted">Format: jpg, jpeg, png | Max: 2MB</small>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
@@ -164,6 +250,36 @@
             <?= form_close(); ?>
         </div>
     </div>
+</div>
+
+<div id="lightboxOverlay" style="
+    position: fixed;
+    top:0; left:0;
+    width:100%;
+    height:100%;
+    background: rgba(0,0,0,0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+">
+
+    <span id="lightboxClose" style="
+        position: absolute;
+        top:20px;
+        right:30px;
+        font-size:30px;
+        color:#fff;
+        cursor:pointer;
+    ">&times;</span>
+
+    <img id="lightboxImage" src="" style="
+        max-width: 90%;
+        max-height: 90%;
+        object-fit: contain;
+        border-radius:8px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    ">
 </div>
 
 <script>
@@ -188,6 +304,28 @@
             // $('#ket').val(data.pd_ket);
             // $('#dhkp_ajuan').val(data.dhkp_ajuan);
         });
+    });
+
+    // klik preview → buka lightbox
+    $('#previewFoto').on('click', function() {
+        const src = $(this).attr('src');
+
+        if (!src) return;
+
+        $('#lightboxImage').attr('src', src);
+        $('#lightboxOverlay').fadeIn(200);
+    });
+
+    // klik tombol X → close
+    $('#lightboxClose').on('click', function() {
+        $('#lightboxOverlay').fadeOut(200);
+    });
+
+    // klik background → close
+    $('#lightboxOverlay').on('click', function(e) {
+        if (e.target.id === 'lightboxOverlay') {
+            $(this).fadeOut(200);
+        }
     });
 
     async function getData(id) {
@@ -394,6 +532,39 @@
                     alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
                 }
             });
+        });
+
+        $('#foto').on('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('previewFoto');
+
+            if (!file) {
+                preview.src = '';
+                preview.style.display = 'none';
+                return;
+            }
+
+            // validasi tipe (client-side)
+            if (!file.type.startsWith('image/')) {
+                alert('File harus berupa gambar');
+                $(this).val('');
+                preview.style.display = 'none';
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            };
+
+            reader.readAsDataURL(file);
+        });
+
+        $('#modalTambah').on('hidden.bs.modal', function() {
+            $('#foto').val('');
+            $('#previewFoto').attr('src', '').hide();
         });
     });
 </script>

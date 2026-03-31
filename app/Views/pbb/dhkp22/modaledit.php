@@ -120,75 +120,124 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12 mt-3">
+
+                        <!-- PREVIEW GAMBAR LAMA -->
+                        <div class="d-flex justify-content-center mb-3">
+                            <img id="previewFotoEdit"
+                                src="<?= !empty($foto) ? base_url('sppt_img/' . $foto) : '' ?>"
+                                style="
+                                width: 100%;
+                                max-width: 550px;
+                                max-height: 60vh;
+                                object-fit: contain;
+                                border-radius:8px;
+                                border:1px solid #ddd;
+                                padding:4px;
+                                background:#fff;
+                                <?= $foto ? '' : 'display:none;' ?>
+                                ">
+                        </div>
+
+                        <!-- INPUT FILE -->
+                        <div class="form-group row nopadding">
+                            <label class="col-4 col-form-label">Ganti Foto</label>
+                            <div class="col-8">
+                                <input type="file" name="foto" id="fotoEdit" class="form-control form-control-sm" accept="image/*">
+                                <small class="text-muted">Kosongkan jika tidak ingin mengganti</small>
+                            </div>
+                        </div>
+
+                        <!-- SIMPAN FOTO LAMA -->
+                        <input type="hidden" name="foto_lama" value="<?= $foto ?>">
+
+                    </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-success tombolSave">Update</button>
                     </div>
                 </div>
-                <?= form_close(); ?>
             </div>
+            <?= form_close(); ?>
         </div>
     </div>
-    <script>
-        $(document).ready(function() {
-            $('.formdhkp').submit(function(e) {
-                e.preventDefault();
-                $.ajax({
-                    type: "post",
-                    url: $(this).attr('action'),
-                    data: $(this).serialize(),
-                    dataType: "json",
-                    beforeSend: function() {
-                        $('.tombolSave').prop('disable', 'disabled');
-                        $('.tombolSave').html('<i class="fa fa-spin fa-spinner"></i>')
-                    },
-                    complete: function() {
-                        $('.tombolsave').removeAttr('disable');
-                        $('.tombolsave').html('Update');
-                    },
-                    success: function(response) {
-                        // Swal.fire({
-                        //     icon: 'success',
-                        //     title: 'Berhasil',
-                        //     text: response.sukses
-                        // })
-                        const Toast = Swal.mixin({
-                            toast: true,
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timer: 2000,
-                            timerProgressBar: true,
-                            didOpen: (toast) => {
-                                toast.addEventListener('mouseenter', Swal.stopTimer)
-                                toast.addEventListener('mouseleave', Swal.resumeTimer)
-                            }
-                        })
+</div>
+<script>
+    $(document).ready(function() {
+        $('.formdhkp').submit(function(e) {
+            e.preventDefault();
 
-                        Toast.fire({
-                            icon: 'success',
-                            title: response.sukses,
+            let form = $('.formdhkp')[0];
+            let data = new FormData(form);
 
-                        });
+            $.ajax({
+                type: "post",
+                url: $(this).attr('action'),
+                data: data,
+                dataType: "json",
+                processData: false,
+                contentType: false,
+                beforeSend: function() {
+                    $('.tombolSave').prop('disable', 'disabled');
+                    $('.tombolSave').html('<i class="fa fa-spin fa-spinner"></i>')
+                },
+                complete: function() {
+                    $('.tombolSave').removeAttr('disabled');
+                    $('.tombolsave').html('Update');
+                },
+                success: function(response) {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
 
-                        jumlahSppt();
-                        jumlahTotal();
-                        jumlahLunas();
-                        jumlahTotalLunas();
-                        jumlahBelumLunas();
-                        jumlahTotalBelumLunas();
-                        jumlahBermasalah();
-                        jumlahTotalBermasalah();
-                        table.draw();
-                        table0.draw();
-                        table1.draw();
-                        table2.draw();
-                        $('#modaledit').modal('hide');
-                    },
-                    error: function(xhr, thrownError) {
-                        alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
-                    }
-                });
-                return false;
+                    Toast.fire({
+                        icon: 'success',
+                        title: response.sukses,
+
+                    });
+
+                    jumlahSppt();
+                    jumlahTotal();
+                    jumlahLunas();
+                    jumlahTotalLunas();
+                    jumlahBelumLunas();
+                    jumlahTotalBelumLunas();
+                    jumlahBermasalah();
+                    jumlahTotalBermasalah();
+                    table.draw();
+                    table0.draw();
+                    table1.draw();
+                    table2.draw();
+                    $('#modaledit').modal('hide');
+                },
+                error: function(xhr, thrownError) {
+                    alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                }
             });
+            return false;
         });
-    </script>
+    });
+
+    $('#fotoEdit').on('change', function(e) {
+        const file = e.target.files[0];
+        const preview = document.getElementById('previewFotoEdit');
+
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        };
+
+        reader.readAsDataURL(file);
+    });
+</script>

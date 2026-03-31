@@ -78,6 +78,7 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 # Test Files
 #-------------------------
 tests/coverage*
+catatan.txt
 
 # Don't save phpunit under version control.
 # phpunit
@@ -127,3 +128,5 @@ nb-configuration.xml
 /phpunit*.xml
 /.phpunit.*.cache
 
+public/sppt_img/*
+!public/sppt_img/.gitkeep
