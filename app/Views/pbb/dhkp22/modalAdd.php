@@ -55,19 +55,19 @@
     }
 </style>
 <!-- Modal -->
-<div class="modal fade" id="modalTambah" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="modalTambah" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header modal-header-primary">
                 <img src="<?= logoApp(); ?>" alt="<?= namaApp(); ?> Logo" class="brand-image" style="width:30px; margin-right: auto">
                 <h5 class="modal-title" id="modalTambahdhkpLabel"><b><?= $title; ?></b></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <?= form_open('', ['class' => 'formsimpan']) ?>
             <div class="modal-body">
-                <div class="form-group row nopadding mb-2">
+                <div class="form-group row nopadding">
                     <label class="col-4 col-sm-2 col-md-2 col-form-label" for="dataCari">Cari Data</label>
                     <div class="col-8 col-sm-10 col-md-10">
                         <select name="dataCari" id="dataCari" class="form-control form-control-sm" style="width: 300px;">
@@ -212,10 +212,9 @@
                         </div>
                     </div>
 
-                    <div class="col-12 mt-3">
-
+                    <div class="col-12">
                         <!-- PREVIEW (FULL CONTROL, TIDAK IKUT GRID FORM) -->
-                        <div class="d-flex justify-content-center mb-3">
+                        <div class="d-flex justify-content-center">
                             <img id="previewFoto"
                                 src=""
                                 style="
@@ -243,7 +242,7 @@
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary btnsimpan">Save</button>
                 </div>
             </div>
@@ -512,8 +511,7 @@
                             // window.location.reload();
                         }
 
-                        $('#modalTambah').hide();
-                        $('.modal-backdrop').hide();
+                        $('#modalTambah').modal('hide');
                         jumlahSppt();
                         jumlahTotal();
                         jumlahLunas();

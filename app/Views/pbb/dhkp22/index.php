@@ -713,20 +713,20 @@ $role = detailUser()->pu_role_id;
             jumlahTotalBermasalah();
         });
 
-        $('.tombolTambah').click(function(e) {
-            e.preventDefault();
-            $.ajax({
-                url: "<?= site_url('formTambah') ?>",
-                dataType: "json",
-                success: function(response) {
-                    $('.viewmodal').html(response.data).show();
-                    $('#modalTambah').modal('show');
-                },
-                error: function(xhr, ajaxOptions, thrownError) {
-                    alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
-                }
-            });
-        });
+        // $('.tombolTambah').click(function(e) {
+        //     e.preventDefault();
+        //     $.ajax({
+        //         url: "<?= site_url('formTambah') ?>",
+        //         dataType: "json",
+        //         success: function(response) {
+        //             $('.viewmodal').html(response.data).show();
+        //             $('#modalTambah').modal('show');
+        //         },
+        //         error: function(xhr, ajaxOptions, thrownError) {
+        //             alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+        //         }
+        //     });
+        // });
 
         $('#nop').keydown(function(e) {
             if (e.keyCode == 13) {
@@ -810,6 +810,58 @@ $role = detailUser()->pu_role_id;
 
         var table = $('#tb_dhkp22').DataTable();
 
+        // document.addEventListener('keydown', (e) => {
+        //     if (e.ctrlKey && e.key.toLowerCase() === 'm') {
+        //         openModalTambah();
+        //     }
+        // });
+
+    });
+
+    function loadModalTambah() {
+        $.ajax({
+            url: "<?= site_url('formTambah') ?>",
+            dataType: "json",
+            success: function(response) {
+                $('.viewmodal').html(response.data).show();
+                $('#modalTambah').modal('show');
+            }
+        });
+    }
+
+    // tombol
+    $('.tombolTambah').click(function(e) {
+        e.preventDefault();
+        loadModalTambah();
+    });
+
+    // shortcut
+    document.addEventListener('keydown', function(e) {
+
+        // 🔒 Hindari trigger saat user sedang mengetik
+        const tag = document.activeElement.tagName;
+        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(tag)) return;
+
+        // ✅ Alt + Q
+        if (e.altKey && e.key.toLowerCase() === 'q') {
+            e.preventDefault();
+            loadModalTambah();
+        }
+    });
+
+    // 🔥 paksa tombol close bekerja
+    $(document).on('click', '[data-dismiss="modal"], .close, .btn-close', function() {
+        $('#modalTambah').modal('hide');
+    });
+
+    // 🔥 sebelum modal ditutup (fix warning aria)
+    $(document).on('hide.bs.modal', '#modalTambah', function() {
+        document.activeElement.blur();
+    });
+
+    // 🔥 setelah modal ditutup (cleanup)
+    $(document).on('hidden.bs.modal', '#modalTambah', function() {
+        $(this).remove();
     });
 
     // Checkbox checked
@@ -1352,296 +1404,6 @@ $role = detailUser()->pu_role_id;
         table2.draw();
     });
 
-    // function jumlahSppt() {
-    //     let data_desa = $('#data_desa').val();
-    //     let data_dusun = $('#data_dusun').val();
-    //     let data_rw = $('#data_rw').val();
-    //     let data_rt = $('#data_rt').val();
-    //     let data_ket = $('#data_ket').val();
-    //     let data_tahun = $('#data_tahun').val();
-    //     let jumlahSppt = $('#jumlahSppt').val();
-    //     $.ajax({
-    //         url: '<?= base_url('jumlahSppt') ?>',
-    //         dataType: 'json',
-    //         type: 'POST',
-    //         data: {
-    //             data_desa: data_desa,
-    //             data_dusun: data_dusun,
-    //             data_rw: data_rw,
-    //             data_rt: data_rt,
-    //             data_ket: data_ket,
-    //             data_tahun: data_tahun,
-    //             _token: '{{ csrf_token() }}',
-    //             jumlahSppt: jumlahSppt
-    //         },
-    //         success: function(data) {
-    //             let jml = formatNumber(data);
-    //             let jmlSppt = jml + ' SPPT';
-    //             $('#jumlahSppt').text(jmlSppt);
-    //         },
-    //         error: function(xhr, thrownError) {
-    //             alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
-    //         }
-    //     });
-    // }
-
-    // function jumlahLunas() {
-    //     let data_desa = $('#data_desa').val();
-    //     let data_dusun = $('#data_dusun').val();
-    //     let data_rw = $('#data_rw').val();
-    //     let data_rt = $('#data_rt').val();
-    //     let data_ket = $('#data_ket').val();
-    //     let data_tahun = $('#data_tahun').val();
-    //     let jumlahLunas = $('#jumlahLunas').val();
-    //     $.ajax({
-    //         url: '<?= base_url('jumlahLunas') ?>',
-    //         dataType: 'json',
-    //         type: 'POST',
-    //         data: {
-    //             data_desa: data_desa,
-    //             data_dusun: data_dusun,
-    //             data_rw: data_rw,
-    //             data_rt: data_rt,
-    //             data_ket: data_ket,
-    //             data_tahun: data_tahun,
-    //             _token: '{{ csrf_token() }}',
-    //             jumlahLunas: jumlahLunas
-    //         },
-    //         success: function(data) {
-    //             let jml = formatNumber(data);
-    //             let jmlLunas = jml + ' SPPT';
-    //             $('#jumlahLunas').text(jmlLunas);
-    //         },
-    //         error: function(xhr, thrownError) {
-    //             alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
-    //         }
-    //     });
-    // }
-
-    // function jumlahBelumLunas() {
-    //     let data_desa = $('#data_desa').val();
-    //     let data_dusun = $('#data_dusun').val();
-    //     let data_rw = $('#data_rw').val();
-    //     let data_rt = $('#data_rt').val();
-    //     let data_ket = $('#data_ket').val();
-    //     let data_tahun = $('#data_tahun').val();
-    //     let jumlahBelumLunas = $('#jumlahBelumLunas').val();
-    //     $.ajax({
-    //         url: '<?= base_url('jumlahBelumLunas') ?>',
-    //         dataType: 'json',
-    //         type: 'POST',
-    //         data: {
-    //             data_desa: data_desa,
-    //             data_dusun: data_dusun,
-    //             data_rw: data_rw,
-    //             data_rt: data_rt,
-    //             data_ket: data_ket,
-    //             data_tahun: data_tahun,
-    //             _token: '{{ csrf_token() }}',
-    //             jumlahBelumLunas: jumlahBelumLunas
-    //         },
-    //         success: function(data) {
-    //             let jml = formatNumber(data);
-    //             let jmlBelumLunas = jml + ' SPPT';
-    //             $('#jumlahBelumLunas').text(jmlBelumLunas);
-    //         }
-    //     });
-    // }
-
-    // function jumlahBermasalah() {
-    //     let data_desa = $('#data_desa').val();
-    //     let data_dusun = $('#data_dusun').val();
-    //     let data_rw = $('#data_rw').val();
-    //     let data_rt = $('#data_rt').val();
-    //     let data_ket = $('#data_ket').val();
-    //     let data_tahun = $('#data_tahun').val();
-    //     let jumlahBermasalah = $('#jumlahBermasalah').val();
-    //     $.ajax({
-    //         url: '<?= base_url('jumlahBermasalah') ?>',
-    //         dataType: 'json',
-    //         type: 'POST',
-    //         data: {
-    //             data_desa: data_desa,
-    //             data_dusun: data_dusun,
-    //             data_rw: data_rw,
-    //             data_rt: data_rt,
-    //             data_ket: data_ket,
-    //             data_tahun: data_tahun,
-    //             _token: '{{ csrf_token() }}',
-    //             jumlahBermasalah: jumlahBermasalah
-    //         },
-    //         success: function(data) {
-    //             let jml = formatNumber(data);
-    //             let jmlBermasalah = jml + ' SPPT';
-    //             $('#jumlahBermasalah').text(jmlBermasalah);
-    //         }
-    //     });
-    // }
-
-    // function jumlahTotal() {
-    //     let data_desa = $('#data_desa').val();
-    //     let data_dusun = $('#data_dusun').val();
-    //     let data_rw = $('#data_rw').val();
-    //     let data_rt = $('#data_rt').val();
-    //     let data_ket = $('#data_ket').val();
-    //     let data_tahun = $('#data_tahun').val();
-    //     $.ajax({
-    //         url: '<?= base_url('jumlahTotal'); ?>',
-    //         type: 'POST',
-    //         data: {
-    //             data_desa: data_desa,
-    //             data_dusun: data_dusun,
-    //             data_rw: data_rw,
-    //             data_rt: data_rt,
-    //             data_ket: data_ket,
-    //             data_tahun: data_tahun,
-    //             _token: '{{ csrf_token() }}'
-    //         },
-    //         success: function(data) {
-    //             let jumlahTotal = document.querySelector("#jumlahTotal");
-    //             let jml = formatNumber(data);
-    //             let jmlTotal = 'Rp. ' + jml + ',-';
-    //             jumlahTotal.textContent = jmlTotal;
-    //         },
-    //         error: function(xhr, thrownError) {
-    //             alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
-    //         }
-    //     });
-    // }
-
-    // function jumlahTotalLunas() {
-    //     let data_desa = $('#data_desa').val();
-    //     let data_dusun = $('#data_dusun').val();
-    //     let data_rw = $('#data_rw').val();
-    //     let data_rt = $('#data_rt').val();
-    //     let data_ket = $('#data_ket').val();
-    //     let data_tahun = $('#data_tahun').val();
-    //     $.ajax({
-    //         url: '<?= base_url('jumlahTotalLunas'); ?>',
-    //         type: 'POST',
-    //         data: {
-    //             data_desa: data_desa,
-    //             data_dusun: data_dusun,
-    //             data_rw: data_rw,
-    //             data_rt: data_rt,
-    //             data_ket: data_ket,
-    //             data_tahun: data_tahun,
-    //             _token: '{{ csrf_token() }}'
-    //         },
-    //         success: function(data) {
-    //             let jml = formatNumber(data);
-    //             let jmlTotal = 'Rp. ' + jml + ',-';
-    //             $('#jumlahTotalLunas').text(jmlTotal);
-    //         }
-    //     });
-    // }
-
-    // function jumlahTotalBelumLunas() {
-    //     let data_desa = $('#data_desa').val();
-    //     let data_dusun = $('#data_dusun').val();
-    //     let data_rw = $('#data_rw').val();
-    //     let data_rt = $('#data_rt').val();
-    //     let data_ket = $('#data_ket').val();
-    //     let data_tahun = $('#data_tahun').val();
-    //     $.ajax({
-    //         url: '<?= base_url('jumlahTotalBelumLunas'); ?>',
-    //         type: 'POST',
-    //         data: {
-    //             data_desa: data_desa,
-    //             data_dusun: data_dusun,
-    //             data_rw: data_rw,
-    //             data_rt: data_rt,
-    //             data_ket: data_ket,
-    //             data_tahun: data_tahun,
-    //             _token: '{{ csrf_token() }}'
-    //         },
-    //         success: function(data) {
-    //             let jml = formatNumber(data);
-    //             let jmlTotal = 'Rp. ' + jml + ',-';
-    //             $('#jumlahTotalBelumLunas').text(jmlTotal);
-    //         }
-    //     });
-    // }
-
-    // function jumlahTotalBermasalah() {
-    //     let data_desa = $('#data_desa').val();
-    //     let data_dusun = $('#data_dusun').val();
-    //     let data_rw = $('#data_rw').val();
-    //     let data_rt = $('#data_rt').val();
-    //     let data_ket = $('#data_ket').val();
-    //     let data_tahun = $('#data_tahun').val();
-    //     $.ajax({
-    //         url: '<?= base_url('jumlahTotalBermasalah'); ?>',
-    //         type: 'POST',
-    //         data: {
-    //             data_desa: data_desa,
-    //             data_dusun: data_dusun,
-    //             data_rw: data_rw,
-    //             data_rt: data_rt,
-    //             data_ket: data_ket,
-    //             data_tahun: data_tahun,
-    //             _token: '{{ csrf_token() }}'
-    //         },
-    //         success: function(data) {
-    //             let jml = formatNumber(data);
-    //             let jmlTotal = 'Rp. ' + jml + ',-';
-    //             $('#jumlahTotalBermasalah').text(jmlTotal);
-    //         }
-    //     });
-    // }
-
-    // function loadJumlah(url, targetSelector, prefix = '', suffix = '') {
-    //     const cacheKey = getCacheKey(url);
-
-    //     // Jika ada cache dan belum expired
-    //     if (dataCache[cacheKey] && (Date.now() - dataCache[cacheKey].time < 10000)) {
-    //         const cachedValue = dataCache[cacheKey].value;
-    //         updateDisplay(targetSelector, cachedValue, prefix, suffix);
-    //         return;
-    //     }
-
-    //     // Ambil data baru
-    //     $.ajax({
-    //         url: url,
-    //         type: 'POST',
-    //         dataType: 'json',
-    //         data: {
-    //             data_desa: $('#data_desa').val(),
-    //             data_dusun: $('#data_dusun').val(),
-    //             data_rw: $('#data_rw').val(),
-    //             data_rt: $('#data_rt').val(),
-    //             data_ket: $('#data_ket').val(),
-    //             data_tahun: $('#data_tahun').val(),
-    //             _token: '{{ csrf_token() }}'
-    //         },
-    //         success: function(response) {
-    //             // simpan cache
-    //             dataCache[cacheKey] = {
-    //                 value: response,
-    //                 time: Date.now()
-    //             };
-    //             updateDisplay(targetSelector, response, prefix, suffix);
-    //         }
-    //     });
-    // }
-
-    // function updateDisplay(selector, value, prefix, suffix) {
-    //     let formatted = formatNumber(value);
-
-    //     // Ambil angka lama (jika ada)
-    //     let element = document.querySelector(selector);
-    //     let oldValue = parseInt(element.textContent.replace(/\D/g, '')) || 0;
-    //     let newValue = parseInt(value) || 0;
-
-    //     // Animasi count-up
-    //     animateCountUp(element, oldValue, newValue, 700);
-
-    //     // Tambahkan prefix/suffix statis
-    //     setTimeout(() => {
-    //         $(selector).text(prefix + formatted + suffix);
-    //     }, 680);
-    // }
-
     function jumlahSppt() {
         loadJumlah('<?= base_url('jumlahSppt') ?>', '#jumlahSppt', '', ' SPPT');
     }
@@ -1742,59 +1504,6 @@ $role = detailUser()->pu_role_id;
     function reload_table() {
         table.ajax.reload(null, false); //reload datatable ajax 
     }
-
-    $(document).on('click', '#tmbDelet', function() {
-        var id = $(this).data('id');
-        var nama = $(this).data('nama');
-        // alert(dv_id);
-        // $('.editIndivdv_idu').modal('show');
-        tanya = confirm(`YAKIN? ANDA MENGHAPUS DATA "${nama}"`);
-        if (tanya == true) {
-            $.ajax({
-                type: "post",
-                url: "<?= base_url('dltPbb'); ?>",
-                data: {
-                    id: id
-                },
-                dataType: "json",
-                success: function(response) {
-                    if (response.sukses) {
-                        const Toast = Swal.mixin({
-                            toast: true,
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timer: 2500,
-                            timerProgressBar: true,
-                            didOpen: (toast) => {
-                                toast.addEventListener('mouseenter', Swal.stopTimer)
-                                toast.addEventListener('mouseleave', Swal.resumeTimer)
-                            }
-                        })
-
-                        Toast.fire({
-                            icon: 'success',
-                            title: response.sukses,
-                        });
-                        // window.location.reload();
-                        jumlahSppt();
-                        jumlahTotal();
-                        jumlahLunas();
-                        jumlahTotalLunas();
-                        jumlahBelumLunas();
-                        jumlahTotalBelumLunas();
-                        jumlahBermasalah();
-                        jumlahTotalBermasalah();
-                        table.draw();
-                        table0.draw();
-                        table1.draw();
-                        table2.draw();
-
-                    }
-                }
-            });
-        }
-
-    });
 
     function edit_person(id) {
         //Ajax Load data from ajax
@@ -1920,6 +1629,60 @@ $role = detailUser()->pu_role_id;
             }
         });
     }
+
+
+    $(document).on('click', '#tmbDelet', function() {
+        var id = $(this).data('id');
+        var nama = $(this).data('nama');
+        // alert(dv_id);
+        // $('.editIndivdv_idu').modal('show');
+        tanya = confirm(`YAKIN? ANDA MENGHAPUS DATA "${nama}"`);
+        if (tanya == true) {
+            $.ajax({
+                type: "post",
+                url: "<?= base_url('dltPbb'); ?>",
+                data: {
+                    id: id
+                },
+                dataType: "json",
+                success: function(response) {
+                    if (response.sukses) {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            }
+                        })
+
+                        Toast.fire({
+                            icon: 'success',
+                            title: response.sukses,
+                        });
+                        // window.location.reload();
+                        jumlahSppt();
+                        jumlahTotal();
+                        jumlahLunas();
+                        jumlahTotalLunas();
+                        jumlahBelumLunas();
+                        jumlahTotalBelumLunas();
+                        jumlahBermasalah();
+                        jumlahTotalBermasalah();
+                        table.draw();
+                        table0.draw();
+                        table1.draw();
+                        table2.draw();
+
+                    }
+                }
+            });
+        }
+
+    });
 </script>
 
 <?= $this->endSection(); ?>
