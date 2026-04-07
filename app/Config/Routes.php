@@ -40,7 +40,7 @@ $routes->match(['GET', 'POST'], 'lockscreen', 'Lockscreen::index');
 
 // $routes->get('/', 'Pbb\Auth::index', ['filter' => 'noauthfilterpbb']);
 $routes->post('cariPbb', 'Auth::cari');
-$routes->match(['GET', 'POST'], 'login', 'Auth::login', ['filter' => 'noauthfilterpbb']);
+$routes->match(['GET', 'POST'], 'login', 'Auth::login');
 $routes->get('logout', 'Auth::logout');
 $routes->match(['GET', 'POST'], 'register', 'Auth::register', ['filter' => 'noauthfilterpbb']);
 // $routes->get('pages', 'Pages::index', ['filter' => 'authfilterpbb']);
@@ -50,7 +50,7 @@ $routes->post('forgot-password', 'Auth::sendResetLink', ['filter' => 'noauthfilt
 $routes->get('reset-password/(:segment)', 'Auth::resetPassword/$1', ['filter' => 'noauthfilterpbb']);
 $routes->post('reset-password', 'Auth::processResetPassword', ['filter' => 'noauthfilterpbb']);
 
-$routes->get('home', 'Pages::index', ['filter' => 'authfilterpbb']);
+$routes->get('dashboard', 'Pages::index', ['filter' => 'authfilterpbb']);
 $routes->get('diagram', 'Pages::index2', ['filter' => 'authfilterpbb']);
 // $routes->get('home', 'Dhkp22::index', ['filter' => 'authfilterpbb']);
 // $routes->get('cache-this-page', 'Pages::index');
@@ -132,6 +132,20 @@ $routes->post('listPbbTerhutang', 'Trx22::listPbbTerhutang', ['filter' => 'authf
 $routes->match(['GET', 'POST'], 'simpanTemp', 'Trx22::simpanTemp', ['filter' => 'authfilterpbb']);
 $routes->post('hitungTotalBayar', 'Trx22::hitungTotalBayar', ['filter' => 'authfilterpbb']);
 $routes->get('initChart', 'Dhkp22::initChart');
+
+// User Management
+$routes->get('/users', 'Users::index', ['filter' => 'adminfilterpbb']);
+$routes->post('/users/store', 'Users::store', ['filter' => 'adminfilterpbb']);
+$routes->post('/users/update/(:num)', 'Users::update/$1', ['filter' => 'adminfilterpbb']);
+$routes->get('/users/delete/(:num)', 'Users::delete/$1', ['filter' => 'adminfilterpbb']);
+$routes->get('/api/dusun/(:any)', 'Users::getDusun/$1');
+$routes->get('/users/get/(:num)', 'Users::getUser/$1');
+$routes->post('/users/toggle-status/(:num)', 'Users::toggleStatus/$1');
+$routes->get('/users/filter', 'Users::filter');
+$routes->get('/users/check-unique', 'Users::checkUnique');
+$routes->post('/users/reset-password/(:num)', 'Users::resetPassword/$1');
+$routes->get('/change-password', 'Auth::changePassword');
+$routes->post('/change-password', 'Auth::updatePassword');
 
 // API
 $routes->resource('api_pbb', ['controller' => 'Api\Home']);

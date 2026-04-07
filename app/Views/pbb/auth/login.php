@@ -11,8 +11,6 @@
                 <h2><?= $title; ?></h2>
 
                 <!-- pesan validasi sukses register -->
-
-
                 <div class="row no-margin past">
                     <a href="/register">
                         <p>Don't Have an Account? Create your Account</p>
@@ -47,33 +45,44 @@
                     </div>
 
                 <?php } ?>
-                <?= form_open('/login'); ?>
-                <?= csrf_field() ?>
 
-
-                <div class="form-group text-box-cont">
-                    <div class="input-group mb-3">
-                        <input type="email" class="form-control" placeholder="Email" name="email">
+                <?php if (session()->getFlashdata('error')): ?>
+                    <div class="alert alert-danger">
+                        <?= session()->getFlashdata('error') ?>
                     </div>
+                <?php endif; ?>
+                <!-- <?= form_open('/login'); ?> -->
+                <!-- <form method="post" action="/login"> -->
+                <form method="post" action="/login" id="formLogin">
+                    <?= csrf_field() ?>
 
 
-                    <div class="input-group mb-3">
-                        <input type="password" class="form-control" placeholder="Password" name="password" id="pu_password">
+                    <div class="form-group text-box-cont">
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control" placeholder="Email" name="email">
+                        </div>
+
+
+                        <div class="input-group mb-3">
+                            <input type="password" class="form-control" placeholder="Password" name="password" id="pu_password">
+                        </div>
+
+
+                        <!-- checkbox -->
+                        <div class="custom-control custom-checkbox mb-3">
+                            <input type="checkbox" class="custom-control-input" id="customCheck1">
+                            <label class="custom-control-label" for="customCheck1">Tampilkan Password</label>
+                        </div>
+
+                        <div class="right-bkij my-2">
+                            <!-- <button type="submit" class="btn btn-success btn-round" onclick="alert('klik login')">Login</button> -->
+                            <input type="submit" value="Login" class="btn btn-success btn-round">
+                        </div>
+
                     </div>
+                    <!-- <?= form_close(); ?> -->
 
-
-                    <!-- checkbox -->
-                    <div class="custom-control custom-checkbox mb-3">
-                        <input type="checkbox" class="custom-control-input" id="customCheck1">
-                        <label class="custom-control-label" for="customCheck1">Tampilkan Password</label>
-                    </div>
-
-                    <div class="right-bkij my-2">
-                        <button type="submit" class="btn btn-success btn-round">Login</button>
-                    </div>
-
-                </div>
-                <?= form_close(); ?>
+                </form>
                 <br><br>
                 <hr class="mt-2">
                 <div class="row no-margin past d-flex justify-content-between">
@@ -121,5 +130,10 @@
             $(this).remove();
         });
     }, 3000);
+</script>
+<script>
+    document.getElementById('formLogin').addEventListener('submit', function() {
+        console.log('FORM BENAR-BENAR SUBMIT');
+    });
 </script>
 <?= $this->endSection(); ?>

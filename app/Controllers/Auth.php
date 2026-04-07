@@ -126,56 +126,53 @@ class Auth extends BaseController
 
     public function login()
     {
+        if ($this->request->getMethod(true) === 'POST') {
 
-        $data = [];
+            $email    = trim($this->request->getVar('email'));
+            $password = trim($this->request->getVar('password'));
 
-        if ($this->request->getPost()) {
+            $model = new \App\Models\Pbb\AuthModel();
 
-            // var_dump($this->request->getvar());
-            // $nik = $this->request->getVar('nik');
+            $user = $model
+                ->where('pu_email', $email)
+                ->where('pu_deleted_at IS NULL')
+                ->first();
 
-            $rules = [
-                'email' => 'required|min_length[6]|max_length[50]|valid_email',
-                'password' => 'required|min_length[6]|max_length[255]|validateUser[pu_email,pu_password]',
-            ];
-
-            $errors = [
-                'password' => [
-                    'validateUser' => "Email atau Password tidak sesuai",
-                ],
-            ];
-
-            if (!$this->validate($rules, $errors)) {
-                $session = session();
-                $session->setFlashdata('message', 'User atau Password tidak sesuai!');
-                return view('pbb/auth/login', [
-                    "validation" => $this->validator,
-                    "title" => 'Sign In',
-                ]);
-            } else {
-
-                $model = new AuthModel();
-
-                $user = $model->where('pu_email', $this->request->getVar('email'))->first();
-                // dd($user);
-                $this->setUserSession($user);
-
-
-                // dd($this->setUserSession($user));
-                // Redirecting to dashboard after login
-                if ($user['pu_status'] !== 1) {
-                    $session = session();
-                    $session->setFlashdata('message', 'User Non-Aktif, Silakan hubungi Admin!');
-                    return redirect()->to('login');
-                }
+            // ❌ USER TIDAK ADA
+            if (!$user) {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'Email atau Password salah');
             }
-        }
-        // echo 'test';
-        $data = [
-            'title' => 'Sign In',
-        ];
 
-        return view('pbb/auth/login', $data);
+            // ❌ PASSWORD SALAH
+            if (!password_verify($password, $user['pu_password'])) {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'Email atau Password salah');
+            }
+
+            // ❌ USER NONAKTIF
+            if ((int)$user['pu_status'] !== 1) {
+                return redirect()->back()
+                    ->with('error', 'User nonaktif, hubungi admin');
+            }
+
+            // ✅ SET SESSION
+            $this->setUserSession($user);
+
+            // 🔐 FORCE RESET PASSWORD
+            if ((int)$user['pu_force_pass_reset'] === 1) {
+                return redirect()->to('/change-password');
+            }
+
+            // ✅ LOGIN SUCCESS
+            return redirect()->to('/dashboard');
+        }
+
+        return view('pbb/auth/login', [
+            'title' => 'Sign In'
+        ]);
     }
 
     private function setUserSession($user)
@@ -196,6 +193,7 @@ class Auth extends BaseController
             'pu_kode_kab' => $user['pu_kode_kab'],
             'pu_kode_prov' => $user['pu_kode_prov'],
             'logPbb' => true,
+            'isLoggedIn' => true,
         ];
 
         session()->set($data);
@@ -531,5 +529,47 @@ class Auth extends BaseController
         curl_close($curl);
 
         return $response;
+    }
+
+    public function changePassword()
+    {
+        if (!session()->get('isLoggedIn')) {
+            return redirect()->to('/login');
+        }
+
+        return view('pbb/auth/change_password', [
+            'title' => 'Ganti Password'
+        ]);
+    }
+
+    public function updatePassword()
+    {
+        if (!session()->get('pu_id')) {
+            return redirect()->to('/login');
+        }
+
+        $password = $this->request->getVar('password');
+        $confirm  = $this->request->getVar('pass_confirm');
+
+        if ($password !== $confirm) {
+            return redirect()->back()->with('error', 'Password tidak sama');
+        }
+
+        if (strlen($password) < 6) {
+            return redirect()->back()->with('error', 'Password minimal 6 karakter');
+        }
+
+        $db = \Config\Database::connect();
+
+        $db->table('pbb_users')
+            ->where('pu_id', session()->get('pu_id'))
+            ->update([
+                'pu_password' => password_hash($password, PASSWORD_DEFAULT),
+                'pu_force_pass_reset' => 0,
+                'pu_updated_by' => session()->get('pu_username'),
+            ]);
+
+        return redirect()->to('/dashboard')
+            ->with('sukses', 'Password berhasil diperbarui');
     }
 }
