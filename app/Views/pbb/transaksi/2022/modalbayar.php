@@ -152,8 +152,6 @@
                                 cancelButtonText: 'Tidak!'
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    // $('#modalbayar').modal('hide');
-                                    // window.print();
                                     window.location.reload();
                                 } else {
                                     window.location.reload();

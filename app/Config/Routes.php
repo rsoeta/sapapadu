@@ -134,18 +134,18 @@ $routes->post('hitungTotalBayar', 'Trx22::hitungTotalBayar', ['filter' => 'authf
 $routes->get('initChart', 'Dhkp22::initChart');
 
 // User Management
-$routes->get('/users', 'Users::index', ['filter' => 'adminfilterpbb']);
-$routes->post('/users/store', 'Users::store', ['filter' => 'adminfilterpbb']);
-$routes->post('/users/update/(:num)', 'Users::update/$1', ['filter' => 'adminfilterpbb']);
-$routes->get('/users/delete/(:num)', 'Users::delete/$1', ['filter' => 'adminfilterpbb']);
-$routes->get('/api/dusun/(:any)', 'Users::getDusun/$1');
-$routes->get('/users/get/(:num)', 'Users::getUser/$1');
-$routes->post('/users/toggle-status/(:num)', 'Users::toggleStatus/$1');
-$routes->get('/users/filter', 'Users::filter');
-$routes->get('/users/check-unique', 'Users::checkUnique');
-$routes->post('/users/reset-password/(:num)', 'Users::resetPassword/$1');
-$routes->get('/change-password', 'Auth::changePassword');
-$routes->post('/change-password', 'Auth::updatePassword');
+$routes->get('users', 'Users::index', ['filter' => 'adminfilterpbb']);
+$routes->post('users/store', 'Users::store', ['filter' => 'adminfilterpbb']);
+$routes->post('users/update/(:num)', 'Users::update/$1', ['filter' => 'adminfilterpbb']);
+$routes->get('users/delete/(:num)', 'Users::delete/$1', ['filter' => 'adminfilterpbb']);
+$routes->get('api/dusun/(:any)', 'Users::getDusun/$1');
+$routes->get('users/get/(:num)', 'Users::getUser/$1');
+$routes->post('users/toggle-status/(:num)', 'Users::toggleStatus/$1');
+$routes->get('users/filter', 'Users::filter');
+$routes->get('users/check-unique', 'Users::checkUnique');
+$routes->post('users/reset-password/(:num)', 'Users::resetPassword/$1');
+$routes->get('change-password', 'Auth::changePassword');
+$routes->post('change-password', 'Auth::updatePassword');
 
 // API
 $routes->resource('api_pbb', ['controller' => 'Api\Home']);

@@ -20,7 +20,16 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Trx22 extends BaseController
 {
+    // hilangkan warning garis bawah
+    protected $dhkpModel;
     protected $dhkpModel22;
+    protected $temp;
+    protected $TrxModel22;
+    protected $dettrans;
+    protected $dusun;
+    protected $rw;
+    protected $rt;
+    protected $auth;
     public function __construct()
     {
         date_default_timezone_set('Asia/Jakarta');
