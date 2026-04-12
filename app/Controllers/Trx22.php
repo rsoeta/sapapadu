@@ -46,6 +46,8 @@ class Trx22 extends BaseController
 
     public function index()
     {
+        helper('terbilang');
+
         $data = [
             'title' => 'Data Transaksi 2022'
         ];
@@ -157,8 +159,6 @@ class Trx22 extends BaseController
 
     public function detail($id_tr = null)
     {
-        // dd($id_tr);
-        // $nofaktur = '';
         $data = [
             'namaApp' => 'KolektorPBB',
             'title' => 'Lampiran Pembayaran PBB-P2 Tahun 2022',
@@ -539,61 +539,157 @@ class Trx22 extends BaseController
 
     public function simpanBayar()
     {
-        $db = \Config\Database::connect();
-        if ($this->request->isAJAX()) {
-            $nofaktur = $this->request->getPost('nofaktur');
-            $pelanggan_id = $this->request->getPost('pelanggan_id');
-            $id_wil = $this->request->getPost('id_wil');
-            $totalkotor = $this->request->getPost('totalkotor');
-            $totalbersih = str_replace(",", "", $this->request->getPost('totalbersih'));
-            $dispersen = str_replace(",", "", $this->request->getPost('dispersen'));
-            $disuang = str_replace(",", "", $this->request->getPost('disuang'));
-            $jmluang = str_replace(",", "", $this->request->getPost('jmluang'));
-            $sisauang = str_replace(",", "", $this->request->getPost('sisauang'));
+        helper(['struk']);
 
-            $tblTransaksi = $db->table('pbb_transaksi22');
-            $tblTempTrans = $this->temp->table('pbb_temptrans21');
+        $db = \Config\Database::connect();
+
+        if ($this->request->isAJAX()) {
+
+            $nofaktur     = $this->request->getPost('nofaktur');
+            $pelanggan_id = $this->request->getPost('pelanggan_id');
+            $id_wil       = $this->request->getPost('id_wil');
+            $totalkotor   = $this->request->getPost('totalkotor');
+
+            $totalbersih = str_replace(",", "", $this->request->getPost('totalbersih'));
+            $dispersen   = str_replace(",", "", $this->request->getPost('dispersen'));
+            $disuang     = str_replace(",", "", $this->request->getPost('disuang'));
+            $jmluang     = str_replace(",", "", $this->request->getPost('jmluang'));
+            $sisauang    = str_replace(",", "", $this->request->getPost('sisauang'));
+
+            $tblTransaksi   = $db->table('pbb_transaksi22');
+            $tblTempTrans   = $this->temp->table('pbb_temptrans21');
             $tblDetailTrans = $this->dettrans->table('pbb_detailtrans21');
 
-            // insert ke tabel transaksi
+            // =========================
+            // INSERT TRANSAKSI
+            // =========================
             $dataInsertTrans = [
-                'tr_faktur' => $nofaktur,
-                'tr_tgl' => date("Y-m-d H:m:s"),
-                'pelanggan_id' => $pelanggan_id,
-                'id_wil' => $id_wil,
-                'tr_dispersen' => $dispersen,
-                'tr_disuang' => $disuang,
-                'tr_totalkotor' => $totalkotor,
+                'tr_faktur'      => $nofaktur,
+                'tr_tgl'         => date("Y-m-d H:i:s"),
+                'pelanggan_id'   => $pelanggan_id,
+                'id_wil'         => $id_wil,
+                'tr_dispersen'   => $dispersen,
+                'tr_disuang'     => $disuang,
+                'tr_totalkotor'  => $totalkotor,
                 'tr_totalbersih' => $totalbersih,
-                'tr_jmluang' => $jmluang,
-                'tr_sisauang' => $sisauang
+                'tr_jmluang'     => $jmluang,
+                'tr_sisauang'    => $sisauang
             ];
 
-            // var_dump($dataInsertTrans);
             $tblTransaksi->insert($dataInsertTrans);
 
-
-            // insert ke tabel detailtransaksi
+            // =========================
+            // INSERT DETAIL
+            // =========================
             $ambilDataTemp = $tblTempTrans->getWhere(['dettr_faktur' => $nofaktur]);
 
             $fieldDetailTrans = [];
+
             foreach ($ambilDataTemp->getResultArray() as $row) {
                 $fieldDetailTrans[] = [
-                    'dettr_faktur' => $row['dettr_faktur'],
-                    'nop' => $row['nop'],
-                    'pajak' => $row['pajak'],
-                    'ket' => $row['ket'],
+                    'dettr_faktur'   => $row['dettr_faktur'],
+                    'nop'            => $row['nop'],
+                    'pajak'          => $row['pajak'],
+                    'ket'            => $row['ket'],
                     'dettr_subtotal' => $row['dettr_subtotal'],
                 ];
             }
-            $tblDetailTrans->insertBatch($fieldDetailTrans);
 
-            // hapus temp
+            if (!empty($fieldDetailTrans)) {
+                $tblDetailTrans->insertBatch($fieldDetailTrans);
+            }
+
+            // =========================
+            // HITUNG JUMLAH NOP
+            // =========================
+            $jumlahNop = count($fieldDetailTrans);
+
+            // =========================
+            // AMBIL DETAIL (UNTUK WA)
+            // =========================
+            $details = $db->table('pbb_detailtrans21')
+                ->where('dettr_faktur', $nofaktur)
+                ->get()
+                ->getResultArray();
+
+            // format NOP untuk WA (🔥 versi keren)
+            $nops = array_column($details, 'nop');
+
+            if (count($nops) == 1) {
+                $nop_text = $nops[0];
+            } else {
+                $nop_text = implode(', ', array_slice($nops, 0, 2));
+
+                if (count($nops) > 2) {
+                    $nop_text .= " +" . (count($nops) - 2) . " lainnya";
+                }
+            }
+
+            // =========================
+            // HAPUS TEMP
+            // =========================
             $tblTempTrans->emptyTable();
 
+            // =========================
+            // GENERATE LINK STRUK
+            // =========================
+            // $link = struk_url($nofaktur);
+            $faktur_clean = str_replace('#', '', $nofaktur);
+
+            if ($jumlahNop > 1) {
+                $link = base_url("print/struk-kolektif/{$faktur_clean}/" . struk_token($faktur_clean));
+            } else {
+                $link = struk_url($nofaktur); // sudah aman di helper
+            }
+
+            // =========================
+            // AMBIL DATA PELANGGAN
+            // =========================
+            $pelanggan = $db->table('pbb_pelanggan')
+                ->where('id_pelanggan', $pelanggan_id)
+                ->get()
+                ->getRowArray();
+
+            $no_hp   = $pelanggan['no_hp'] ?? '';
+            $nama_wp = $pelanggan['nama_pelanggan'] ?? '-';
+
+            // format nomor
+            if (!empty($no_hp) && substr($no_hp, 0, 1) == '0') {
+                $no_hp = '62' . substr($no_hp, 1);
+            }
+
+            // =========================
+            // FORMAT PESAN WA
+            // =========================
+            $tahun = date('Y', strtotime($dataInsertTrans['tr_tgl']));
+
+            $pesan = "📢 *Pembayaran PBB-P2 Berhasil*\n\n" .
+                "No. Transaksi: {$nofaktur}\n" .
+                "Nama: Bpk/Ibu {$nama_wp}\n" .
+                "NOP: {$nop_text}\n\n" .
+                "Total Bayar: *Rp" . number_format($totalbersih, 0, ',', '.') . "*\n" .
+                "Tahun Pajak: {$tahun}\n\n" .
+                "🧾 Cek & Cetak Struk:\n{$link}\n\n" .
+                "Terima kasih telah melakukan pembayaran PBB 🙏";
+
+            // =========================
+            // KIRIM WA
+            // =========================
+            if (!empty($no_hp)) {
+                $this->kirimWA($no_hp, $pesan);
+                log_message('info', 'WA terkirim ke: ' . $no_hp);
+            }
+
+            // =========================
+            // RESPONSE
+            // =========================
             $msg = [
-                'sukses' => 'berhasil'
+                'sukses'     => 'berhasil',
+                'nofaktur'   => $nofaktur,
+                'total'      => number_format($totalbersih, 0, ',', '.'),
+                'link_struk' => $link
             ];
+
             echo json_encode($msg);
         }
     }
@@ -676,5 +772,31 @@ class Trx22 extends BaseController
         header('Cache-Control: max-age=0');
 
         $writer->save('php://output');
+    }
+
+    private function kirimWA($nomor, $pesan)
+    {
+        $token = 'n8jW8W4EFXh1QoiLNZz4'; // 🔥 ganti token kamu
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.fonnte.com/send',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => array(
+                'target' => $nomor,
+                'message' => $pesan,
+            ),
+            CURLOPT_HTTPHEADER => array(
+                "Authorization: $token"
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        return $response;
     }
 }

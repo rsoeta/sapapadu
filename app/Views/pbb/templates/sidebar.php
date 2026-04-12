@@ -21,7 +21,7 @@ $menus = menu()
         <!-- Sidebar user (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="<?= base_url('img/' . detailUser()->pu_user_image) ?>" class="img-circle elevation-2" alt="User Image">
+                <img src="<?= base_url('img/' . detailUser()->pu_user_image) ?? base_url('img/default.png') ?>" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
                 <a href="/admin/detail/<?= detailUser()->pu_id; ?>" class="nama-pengguna d-block"><?= detailUser()->pu_fullname; ?></a>

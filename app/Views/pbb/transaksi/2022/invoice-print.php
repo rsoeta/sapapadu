@@ -1,7 +1,11 @@
 <?= $this->extend('pbb/templates/index'); ?>
 
 <?= $this->section('content'); ?>
-
+<style>
+    #nop:focus {
+        border: 2px solid #28a745;
+    }
+</style>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <!-- jQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -15,148 +19,163 @@
     <!-- Content Header (Page header) -->
     <section class="content">
         <div class="col-12">
-            <div class="invoice p-3 mb-3">
-                <div class="container ml-3" id="printarea">
-                    <!-- title row -->
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="" style="border-bottom: 5px double black;">
-                                <div class="row">
-                                    <div class="col-2">
-                                        <img src="<?= base_url('favicon.png') ?>" alt="" class="" style="opacity: .8; text-align: center; width:75%;" width="100">
-                                    </div>
-                                    <div class="col" id="kop-surat">
-                                        <h1 style="font-size: 4em; letter-spacing: 0.5em;"><?= namaApp(); ?></h1>
-                                        <h4>( <?= deskApp(); ?> )</h4>
-                                        <h2><?= !empty(detailUser()->nm_desa) ? 'DESA ' . detailUser()->nm_desa . ' KECAMATAN ' . detailUser()->nm_kec : ' KECAMATAN ' . detailUser()->nm_kec; ?></h2>
-                                        <h6><?= !empty($sekretariat['lp_sekretariat']) ? $sekretariat['lp_sekretariat'] : ''; ?></h6>
-                                    </div>
-                                    <div class="col-2">
-                                        <img src="<?= base_url('img/logo-garutkab.jpg') ?>" alt="" class="" style="opacity: .8; text-align: center; width:75%;" width="100">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="float-right col-12 col-sm-2 col-md-2 mt-2">
-                                <small>
-                                    Tanggal :
-                                </small>
-                                <input type="text" class="form-control form-control-sm" name="tanggal" id="tanggal" value="<?php echo date("d M Y"); ?>" style="font-weight: bold;">
-                                <!-- this row will not appear when printing -->
-                                <div class="input-group mt-1 no-print">
-                                    <input type="text" class="form-control form-control-sm" name="nop" id="nop">
-                                </div>
-                                <div class="input-group mt-1 no-print">
-                                    <input type="text" class="form-control form-control-sm" name="nama_wp" id="nama_wp" style="font-weight: bold;" readonly>
-                                </div>
-                                <div class="input-group mt-1 no-print">
-                                    <button class="btn btn-sm btn-outline-secondary btn-block btnTambahPelanggan" type="button" onclick="window.location='<?= site_url('pelanggan/add'); ?>'"><i class="fa fa-plus-circle"></i> Tambah Pelanggan</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- info row -->
-                    <strong>
-                        <h6 style="font-size: 20px;">Kuitansi PBB Tahun <?= date('Y'); ?></h6>
-                    </strong>
-                    <div class="row invoice-info">
-                        <div class="col-4 invoice-col">
-                            <div class="form-group row nopadding">
-                                <label for="dusun" class="col-form-label">Dari :</label>
-                            </div>
-                            <div class="col-12 form-group row">
-                                <input class="text-bold form-control" value="KOLEKTOR DESA">
-                            </div>
-                        </div>
-                        <div class="col-4 invoice-col">
-                            <div class="form-group row nopadding">
-                                <label for="pelanggan" class="col-form-label">Kepada :
-                                    Bpk/Ibu/Sdr.
-                                </label>
-                            </div>
-                            <div class="col-12 form-group row">
-                                <!-- CSRF token -->
-                                <input type="hidden" class="txt_csrfname" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>" required />
-                                <select class="form-control border border-white border-0" id="pelanggan" name="pelanggan" style="font-weight:bold; -webkit-appearance: none; -moz-appearance: none; appearance: none; border: none; background: none; width:auto"></select>
-                            </div>
-                        </div>
-                        <!-- /.col -->
-                        <div class="col-4 invoice-col">
-                            <div class="form-group row nopadding">
-                                <label for="dusun" class="col-form-label">No. Kuitansi :</label>
-                            </div>
-                            <div class="col-12 form-group row">
-                                <input class="text-bold form-control" name="nofaktur" id="nofaktur" value="<?= !empty($nofaktur) ? $nofaktur : $row['tr_faktur']; ?>">
-                            </div>
-                        </div>
-                        <!-- /.col -->
-                    </div>
-                    <!-- /.row -->
+            <div class="p-3 mb-3">
 
-                    <!-- Table row -->
-                    <div class="row mt-5">
-                        <div class="col-12 dataDetailTr"></div>
+                <!-- 🔥 HEADER RINGAN -->
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <div>
+                        <h4 style="margin:0; font-weight:bold;">Rencana Pembayaran PBB</h4>
+                        <small><?= detailUser()->nm_desa ?? '' ?></small>
                     </div>
-                    <br><br>
-                    <!-- /.row -->
-                    <div class="row">
-                        <!-- accepted payments column -->
-                        <div class="col-8">
-                        </div>
-                        <!-- /.col -->
-                        <div class="col-4">
-                            <p class="lead">Pembayaran</p>
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <tr></tr>
-                                    <tr>
-                                        <th style="font-size: 1em;">Total :</th>
-                                        <td><input type="text" class="form-control" style="font-size: 1em; font-weight:bold;background-color: transparent; border: 0px solid;box-shadow: none;" name="totalbayar" id="totalbayar" readonly>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <span><em>Terbilang: </em></span>
-                            <input type="text" class="form-control" style="font-size: 1em; font-weight:bold;background-color: transparent; border: 0px solid;box-shadow: none;" name="terbilang" id="terbilang" readonly>
-                        </div>
-                        <!-- /.col -->
+
+                    <div style="text-align:right;">
+                        <small>Tanggal</small>
+                        <input type="text" class="form-control form-control-sm" id="tanggal"
+                            value="<?= date("d M Y"); ?>" style="font-weight:bold;">
                     </div>
-                    <div class="row mt-6">
-                        <div class="container-flex" style="display: flex; text-align:center;">
-                            <div class="col">
-                                <h6>Kepala Desa</h6>
-                                <h6 style="margin-top: 80px; text-decoration:underline"><strong>Tata Rustandi</strong></h6>
-                            </div>
-                            <div class="col">
-                                <h6>Kolektor Desa</h6>
-                                <h6 style="margin-top: 80px; text-decoration:underline"><strong>Rian Sutarsa</strong></h6>
-                            </div>
+                </div>
+
+                <hr>
+
+                <!-- 🔥 FORM UTAMA -->
+                <div style="display:flex; gap:20px; flex-wrap:wrap;">
+
+                    <div style="display:flex; align-items:end; gap:10px; flex-wrap:wrap;">
+
+                        <!-- No Transaksi -->
+                        <div style="min-width:180px;">
+                            <label style="font-size:11px;">No Transaksi</label>
+                            <input class="form-control form-control-sm" name="nofaktur" id="nofaktur"
+                                value="<?= !empty($nofaktur) ? $nofaktur : $row['tr_faktur']; ?>"
+                                style="font-weight:bold;">
                         </div>
-                        <!-- this row will not appear when printing -->
-                        <div class="col-12">
-                            <div class="row no-print">
-                                <div class="col-6">
-                                    <a type="button" rel="noopener" class="btn btn-default" href="/dhkp22"><i class="fa fa-fast-backward mr-1"></i> Data</a>
-                                </div>
-                                <div class="col-6">
-                                    <a type="button" rel="noopener" class="btn btn-default float-right" id="btnSimpanTransaksi"><i class="fas fa-print mr-1"></i> Print</a>
-                                    <a type="button" rel="noopener" class="btn btn-default float-right" id="btnHapusTransaksi"><i class="fa fa-exchange-alt mr-1"></i> Return</a>
-                                </div>
-                            </div>
+
+                        <!-- Penyetor -->
+                        <div style="flex:1; min-width:220px;">
+                            <label style="font-size:11px;">Penyetor</label>
+                            <select class="form-control form-control-sm" id="pelanggan" name="pelanggan"
+                                style="font-weight:bold; background:#f8f9fa;"></select>
+                        </div>
+
+                        <!-- Tombol tambah -->
+                        <div>
+                            <label style="font-size:11px; opacity:0;">.</label>
+                            <button class="btn btn-sm btn-outline-secondary btnTambahPelanggan"
+                                type="button"
+                                onclick="tambahPelanggan()">
+                                <i class="fas fa-user-plus"></i>
+                            </button>
+                        </div>
+
+                        <!-- Input NOP -->
+                        <div style="min-width:220px;">
+                            <label style="font-size:11px;">Input NOP</label>
+                            <input type="text" class="form-control form-control-sm" name="nop" id="nop"
+                                placeholder="Scan / ketik NOP">
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+                <!-- 🔥 DATA DETAIL -->
+                <div class="row mt-4">
+                    <div class="col-12 dataDetailTr"></div>
+                </div>
+
+                <!-- 🔥 TOTAL -->
+                <div style="display:flex; justify-content:flex-end; margin-top:20px;">
+                    <div style="width:300px;">
+                        <div style="display:flex; justify-content:space-between;">
+                            <b>Total</b>
+                            <input type="text" class="form-control text-right"
+                                name="totalbayar" id="totalbayar"
+                                style="font-weight:bold; background:#f8f9fa; border:0;" readonly>
                         </div>
                     </div>
                 </div>
-                <!-- /.row -->
+
+                <!-- 🔥 TERBILANG -->
+                <div style="margin-top:10px;">
+                    <small><em>Terbilang:</em></small>
+                    <input type="text" class="form-control"
+                        name="terbilang" id="terbilang"
+                        style="font-weight:bold; background:#f8f9fa; border:0;" readonly>
+                </div>
+
+                <!-- 🔥 ACTION -->
+                <div class="row mt-4 no-print">
+                    <div class="col-6">
+                        <a class="btn btn-light" href="/dhkp22">
+                            <i class="fa fa-arrow-left"></i> Kembali
+                        </a>
+                    </div>
+
+                    <div class="col-6 text-right">
+                        <button class="btn btn-warning" id="btnHapusTransaksi">
+                            Reset
+                        </button>
+
+                        <button class="btn btn-success" id="btnSimpanTransaksi">
+                            Bayar & Cetak
+                        </button>
+                    </div>
+                </div>
+
             </div>
-            <!-- /.invoice -->
         </div>
     </section>
 
 </div>
 <div class="viewmodal" style="display: none;"></div>
 <div class="viewmodalbayar" style="display: none;"></div>
+<div class="viewmodalpelanggan" style="display:none;"></div>
 <script>
+    $(document).ready(function() {
+        // sidebar non collapse
+        $('body').removeClass('sidebar-collapse');
+
+        pbbterhutang();
+        dataDetailTr();
+        hitungTotalBayar();
+        dataPelanggan();
+
+        $('#nop').keydown(function(e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                cekNop();
+            }
+        });
+
+        $('#btnHapusTransaksi').click(function(e) {
+            e.preventDefault();
+            batalTransaksi();
+        });
+
+        $('#btnSimpanTransaksi').click(function(e) {
+            e.preventDefault();
+            bayar();
+            // window.print();
+        });
+
+        $(this).keydown(function(e) {
+            if (e.keyCode == 27) {
+                e.preventDefault();
+                $('#nop').focus();
+            }
+            if (e.keyCode == 192) {
+                e.preventDefault();
+                batalTransaksi();
+            }
+            if (e.keyCode == 220) {
+                e.preventDefault();
+                bayar();
+            }
+        });
+
+    });
+
     function dataPelanggan() {
         //pilih data dusun
         $('#pelanggan').select2({
@@ -227,50 +246,6 @@
             }
         })
     }
-
-    $(document).ready(function() {
-        // sidebar non collapse
-        $('body').removeClass('sidebar-collapse');
-
-        pbbterhutang();
-        dataDetailTr();
-        hitungTotalBayar();
-        dataPelanggan();
-
-        $('#nop').keydown(function(e) {
-            if (e.keyCode == 13) {
-                e.preventDefault();
-                cekNop();
-            }
-        });
-
-        $('#btnHapusTransaksi').click(function(e) {
-            e.preventDefault();
-            batalTransaksi();
-        });
-
-        $('#btnSimpanTransaksi').click(function(e) {
-            e.preventDefault();
-            bayar();
-            window.print();
-        });
-
-        $(this).keydown(function(e) {
-            if (e.keyCode == 27) {
-                e.preventDefault();
-                $('#nop').focus();
-            }
-            if (e.keyCode == 192) {
-                e.preventDefault();
-                batalTransaksi();
-            }
-            if (e.keyCode == 220) {
-                e.preventDefault();
-                bayar();
-            }
-        });
-
-    });
 
     function bayar() {
         let nofaktur = $('#nofaktur').val();
@@ -429,6 +404,19 @@
             },
             error: function(xhr, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        });
+    }
+
+    function tambahPelanggan() {
+        $.ajax({
+            url: "<?= site_url('pbb/pelanggan/formmodal'); ?>",
+            dataType: "json",
+            success: function(response) {
+                if (response.data) {
+                    $('.viewmodalpelanggan').html(response.data).show();
+                    $('#modalTambahPelanggan').modal('show');
+                }
             }
         });
     }

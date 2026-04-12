@@ -59,8 +59,10 @@
     <!-- <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&family=Titillium+Web:ital,wght@0,200;0,300;1,200&display=swap" rel="stylesheet"> -->
 
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="<?= base_url('assets/plugins/fontawesome-free/css/all.min.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('fontawesome/fontawesome-free-6.0.0-beta3-web/css/all.min.css') ?>">
+    <!-- <link rel="stylesheet" href="<?= base_url('assets/plugins/fontawesome-free/css/all.min.css') ?>"> -->
+    <!-- <link rel="stylesheet" href="<?= base_url('fontawesome/fontawesome-free-6.0.0-beta3-web/css/all.min.css') ?>"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <!-- Theme style -->
     <link rel="stylesheet" href="<?= base_url('assets/dist/css/adminlte.min.css') ?>">
 
@@ -80,7 +82,8 @@
     <!-- <link rel="stylesheet" href="<?= base_url('datatable/css/dataTables.bootstrap4.min.css'); ?>"> -->
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.bootstrap5.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.9/css/fixedHeader.bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css"> -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
 
     <!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> -->
     <!-- <link rel="stylesheet" href="<?= base_url(); ?>/assets/plugins/select2/css/select2.min.css"> -->
@@ -373,9 +376,10 @@
     <!-- <script type="text/javascript" src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script> -->
     <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
     <!-- <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/dt-1.11.4/datatables.min.js"></script> -->
     <!-- <script src="<?= base_url(); ?>/assets/plugins/select2/js/select2.min.js"></script> -->
-    <script src="<?= base_url(); ?>/assets/plugins/sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="<?= base_url('assets/plugins/sweetalert2/sweetalert2.all.min.js'); ?>"></script>
 
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script> -->
     <script src="<?= base_url('assets/bootstrap-5.0.2/dist/js/bootstrap.bundle.min.js'); ?>"></script>

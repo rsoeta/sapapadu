@@ -2,7 +2,7 @@
 
 function namaApp()
 {
-    return 'SAPA PADU';
+    return 'SAPAPADU';
 }
 
 function appVersion()
@@ -12,7 +12,7 @@ function appVersion()
 
 function deskApp()
 {
-    return 'Sistem Aplikasi Pajak Bumi dan Bangunan Pakenjeng Terpadu';
+    return 'Sistem Aplikasi PBB-P2 Desa Terpadu';
 }
 
 function profilAdmin()

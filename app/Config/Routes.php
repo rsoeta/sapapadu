@@ -21,7 +21,7 @@ $routes->setDefaultController('Landing');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
 $routes->set404Override();
-$routes->setAutoRoute(true);
+$routes->setAutoRoute(false);
 
 /*
  * --------------------------------------------------------------------
@@ -76,9 +76,23 @@ $routes->post('ambilDataPelanggan', 'Dhkp21::ambilDataPelanggan', ['filter' => '
 $routes->post('editPbb21', 'Dhkp21::formedit', ['filter' => 'authfilterpbb']);
 $routes->post('dhkp21/ekpor-dhkp21', 'Dhkp21::export', ['filter' => 'authfilterpbb']);
 
+// Management Pelanggan
+$routes->get('pelanggan', 'Pbb\Pelanggan::index', ['filter' => 'authfilterpbb']);
+$routes->post('pbb/pelanggan/ambildata', 'Pbb\Pelanggan::ambildata', ['filter' => 'authfilterpbb']);
+$routes->get('pbb/pelanggan/formmodal', 'Pbb\Pelanggan::formmodal', ['filter' => 'authfilterpbb']);
+$routes->post('pbb/pelanggan/simpandata', 'Pbb\Pelanggan::simpandata', ['filter' => 'authfilterpbb']);
+$routes->post('pbb/pelanggan/formedit', 'Pbb\Pelanggan::formedit', ['filter' => 'authfilterpbb']);
+$routes->post('pbb/pelanggan/updatedata', 'Pbb\Pelanggan::updatedata', ['filter' => 'authfilterpbb']);
+$routes->post('pbb/pelanggan/hapus', 'Pbb\Pelanggan::hapus', ['filter' => 'authfilterpbb']);
+$routes->post('pbb/pelanggan/ambilDataDusun', 'Pbb\Pelanggan::ambilDataDusun', ['filter' => 'authfilterpbb']);
+$routes->post('pbb/pelanggan/ambilDataRw', 'Pbb\Pelanggan::ambilDataRw', ['filter' => 'authfilterpbb']);
+$routes->post('pbb/pelanggan/ambilDataRt', 'Pbb\Pelanggan::ambilDataRt', ['filter' => 'authfilterpbb']);
+$routes->post('pbb/pelanggan/dataPelanggan', 'Pbb\Pelanggan::dataPelanggan', ['filter' => 'authfilterpbb']);
+
+// Wilayah
 $routes->get('chart', 'Chart::index', ['filter' => 'authfilterpbb']);
 $routes->get('dhkp', 'Dhkp::index', ['filter' => 'authfilterpbb']);
-$routes->get('dhkp/(:num)', 'dhkp::detail', ['filter' => 'authfilterpbb']);
+$routes->get('dhkp/(:num)', 'Dhkp::detail', ['filter' => 'authfilterpbb']);
 $routes->get('profil_user', 'Admin::detail', ['filter' => 'authfilterpbb']);
 $routes->post('update_user', 'Admin::update_user', ['filter' => 'authfilterpbb']);
 $routes->post('submit_lembaga', 'Admin::submit_lembaga', ['filter' => 'authfilterpbb']);
@@ -132,6 +146,16 @@ $routes->post('listPbbTerhutang', 'Trx22::listPbbTerhutang', ['filter' => 'authf
 $routes->match(['GET', 'POST'], 'simpanTemp', 'Trx22::simpanTemp', ['filter' => 'authfilterpbb']);
 $routes->post('hitungTotalBayar', 'Trx22::hitungTotalBayar', ['filter' => 'authfilterpbb']);
 $routes->get('initChart', 'Dhkp22::initChart');
+
+$routes->get('qr/generate', 'Qr::generate');
+// $routes->get('print/struk/(:any)/(:any)', 'Pbb\Struk::index/$1/$2');
+$routes->get('print/struk/(:any)/(:any)', '\App\Controllers\Pbb\Struk::index/$1/$2');
+$routes->get('validasi/(:any)/(:any)', 'Pbb\Validasi::index/$1/$2');
+
+$routes->get('print/struk-kolektif/(:any)/(:any)', 'Pbb\Struk::kolektif/$1/$2');
+
+$routes->get('print/struk/(:num)', 'Pbb\Struk::index/$1');
+$routes->get('debug-struk', 'Pbb\Struk::index/test/test');
 
 // User Management
 $routes->get('users', 'Users::index', ['filter' => 'adminfilterpbb']);

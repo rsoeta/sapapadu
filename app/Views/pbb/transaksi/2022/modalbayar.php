@@ -141,22 +141,27 @@
                     },
                     success: function(response) {
                         if (response.sukses == 'berhasil') {
+
+                            let link = response.link_struk;
+                            let nofaktur = response.nofaktur;
+                            let total = response.total;
+
                             Swal.fire({
-                                title: 'Cetak Invoice',
-                                text: "Apakah Anda sudah mencetak Invoice?",
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Ya, Sudah!',
-                                cancelButtonText: 'Tidak!'
+                                title: 'Pembayaran Berhasil ✅',
+                                html: `
+                                    No: <b>${nofaktur}</b><br>
+                                    Total: Rp ${total}<br><br>
+                                    <a href="${link}" target="_blank">Lihat / Cetak Struk</a>
+                                `,
+                                icon: 'success',
+                                confirmButtonText: 'Buka Struk'
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    window.location.reload();
-                                } else {
-                                    window.location.reload();
+                                    window.open(link, '_blank');
                                 }
-                            })
+                                window.location.reload();
+                            });
+
                         }
                     },
                     error: function(xhr, thrownError) {
