@@ -174,6 +174,10 @@ $routes->post('change-password', 'Auth::updatePassword');
 // API
 $routes->resource('api_pbb', ['controller' => 'Api\Home']);
 
+// Token Fonnte
+$routes->get('settings/fonnte', 'SettingController::fonnte');
+$routes->post('settings/save-fonnte', 'SettingController::saveFonnte');
+
 // $routes->get('inner-join', 'Site::innerJoinMethod');
 // $routes->get('left-join', 'Site::leftJoinMethod');
 // $routes->get('right-join', 'Site::rightJoinMethod');

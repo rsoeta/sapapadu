@@ -6,53 +6,6 @@ use App\Controllers\BaseController;
 
 class Struk extends BaseController
 {
-    // public function index($faktur, $token)
-    // {
-    //     return "STRUK OK: " . $faktur;
-    // }
-    // public function index($faktur, $token)
-    // {
-    //     helper(['terbilang', 'struk']);
-    //     $faktur = str_replace('#', '', $faktur);
-
-    //         // validasi token
-    //         if ($token !== struk_token($faktur)) {
-    //             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-    //         }
-
-    //         $db = \Config\Database::connect();
-
-    //         $builder = $db->table('pbb_transaksi22 t');
-    //         $builder->select('
-    //         t.tr_faktur,
-    //         t.tr_tgl,
-    //         t.tr_totalbersih,
-
-    //         d.nop,
-    //         d.pajak,
-    //         d.ket,
-
-    //         p.nama_wp,
-    //         p.alamat_wp
-    //     ');
-
-    //     $builder->join('pbb_detailtrans21 d', 'd.dettr_faktur = t.tr_faktur');
-    //     $builder->join('pbb_pelanggan p', 'p.id_pelanggan = t.pelanggan_id');
-    //     // $builder->where('t.tr_faktur', $faktur);
-    //     $builder->where('t.tr_faktur', '#' . $faktur);
-
-    //     $data = $builder->get()->getRowArray();
-
-    //     if (!$data) {
-    //         throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-    //     }
-
-    //     $data['terbilang'] = terbilang($data['tr_totalbersih']);
-    //     $data['tgl_format'] = date('d-m-Y H:i', strtotime($data['tr_tgl']));
-    //     $data['validasi_url'] = validasi_url($faktur);
-
-    //     return view('pbb/struk/struk_single', $data);
-    // }
 
     public function index($faktur, $token)
     {

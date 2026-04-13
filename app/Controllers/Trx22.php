@@ -776,7 +776,8 @@ class Trx22 extends BaseController
 
     private function kirimWA($nomor, $pesan)
     {
-        $token = 'n8jW8W4EFXh1QoiLNZz4'; // 🔥 ganti token kamu
+        // $token = 'n8jW8W4EFXh1QoiLNZz4'; // 🔥 ganti token kamu
+        $token = app_config('fonnte_token');
 
         $curl = curl_init();
 
