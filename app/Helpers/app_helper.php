@@ -14,6 +14,40 @@ function deskApp()
 {
     return 'Sistem Aplikasi PBB-P2 Desa Terpadu';
 }
+function logoApp()
+{
+    return base_url('favicon.png');
+}
+
+if (!function_exists('infoApp')) {
+    function infoApp()
+    {
+        static $cache = null;
+
+        if ($cache !== null) {
+            return $cache;
+        }
+
+        $db = \Config\Database::connect();
+
+        $data = $db->table('app_profile')
+            ->limit(1)
+            ->get()
+            ->getRow();
+
+        // 🔥 fallback kalau kosong
+        if (!$data) {
+            $data = (object)[
+                'nama_desa' => '',
+                'nama_kecamatan' => '',
+                'nama_kabupaten' => '',
+                'sekretariat' => ''
+            ];
+        }
+
+        return $cache = $data;
+    }
+}
 
 function profilAdmin()
 {
@@ -26,11 +60,6 @@ function profilAdmin()
     $query = $builder->get();
 
     return $query->getRow();
-}
-
-function logoApp()
-{
-    return base_url('favicon.png');
 }
 
 function detailUser()

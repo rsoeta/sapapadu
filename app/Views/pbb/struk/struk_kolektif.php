@@ -69,6 +69,11 @@
             font-size: 11px;
         }
 
+        .kop-sekretariat {
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
         .kop-logo:first-child {
             text-align: left;
         }
@@ -90,8 +95,10 @@
 
         .kop-wrapper {
             border-bottom: 4px double #000;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
+            padding-bottom: 5px;
+            /* 🔥 lebih rapat */
+            margin-bottom: 8px;
+            /* 🔥 lebih dekat */
         }
 
         /* 🔥 JUDUL */
@@ -156,8 +163,57 @@
 
         @media print {
 
+            @page {
+                margin: 5mm;
+            }
+
+            html,
             body {
-                margin: 10px;
+                margin: 0 !important;
+                padding: 0 !important;
+                height: 100%;
+            }
+
+            body {
+                margin: -10mm 0 0 0 !important;
+                /* 🔥 tarik ke atas paksa */
+            }
+
+
+            body>*:first-child {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+            }
+
+            .container,
+            .container-fluid,
+            .content,
+            .wrapper,
+            .main,
+            .main-content,
+            .page,
+            .app-content {
+                margin-top: 0 !important;
+                padding-top: 0 !important;
+            }
+
+            .content-wrapper {
+                padding-top: 0 !important;
+                margin-top: 0 !important;
+            }
+
+            body *:first-child {
+                margin-top: 0 !important;
+                padding-top: 0 !important;
+            }
+
+            .container,
+            .wrapper,
+            .content {
+                margin-top: 0 !important;
+                padding-top: 0 !important;
             }
 
             /* ❌ MATIKAN FLEX TOTAL */
@@ -176,12 +232,14 @@
                 border-collapse: collapse;
                 table-layout: fixed;
                 margin-bottom: 10px;
+                margin-top: 0 !important;
             }
 
             .kop-table td {
                 vertical-align: middle;
                 padding: 6px;
                 border: none !important;
+                padding-bottom: 0 !important;
             }
 
             /* PROPORSI */
@@ -213,24 +271,38 @@
                 letter-spacing: 10px;
                 margin: 0;
                 font-weight: bold;
+                margin-bottom: 2px;
             }
 
             .kop-sub {
                 font-size: 11px;
                 margin: 2px 0;
                 font-weight: normal;
+                margin-bottom: 2px;
             }
 
             .kop-desa {
                 margin: 2px 0;
                 font-size: 12px;
                 font-weight: bold;
+                margin-bottom: 2px;
+            }
+
+            .kop-sekretariat {
+                font-size: 10px;
+                line-height: 1.3;
+                margin-bottom: 0 !important;
             }
 
             .kop-wrapper {
                 border-bottom: 4px double #000 !important;
-                padding-bottom: 8px;
-                margin-bottom: 12px;
+                padding-bottom: 0 !important;
+                /* 🔥 hilangkan jarak */
+                margin-bottom: 6px;
+                /* opsional, kecilkan */
+                margin-top: 0 !important;
+                padding-top: 0 !important;
+
             }
 
             /* FOOTER */
@@ -244,7 +316,7 @@
 
             table th,
             table td {
-                padding: 6px 8px !important;
+                /* padding: 6px 8px !important; */
                 /* 🔥 tambah ruang */
                 line-height: 1.4 !important;
                 /* 🔥 biar tidak naik */
@@ -262,7 +334,7 @@
             }
 
             table th {
-                padding: 7px 8px !important;
+                /* padding: 7px 8px !important; */
             }
         }
 
@@ -346,11 +418,11 @@
                         <h1><?= namaApp(); ?></h1>
                         <h4>( <?= deskApp(); ?> )</h4>
                         <h3>
-                            <?= !empty(detailUser()->nm_desa)
-                                ? 'DESA ' . detailUser()->nm_desa . ' KECAMATAN ' . detailUser()->nm_kec
-                                : 'KECAMATAN ' . detailUser()->nm_kec; ?>
+                            <?= !empty(infoApp()->nama_desa)
+                                ? 'DESA ' . infoApp()->nama_desa . ' KECAMATAN ' . infoApp()->nama_kecamatan
+                                : 'KECAMATAN ' . infoApp()->nama_kecamatan; ?>
                         </h3>
-                        <h6><?= !empty($sekretariat['lp_sekretariat']) ? $sekretariat['lp_sekretariat'] : ''; ?></h6>
+                        <h6><?= !empty(infoApp()->sekretariat) ? infoApp()->sekretariat : ''; ?></h6>
                     </div>
 
                     <div class="kop-logo kanan">
@@ -366,12 +438,25 @@
                         </td>
 
                         <td class="kop-tengah">
+
+                            <?php $app = infoApp(); ?>
+
                             <div class="kop-title"><?= namaApp(); ?></div>
-                            <div class="kop-sub">( <?= deskApp(); ?> )</div>
-                            <div class="kop-desa">
-                                DESA <?= detailUser()->nm_desa ?>
-                                KECAMATAN <?= detailUser()->nm_kec ?>
+
+                            <div class="kop-sub">
+                                ( <?= deskApp(); ?> )
                             </div>
+
+                            <div class="kop-desa">
+                                <?= !empty($app->nama_desa)
+                                    ? 'DESA ' . $app->nama_desa . ' KECAMATAN ' . $app->nama_kecamatan
+                                    : 'KECAMATAN ' . $app->nama_kecamatan; ?>
+                            </div>
+
+                            <div class="kop-sekretariat">
+                                <?= !empty($app->sekretariat) ? $app->sekretariat : ''; ?>
+                            </div>
+
                         </td>
 
                         <td class="kop-kanan">
@@ -435,7 +520,7 @@
 
         <!-- FOOTER -->
         <div class="footer">
-            Koektor,
+            Kolektor,<br>
             <!-- QR -->
             <div style="margin: 10px 0;">
                 <img src="<?= base_url('qr/generate?data=' . urlencode($validasi_url)) ?>" width="100">

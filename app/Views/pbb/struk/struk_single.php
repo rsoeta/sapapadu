@@ -105,7 +105,7 @@
             <img src="<?= logoApp(); ?>" width="40">
             <div class="title"><?= namaApp(); ?></div>
             <div class="subtitle"><?= deskApp(); ?></div>
-            <div class="small"><?= detailUser()->nm_desa ?? '' ?> - <?= detailUser()->nm_kec ?? '' ?> - <?= detailUser()->nm_kab ?? '' ?></div>
+            <div class="small"><?= infoApp()->nama_desa ?? '' ?> - <?= infoApp()->nama_kecamatan ?? '' ?> - <?= infoApp()->nama_kabupaten ?? '' ?></div>
         </div>
 
         <div class="line"></div>

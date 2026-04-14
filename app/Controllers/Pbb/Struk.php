@@ -38,7 +38,7 @@ class Struk extends BaseController
         ');
 
         $builder->join('pbb_detailtrans21 d', 'd.dettr_faktur = t.tr_faktur');
-        $builder->join('pbb_pelanggan p', 'p.id_pelanggan = t.pelanggan_id');
+        $builder->join('pbb_pelanggan p', 'p.id_pelanggan = t.pelanggan_id', 'left');
         $builder->where('t.tr_faktur', $faktur_db);
 
         $data = $builder->get()->getRowArray();
@@ -94,10 +94,14 @@ class Struk extends BaseController
             p.alamat_pelanggan
         ');
 
-        $builder->join('pbb_pelanggan p', 'p.id_pelanggan = t.pelanggan_id');
+        $builder->join('pbb_pelanggan p', 'p.id_pelanggan = t.pelanggan_id', 'left');
         $builder->where('t.tr_faktur', $faktur_db);
 
         $header = $builder->get()->getRowArray();
+
+        if (!$header) {
+            return view('pbb/struk/not_found');
+        }
 
         $tahun = date('Y', strtotime($header['tr_tgl']));
 
