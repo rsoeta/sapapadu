@@ -137,18 +137,29 @@ class DashboardPbb extends BaseController
 
     public function getTimeline()
     {
-        $tahun = $this->request->getGet('tahun');
+        $tahun = $this->request->getGet('tahun') ?? date('Y');
+        $dusun = $this->request->getGet('dusun');
+        $rw    = $this->request->getGet('rw');
+        $rt    = $this->request->getGet('rt');
 
         $db = \Config\Database::connect();
 
-        $builder = $db->table('pbb_transaksi22 t')
+        $builder = $db->table('pbb_detailtrans21 dt')
             ->select('DATE(t.tr_tgl) as tanggal, SUM(dt.dettr_subtotal) as total')
-            ->join('pbb_detailtrans21 dt', 'dt.dettr_faktur = t.tr_faktur')
-            ->join('pbb_dhkp22 d', 'd.nop = dt.nop');
+            ->join('pbb_transaksi22 t', 't.tr_faktur = dt.dettr_faktur')
+            ->join(
+                "(SELECT DISTINCT nop, dusun, rw, rt 
+            FROM pbb_dhkp22 
+            WHERE pd_tahun = {$tahun}) d",
+                'd.nop = dt.nop'
+            );
 
-        if ($tahun) {
-            $builder->where('YEAR(t.tr_tgl)', $tahun);
-        }
+        $builder->where('YEAR(t.tr_tgl)', $tahun);
+
+        // 🔥 filter wilayah (baru join d berguna)
+        if (!empty($dusun)) $builder->where('d.dusun', $dusun);
+        if (!empty($rw))    $builder->where('d.rw', $rw);
+        if (!empty($rt))    $builder->where('d.rt', $rt);
 
         $builder->groupBy('DATE(t.tr_tgl)');
         $builder->orderBy('DATE(t.tr_tgl)', 'ASC');

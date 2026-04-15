@@ -1056,53 +1056,6 @@ class DhkpModel22 extends Model
         return array_values($filtered);
     }
 
-    // public function setoranPerRtFiltered($dusun = null, $rw = null, $rt = null, $tahun = null)
-    // {
-    //     $builder = $this->db->table('pbb_transaksi22 t')
-    //         ->select('
-    //                 d.dusun,
-    //                 d.rw,
-    //                 d.rt,
-
-    //                 COALESCE(rt.no_rt, LPAD(d.rt,3,"0")) as rt_fix,
-    //                 COALESCE(rt.no_rw, LPAD(d.rw,3,"0")) as rw_fix,
-
-    //                 rt.alamat_rt,
-
-    //                 SUM(CASE WHEN d.pd_ket = 0 THEN d.pajak ELSE 0 END) as dataCapaian,
-    //                 SUM(d.pajak) as dataTarget
-    //             ')
-    //         // 🔥 URUTAN JOIN DIPERBAIKI
-    //         ->join('pbb_detailtrans21 dt', 'dt.dettr_faktur = t.tr_faktur')
-    //         ->join('pbb_dhkp22 d', 'd.nop = dt.nop')
-    //         ->join('tb_rt rt', "
-    //         rt.no_rt = LPAD(d.rt,3,'0') 
-    //         AND rt.no_rw = LPAD(d.rw,3,'0') 
-    //         AND rt.no_dusun = d.dusun
-    //     ", 'left');
-
-    //     if (!empty($dusun)) $builder->where('d.dusun', $dusun);
-    //     if (!empty($rw)) $builder->where('d.rw', $rw);
-    //     if (!empty($rt)) $builder->where('d.rt', $rt);
-    //     if (!empty($tahun)) $builder->where('YEAR(t.tr_tgl)', $tahun);
-
-    //     $builder->groupBy(['d.dusun', 'd.rw', 'd.rt']);
-
-    //     $result = $builder->get()->getResult();
-
-    //     foreach ($result as $row) {
-    //         $row->dataPersentase = $row->dataTarget > 0
-    //             ? ($row->dataCapaian / $row->dataTarget) * 100
-    //             : 0;
-
-    //         if ($row->dataPersentase > 100) {
-    //             $row->dataPersentase = 100;
-    //         }
-    //     }
-
-    //     return $result;
-    // }
-
     public function setoranPerRtFiltered($dusun = null, $rw = null, $rt = null, $tahun = null)
     {
         $builder = $this->db->table('pbb_dhkp22 d')
