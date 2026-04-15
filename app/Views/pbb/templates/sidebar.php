@@ -11,7 +11,7 @@ $menus = menu()
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-light-primary elevation-4" style="background-color: cornflowerblue;">
     <!-- Brand Logo -->
-    <a href="<?= base_url('dashboard') ?>" class="brand-link">
+    <a href="<?= base_url('dashboard-v2') ?>" class="brand-link">
         <img src="<?= logoApp(); ?>" alt="<?= namaApp(); ?> Logo" class="brand-image" style="opacity: .8">
         <span class="brand-text font-weight-light" style="font-weight: bolder;"><?= namaApp(); ?></span>
     </a>

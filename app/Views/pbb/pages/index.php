@@ -24,6 +24,47 @@
             </h3>
         </div>
 
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <div class="kpi-card bg-primary">
+                    <h5>Total Target</h5>
+                    <h3>Rp <?= number_format($kpi['target']) ?></h3>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="kpi-card bg-success">
+                    <h5>Capaian</h5>
+                    <h3>Rp <?= number_format($kpi['capaian']) ?></h3>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="kpi-card bg-warning">
+                    <h5>Persentase</h5>
+                    <h3><?= number_format($kpi['persentase'], 2) ?>%</h3>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="kpi-card bg-danger">
+                    <h5>Sisa</h5>
+                    <h3>Rp <?= number_format($kpi['sisa']) ?></h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <select id="filterDusun" class="form-control">
+                    <option value="">Semua Dusun</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select id="filterRw" class="form-control"></select>
+            </div>
+            <div class="col-md-4">
+                <select id="filterRt" class="form-control"></select>
+            </div>
+        </div>
+
         <div class="card card-primary card-outline card-outline-tabs">
             <div class="card-header p-0 border-bottom-0">
                 <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
@@ -80,7 +121,21 @@
                                                     <div class=""></div>
                                                 </div>
                                             </div>
-                                            <canvas id="timelineChart" style="min-height: 250px; height: 350px; max-height: 500px; max-width: 100%; display: block; width: 329px;" width="1000" height="500" class="chartjs-render-monitor"></canvas>
+                                            <!-- <canvas id="timelineChart" style="min-height: 250px; height: 350px; max-height: 500px; max-width: 100%; display: block; width: 329px;" width="1000" height="500" class="chartjs-render-monitor"></canvas> -->
+                                            <div class="card mt-3">
+                                                <div class="card-header">
+                                                    🔥 Top Kolektor
+                                                </div>
+                                                <div class="card-body">
+                                                    <ul>
+                                                        <?php foreach (array_slice($setoranPerRt, 0, 10) as $row): ?>
+                                                            <li>
+                                                                RT <?= $row->rtNama ?> - <?= number_format($row->dataPersentase, 2) ?>%
+                                                            </li>
+                                                        <?php endforeach; ?>
+                                                    </ul>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

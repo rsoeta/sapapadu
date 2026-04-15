@@ -30,8 +30,11 @@ class Trx22 extends BaseController
     protected $rw;
     protected $rt;
     protected $auth;
+    protected $db;
+
     public function __construct()
     {
+        $this->db = \Config\Database::connect();
         date_default_timezone_set('Asia/Jakarta');
         $this->dhkpModel = new DhkpModel();
         $this->dhkpModel22 = new DhkpModel22();
@@ -799,5 +802,16 @@ class Trx22 extends BaseController
         curl_close($curl);
 
         return $response;
+    }
+
+    public function timelineChartFiltered($dusun = null, $rw = null, $rt = null)
+    {
+        $builder = $this->db->table('pbb_transaksi22');
+
+        if ($dusun) $builder->where('dusun', $dusun);
+        if ($rw) $builder->where('rw', $rw);
+        if ($rt) $builder->where('rt', $rt);
+
+        return $builder->get()->getResult();
     }
 }

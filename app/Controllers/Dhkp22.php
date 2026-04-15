@@ -24,7 +24,17 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Dhkp22 extends BaseController
 {
+    protected $DetailTransModel;
     protected $dhkpModel22;
+    protected $dhkpModel21;
+    protected $pelanggan;
+    protected $KetBayarModel;
+    protected $PengajuanModel;
+    protected $DesaModel;
+    protected $dusun;
+    protected $rw;
+    protected $rt;
+
     public function __construct()
     {
         $this->DetailTransModel = new DetailTransModel();
@@ -514,20 +524,6 @@ class Dhkp22 extends BaseController
                         'required' => '{field} tidak boleh kosong'
                     ]
                 ],
-                // 'bumi' => [
-                //     'label' => 'Bumi',
-                //     'rules' => 'required',
-                //     'errors' => [
-                //         'required' => '{field} tidak boleh kosong'
-                //     ]
-                // ],
-                // 'bgn' => [
-                //     'label' => 'Bangunan',
-                //     'rules' => 'required',
-                //     'errors' => [
-                //         'required' => '{field} tidak boleh kosong'
-                //     ]
-                // ],
                 'pajak' => [
                     'label' => 'Pajak',
                     'rules' => 'required',
@@ -535,13 +531,6 @@ class Dhkp22 extends BaseController
                         'required' => '{field} tidak boleh kosong'
                     ]
                 ],
-                // 'nama_ktp' => [
-                //     'label' => 'Nama Pemilik',
-                //     'rules' => 'required',
-                //     'errors' => [
-                //         'required' => '{field} tidak boleh kosong'
-                //     ]
-                // ],
                 'pd_desa' => [
                     'label' => 'Desa',
                     'rules' => 'required',
@@ -570,13 +559,6 @@ class Dhkp22 extends BaseController
                         'required' => '{field} tidak boleh kosong'
                     ]
                 ],
-                // 'ket' => [
-                //     'label' => 'Keterangan',
-                //     'rules' => 'required',
-                //     'errors' => [
-                //         'required' => '{field} tidak boleh kosong'
-                //     ]
-                // ]
                 'foto' => [
                     'rules' => 'permit_empty|is_image[foto]|max_size[foto,2048]|mime_in[foto,image/jpg,image/jpeg,image/png]',
                     'errors' => [
@@ -842,17 +824,6 @@ class Dhkp22 extends BaseController
             $msg = [
                 'gagal' => 'Data SPPT gagal dihapus'
             ];
-
-            // if (isset($_POST['deleteids_arr'])) {
-            //     $deleteids_arr = $_POST['deleteids_arr'];
-            // }
-            // foreach ($deleteids_arr as $deleteid) {
-            //     $model->delete($deleteid);
-            //     // mysqli_query($con, "DELETE FROM pbb_dhkp22 WHERE id=" . $deleteid);
-            // }
-
-            // echo 1;
-            // exit;
         }
     }
 
@@ -1090,8 +1061,6 @@ class Dhkp22 extends BaseController
         $tempTr = $this->db->table('pbb_dhkp22');
         $queryTampil = $tempTr
             ->select('id, nama_wp, nop, alamat_wp, alamat_op, bumi, bgn, nik_wp, nama_ktp, dusun, rw, rt,pajak, ket, created_at, updated_at')
-            // ->join('pbb_dhkp22', 'pbb_temptrans22.nop = pbb_dhkp22.nop')
-            // ->where('dettr_faktur', $nofaktur)
             ->orderBy('id', 'desc');
 
         $data = [
@@ -1160,19 +1129,6 @@ class Dhkp22 extends BaseController
 
         echo json_encode($output);
 
-        // $db      = \Config\Database::connect();
-        // $builder = $db->table('pbb_dhkp22');
-        // $builder->select('nama_wp, nop, alamat_wp, alamat_op, bumi, bgn, pajak, sta_keterangan, rt, rw, tb_villages.name as desaNama');
-
-        // $builder->join('pbb_stasppt',   'pbb_stasppt.sta_id=pbb_dhkp22.ket');
-        // $builder->join('tb_villages',     'tb_villages.id=pbb_dhkp22.pd_desa');
-        // $builder->where('ket', '1');
-        // $builder->where('rw', $filter2);
-        // $builder->where('rt', $filter3);
-        // $query = $builder->get();
-        // $data = $query->getResultArray();
-        // dd($filter2);
-
         $file_name = 'file-BL-' . date('Ymd_His') . '.xlsx';
 
         $spreadsheet = new Spreadsheet();
@@ -1183,10 +1139,6 @@ class Dhkp22 extends BaseController
         $drawing->setCoordinates('A1');
         $drawing->setWidthAndHeight(500, 500);
         $drawing->setDescription('logo-garutkab');
-        // $drawing->setOffsetX(110);
-        // $drawing->setRotation(25);
-        // $drawing->getShadow()->setVisible(true);
-        // $drawing->getShadow()->setDirection(45);
 
         $sheet = $spreadsheet->getActiveSheet();
 
@@ -1198,7 +1150,6 @@ class Dhkp22 extends BaseController
         $sheet->setCellValue('F5', 'BUMI');
         $sheet->setCellValue('G5', 'BGN');
         $sheet->setCellValue('H5', 'PAJAK');
-        // $sheet->setCellValue('I5', 'KETERANGAN');
         $sheet->setCellValue('J5', 'RT');
         $sheet->setCellValue('K5', 'RW');
 
@@ -1214,7 +1165,6 @@ class Dhkp22 extends BaseController
             $sheet->setCellValue('F' . $count, $row['bumi']);
             $sheet->setCellValue('G' . $count, $row['bgn']);
             $sheet->setCellValue('H' . $count, $row['pajak']);
-            // $sheet->setCellValue('I' . $count, strtoupper($row['sta_keterangan']));
             $sheet->setCellValue('J' . $count, $row['rt']);
             $sheet->setCellValue('K' . $count, $row['rw']);
 

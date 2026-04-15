@@ -117,4 +117,24 @@ class TrxModel22 extends Model
 
         return $query->getResult();
     }
+
+    public function timelineChartFiltered($dusun = null, $rw = null, $rt = null)
+    {
+        $builder = $this->db->table('pbb_transaksi22 t')
+            ->select('DATE(t.tr_tgl) as tr_tgl, SUM(dt.dettr_subtotal) as tr_totalkotor')
+            ->join('pbb_detailtrans21 dt', 'dt.dettr_faktur = t.tr_faktur')
+            ->join('pbb_dhkp22 d', 'd.nop = dt.nop');
+
+        if (!empty($dusun)) $builder->where('d.dusun', $dusun);
+        if (!empty($rw)) $builder->where('d.rw', $rw);
+        if (!empty($rt)) $builder->where('d.rt', $rt);
+        if (!empty($tahun)) {
+            $builder->where('YEAR(t.tr_tgl)', $tahun);
+        }
+
+        $builder->groupBy('DATE(t.tr_tgl)');
+        $builder->orderBy('DATE(t.tr_tgl)', 'ASC');
+
+        return $builder->get()->getResult();
+    }
 }

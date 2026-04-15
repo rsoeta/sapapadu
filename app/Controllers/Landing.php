@@ -6,6 +6,7 @@ use App\Models\Pbb\DhkpModel22;
 
 class Landing extends BaseController
 {
+	protected $DhkpModel22;
 	public function __construct()
 	{
 		$this->DhkpModel22 = new DhkpModel22();

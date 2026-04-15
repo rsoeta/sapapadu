@@ -167,7 +167,7 @@ class Auth extends BaseController
             }
 
             // ✅ LOGIN SUCCESS
-            return redirect()->to('/dashboard');
+            return redirect()->to('/dashboard-v2');
         }
 
         return view('pbb/auth/login', [
@@ -569,7 +569,7 @@ class Auth extends BaseController
                 'pu_updated_by' => session()->get('pu_username'),
             ]);
 
-        return redirect()->to('/dashboard')
+        return redirect()->to('/dashboard-v2')
             ->with('sukses', 'Password berhasil diperbarui');
     }
 }

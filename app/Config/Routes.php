@@ -50,10 +50,29 @@ $routes->post('forgot-password', 'Auth::sendResetLink', ['filter' => 'noauthfilt
 $routes->get('reset-password/(:segment)', 'Auth::resetPassword/$1', ['filter' => 'noauthfilterpbb']);
 $routes->post('reset-password', 'Auth::processResetPassword', ['filter' => 'noauthfilterpbb']);
 
-$routes->get('dashboard', 'Pages::index', ['filter' => 'authfilterpbb']);
-$routes->get('diagram', 'Pages::index2', ['filter' => 'authfilterpbb']);
+$routes->get('api/dashboard', 'Api\Dashboard::index');
+$routes->get('api/wilayah/dusun', 'Api\Wilayah::dusun');
+$routes->get('api/wilayah/rw', 'Api\Wilayah::rw');
+$routes->get('api/wilayah/rt', 'Api\Wilayah::rt');
+$routes->get('api/wilayah/tahun', 'Api\Wilayah::tahun');
+
+// $routes->get('dashboard', 'Pages::index', ['filter' => 'authfilterpbb']);
+// $routes->get('diagram', 'Pages::index2', ['filter' => 'authfilterpbb']);
+$routes->get('dashboard-v2', 'Pages::index2', ['filter' => 'authfilterpbb']);
 // $routes->get('home', 'Dhkp22::index', ['filter' => 'authfilterpbb']);
 // $routes->get('cache-this-page', 'Pages::index');
+
+// Dashboard API
+$routes->get('/dashboard/kpi', 'DashboardPbb::getKpi');
+$routes->get('/dashboard/ranking-rt', 'DashboardPbb::getRankingRt');
+$routes->get('/dashboard/komposisi', 'DashboardPbb::getKomposisi');
+$routes->get('/dashboard/timeline', 'DashboardPbb::getTimeline');
+
+// publik (tanpa auth) – kalau sebelumnya pakai detailUser, tambahkan fallback
+$routes->get('/api/wilayah/dusun', 'Api\Wilayah::dusunPublic');
+$routes->get('/api/wilayah/rw', 'Api\Wilayah::rwPublic');
+$routes->get('/api/wilayah/rt', 'Api\Wilayah::rtPublic');
+
 
 $routes->get('setting_web', 'Admin::setting_web', ['filter' => 'adminfilterpbb']);
 $routes->post('get_count_desa/(:any)', 'Admin::get_count_desa/$1', ['filter' => 'adminfilterpbb']);
