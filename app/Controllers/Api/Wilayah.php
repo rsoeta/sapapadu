@@ -15,7 +15,14 @@ class Wilayah extends BaseController
 
     public function dusun()
     {
-        $kodeDesa = detailUser()->pu_kode_desa;
+        $user = detailUser();
+
+        if ($user && !empty($user->pu_kode_desa)) {
+            $kodeDesa = $user->pu_kode_desa;
+        } else {
+            // 🔥 fallback untuk publik (landing)
+            $kodeDesa = '32.05.33.2006';
+        }
 
         return $this->response->setJSON(
             $this->db->table('tb_dusun')
@@ -27,7 +34,15 @@ class Wilayah extends BaseController
 
     public function rw()
     {
-        $kodeDesa = detailUser()->pu_kode_desa;
+        $user = detailUser();
+
+        if ($user && !empty($user->pu_kode_desa)) {
+            $kodeDesa = $user->pu_kode_desa;
+        } else {
+            // 🔥 fallback untuk publik (landing)
+            $kodeDesa = '32.05.33.2006';
+        }
+
         $dusun = $this->request->getGet('dusun');
 
         $builder = $this->db->table('tb_rw')
@@ -45,7 +60,15 @@ class Wilayah extends BaseController
 
     public function rt()
     {
-        $kodeDesa = detailUser()->pu_kode_desa;
+        $user = detailUser();
+
+        if ($user && !empty($user->pu_kode_desa)) {
+            $kodeDesa = $user->pu_kode_desa;
+        } else {
+            // 🔥 fallback untuk publik (landing)
+            $kodeDesa = '32.05.33.2006';
+        }
+
         $dusun = $this->request->getGet('dusun');
         $rw = $this->request->getGet('rw');
 
