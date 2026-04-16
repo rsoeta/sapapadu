@@ -39,6 +39,29 @@
 </table>
 
 <script>
+    // 🔥 Hitung total row menggunakan PHP dan lempar ke input id="jmldata" di Form Utama
+    <?php $jumlah_data = count($datadetail->getResultArray()); ?>
+    $('#jmldata').val('<?= $jumlah_data; ?>');
+
+    // Contoh sebelumnya untuk jumlah data
+    <?php $jumlah_data = count($datadetail->getResultArray()); ?>
+    $('#jmldata').val('<?= $jumlah_data; ?>');
+
+    // Asumsi: Menghitung total pajak di PHP (bisa disesuaikan dengan variabel Anda)
+    <?php
+    $total_pajak = 0;
+    foreach ($datadetail->getResultArray() as $row) {
+        $total_pajak += $row['pajak'];
+    }
+    ?>
+    // 1. Update nilai ke #totalbayar (format ribuan)
+    $('#totalbayar').val('<?= number_format($total_pajak, 0, ',', '.'); ?>');
+
+    // 2. Panggil fungsi terbilang yang sudah kita buat di atas
+    if (typeof updateTerbilang === "function") {
+        updateTerbilang();
+    }
+
     function hapusitem(id, nama_wp) {
         Swal.fire({
             title: 'Hapus Data',

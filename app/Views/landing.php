@@ -720,25 +720,25 @@
 				renderRankingLists([{
 						rt_fix: '001',
 						rw_fix: '002',
-						alamat_rt: 'Cikajang',
+						alamat_rt: 'Pasirlangu',
 						dataPersentase: 95.5
 					},
 					{
 						rt_fix: '003',
 						rw_fix: '001',
-						alamat_rt: 'Cikajang',
+						alamat_rt: 'Pasirlangu',
 						dataPersentase: 88.0
 					},
 					{
 						rt_fix: '002',
 						rw_fix: '003',
-						alamat_rt: 'Sukamaju',
+						alamat_rt: 'Pasirlangu',
 						dataPersentase: 45.0
 					},
 					{
 						rt_fix: '004',
 						rw_fix: '001',
-						alamat_rt: 'Sukamaju',
+						alamat_rt: 'Pasirlangu',
 						dataPersentase: 20.5
 					}
 				]);

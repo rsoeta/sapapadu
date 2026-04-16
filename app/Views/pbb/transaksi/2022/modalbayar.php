@@ -109,70 +109,97 @@
             hitungSisaUang();
         });
 
-        $('.frmbayar').submit(function(e) {
-            e.preventDefault();
+    });
 
-            let jmluang = ($('#jmluang').val() == "") ? 0 : $('#jmluang').autoNumeric('get');
-            let sisauang = ($('#sisauang').val() == "") ? 0 : $('#sisauang').autoNumeric('get');
+    $('.frmbayar').submit(function(e) {
+        e.preventDefault();
 
-            if (parseFloat(jmluang) == 0 || parseFloat(jmluang) == "") {
-                Toast.fire({
-                    icon: 'warning',
-                    title: 'Maaf Jumlah Uang belum diinput!'
-                })
-            } else if (parseFloat(sisauang) < 0) {
-                Toast.fire({
-                    icon: 'error',
-                    title: 'Maaf Jumlah Uang tidak mencukupi!'
-                })
-            } else {
-                $.ajax({
-                    type: "post",
-                    url: $(this).attr('action'),
-                    data: $(this).serialize(),
-                    dataType: "json",
-                    beforeSend: function() {
-                        $('.tombolSimpan').prop('disabled', true);
-                        $('.tombolSimpan').html('<i class="fa fa-spin fa-spinner"></i>');
-                    },
-                    complete: function() {
-                        $('.tombolSimpan').prop('disabled', false);
-                        $('.tombolSimpan').html('Simpan');
-                    },
-                    success: function(response) {
-                        if (response.sukses == 'berhasil') {
+        let jmluang = ($('#jmluang').val() == "") ? 0 : $('#jmluang').autoNumeric('get');
+        let sisauang = ($('#sisauang').val() == "") ? 0 : $('#sisauang').autoNumeric('get');
 
-                            let link = response.link_struk;
-                            let nofaktur = response.nofaktur;
-                            let total = response.total;
+        if (parseFloat(jmluang) == 0 || parseFloat(jmluang) == "") {
+            Toast.fire({
+                icon: 'warning',
+                title: 'Maaf Jumlah Uang belum diinput!'
+            })
+        } else if (parseFloat(sisauang) < 0) {
+            Toast.fire({
+                icon: 'error',
+                title: 'Maaf Jumlah Uang tidak mencukupi!'
+            })
+        } else {
+            $.ajax({
+                type: "post",
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                dataType: "json",
+                beforeSend: function() {
+                    $('.tombolSimpan').prop('disabled', true);
+                    $('.tombolSimpan').html('<i class="fa fa-spin fa-spinner"></i>');
+                },
+                complete: function() {
+                    $('.tombolSimpan').prop('disabled', false);
+                    $('.tombolSimpan').html('Simpan');
+                },
+                success: function(response) {
+                    if (response.sukses == 'berhasil') {
 
-                            Swal.fire({
-                                title: 'Pembayaran Berhasil ✅',
-                                html: `
-                                    No: <b>${nofaktur}</b><br>
-                                    Total: Rp ${total}<br><br>
-                                    <a href="${link}" target="_blank">Lihat / Cetak Struk</a>
-                                `,
-                                icon: 'success',
-                                confirmButtonText: 'Buka Struk'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    window.open(link, '_blank');
+                        let link = response.link_struk;
+                        let nofaktur = response.nofaktur;
+                        let total = response.total;
+
+                        Swal.fire({
+                            title: 'Pembayaran Berhasil ✅',
+                            // Tambahkan tombol salin di samping teks nofaktur
+                            html: `
+                        <div style="font-size: 16px; margin-bottom: 10px;">
+                            No: <b>${nofaktur}</b> 
+                            <button type="button" id="btnSalinFakturModal" class="btn btn-sm btn-outline-secondary" style="padding: 0px 6px; margin-left: 5px;" title="Salin No Faktur">
+                                <i class="fas fa-clipboard"></i> Salin
+                            </button>
+                        </div>
+                        Total: Rp ${total}<br><br>
+                        <a href="${link}" class="btn btn-sm btn-primary" target="_blank"><i class="fas fa-print"></i> Lihat / Cetak Struk</a>
+                    `,
+                            icon: 'success',
+                            confirmButtonText: 'Tutup & Reload',
+                            showCancelButton: false,
+                            // Gunakan didOpen untuk mengaktifkan fungsi tombol salin saat modal muncul
+                            didOpen: () => {
+                                const btnSalin = document.getElementById('btnSalinFakturModal');
+                                if (btnSalin) {
+                                    btnSalin.addEventListener('click', () => {
+                                        navigator.clipboard.writeText(nofaktur).then(() => {
+                                            // Ubah tampilan tombol sejenak untuk memberi tahu bahwa teks sudah disalin
+                                            let originalHTML = btnSalin.innerHTML;
+                                            btnSalin.innerHTML = '<i class="fas fa-check"></i> Disalin!';
+                                            btnSalin.classList.replace('btn-outline-secondary', 'btn-success');
+
+                                            setTimeout(() => {
+                                                btnSalin.innerHTML = originalHTML;
+                                                btnSalin.classList.replace('btn-success', 'btn-outline-secondary');
+                                            }, 2000);
+                                        }).catch(err => {
+                                            console.error('Gagal menyalin:', err);
+                                        });
+                                    });
                                 }
-                                window.location.reload();
-                            });
+                            }
+                        }).then((result) => {
+                            // Hilangkan buka struk otomatis di sini jika Anda sudah menjadikannya tombol biru di atas, 
+                            // atau biarkan jika tetap ingin dipaksa buka. Saya asumsikan user cukup klik link di atas.
+                            window.location.reload();
+                        });
 
-                        }
-                    },
-                    error: function(xhr, thrownError) {
-                        alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
                     }
-                });
-            }
+                },
+                error: function(xhr, thrownError) {
+                    alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                }
+            });
+        }
 
-            return false;
-
-        });
+        return false;
     });
 
     function hitungDiskon() {

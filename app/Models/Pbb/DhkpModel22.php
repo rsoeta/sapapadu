@@ -1060,6 +1060,7 @@ class DhkpModel22 extends Model
     {
         $builder = $this->db->table('pbb_dhkp22 d')
             ->select('
+            d.pd_desa,
             d.dusun,
             d.rw,
             d.rt,
@@ -1073,17 +1074,18 @@ class DhkpModel22 extends Model
             SUM(d.pajak) as dataTarget
         ')
             ->join('tb_rt rt', "
-            rt.no_rt = LPAD(d.rt,3,'0') 
-            AND rt.no_rw = LPAD(d.rw,3,'0') 
+            rt.kode_desa = pd_desa
             AND rt.no_dusun = d.dusun
+            AND CAST(rt.no_rw AS UNSIGNED) = d.rw
+            AND CAST(rt.no_rt AS UNSIGNED) = d.rt
         ", 'left');
 
         if (!empty($dusun)) $builder->where('d.dusun', $dusun);
         if (!empty($rw)) $builder->where('d.rw', $rw);
         if (!empty($rt)) $builder->where('d.rt', $rt);
-        if (!empty($tahun)) $builder->where('d.pd_tahun', $tahun); // 🔥 FIX PENTING
+        if (!empty($tahun)) $builder->where('d.pd_tahun', $tahun);
 
-        $builder->groupBy(['d.dusun', 'd.rw', 'd.rt']);
+        $builder->groupBy(['pd_desa', 'd.dusun', 'd.rw', 'd.rt']);
 
         $result = $builder->get()->getResult();
 

@@ -66,15 +66,6 @@ class DashboardPbb extends BaseController
     public function getRankingRt()
     {
         $tahun = $this->request->getGet('tahun') ?? date('Y');
-
-        // $data = $this->dhkp->setoranPerRtFiltered(null, null, null, $tahun);
-
-        // // 🔥 SORT BY PERSENTASE
-        // usort($data, function ($a, $b) {
-        //     return $b->dataPersentase <=> $a->dataPersentase;
-        // });
-
-        // return $this->response->setJSON($data);
         try {
 
             $data = $this->dhkp->setoranPerRtFiltered(null, null, null, $tahun);

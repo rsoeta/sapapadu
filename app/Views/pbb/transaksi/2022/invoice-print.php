@@ -38,89 +38,89 @@
                 <hr>
 
                 <!-- 🔥 FORM UTAMA -->
-                <div style="display:flex; gap:20px; flex-wrap:wrap;">
+                <div class="container-fluid p-0">
 
-                    <div style="display:flex; align-items:end; gap:10px; flex-wrap:wrap;">
+                    <div class="row mb-3 align-items-end">
 
-                        <!-- No Transaksi -->
-                        <div style="min-width:180px;">
-                            <label style="font-size:11px;">No Transaksi</label>
-                            <input class="form-control form-control-sm" name="nofaktur" id="nofaktur"
-                                value="<?= !empty($nofaktur) ? $nofaktur : $row['tr_faktur']; ?>"
-                                style="font-weight:bold;">
+                        <div class="col-md-4">
+                            <label style="font-size:11px; margin-bottom: 2px;">No Transaksi</label>
+                            <div class="input-group input-group-sm">
+                                <input class="form-control" name="nofaktur" id="nofaktur"
+                                    value="<?= !empty($nofaktur) ? $nofaktur : $row['tr_faktur']; ?>"
+                                    style="font-weight:bold;">
+                                <button class="btn btn-outline-secondary btn-copy" type="button" data-copy="nofaktur">
+                                    <i class="bi bi-clipboard"></i> Salin
+                                </button>
+                            </div>
+
                         </div>
 
-                        <!-- Penyetor -->
-                        <div style="flex:1; min-width:220px;">
-                            <label style="font-size:11px;">Penyetor</label>
-                            <select class="form-control form-control-sm" id="pelanggan" name="pelanggan"
-                                style="font-weight:bold; background:#f8f9fa;"></select>
+                        <div class="col-md-5">
+                            <label style="font-size:11px; margin-bottom: 2px;">Penyetor</label>
+                            <div class="d-flex gap-1">
+                                <div class="flex-grow-1" style="min-width: 0;">
+                                    <select class="form-control form-control-sm w-100" id="pelanggan" name="pelanggan"
+                                        style="font-weight:bold; background:#f8f9fa;">
+                                    </select>
+                                </div>
+                                <button class="btn btn-sm btn-outline-secondary btnTambahPelanggan" type="button" onclick="tambahPelanggan()" style="white-space: nowrap;">
+                                    <i class="fas fa-user-plus"></i>
+                                </button>
+                            </div>
                         </div>
 
-                        <!-- Tombol tambah -->
-                        <div>
-                            <label style="font-size:11px; opacity:0;">.</label>
-                            <button class="btn btn-sm btn-outline-secondary btnTambahPelanggan"
-                                type="button"
-                                onclick="tambahPelanggan()">
-                                <i class="fas fa-user-plus"></i>
-                            </button>
-                        </div>
-
-                        <!-- Input NOP -->
-                        <div style="min-width:220px;">
-                            <label style="font-size:11px;">Input NOP</label>
+                        <div class="col-md-3">
+                            <label style="font-size:11px; margin-bottom: 2px;">Input NOP</label>
                             <input type="text" class="form-control form-control-sm" name="nop" id="nop"
                                 placeholder="Scan / ketik NOP">
                         </div>
 
                     </div>
 
+                    <div class="row align-items-center bg-light p-2 rounded no-print m-0">
+
+                        <div class="col-md-4 px-1">
+                            <div class="d-flex align-items-center">
+                                <small class="mb-0 text-muted me-2" style="white-space: nowrap;"><em>Terbilang:</em></small>
+                                <input type="text" class="form-control form-control-sm flex-fill shadow-none"
+                                    name="terbilang" id="terbilang"
+                                    style="font-weight:bold; background:transparent; border:0; padding-left:0;" readonly>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 px-1 text-center">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <b class="me-2">Item</b>
+                                <input type="text" class="form-control form-control-sm text-center text-primary me-3"
+                                    id="jmldata" style="font-weight:bold; background:transparent; border:0; width:30px; padding:0;" readonly value="0">
+
+                                <b class="me-2">Total</b>
+                                <input type="text" class="form-control form-control-sm text-end"
+                                    name="totalbayar" id="totalbayar"
+                                    style="font-weight:bold; background:transparent; border:0; width:120px;" readonly value="0">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 px-1 text-end">
+                            <a class="btn btn-sm btn-light border" href="/dhkp22">
+                                <i class="fa fa-arrow-left"></i>
+                            </a>
+                            <button class="btn btn-sm btn-warning" id="btnHapusTransaksi">
+                                Reset
+                            </button>
+                            <button class="btn btn-sm btn-success" id="btnSimpanTransaksi">
+                                Bayar & Cetak
+                            </button>
+                        </div>
+
+                    </div>
 
                 </div>
+                <!-- END FORM UTAMA -->
 
                 <!-- 🔥 DATA DETAIL -->
                 <div class="row mt-4">
                     <div class="col-12 dataDetailTr"></div>
-                </div>
-
-                <!-- 🔥 TOTAL -->
-                <div style="display:flex; justify-content:flex-end; margin-top:20px;">
-                    <div style="width:300px;">
-                        <div style="display:flex; justify-content:space-between;">
-                            <b>Total</b>
-                            <input type="text" class="form-control text-right"
-                                name="totalbayar" id="totalbayar"
-                                style="font-weight:bold; background:#f8f9fa; border:0;" readonly>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 🔥 TERBILANG -->
-                <div style="margin-top:10px;">
-                    <small><em>Terbilang:</em></small>
-                    <input type="text" class="form-control"
-                        name="terbilang" id="terbilang"
-                        style="font-weight:bold; background:#f8f9fa; border:0;" readonly>
-                </div>
-
-                <!-- 🔥 ACTION -->
-                <div class="row mt-4 no-print">
-                    <div class="col-6">
-                        <a class="btn btn-light" href="/dhkp22">
-                            <i class="fa fa-arrow-left"></i> Kembali
-                        </a>
-                    </div>
-
-                    <div class="col-6 text-right">
-                        <button class="btn btn-warning" id="btnHapusTransaksi">
-                            Reset
-                        </button>
-
-                        <button class="btn btn-success" id="btnSimpanTransaksi">
-                            Bayar & Cetak
-                        </button>
-                    </div>
                 </div>
 
             </div>
@@ -172,6 +172,28 @@
                 e.preventDefault();
                 bayar();
             }
+        });
+
+
+        $(document).on('click', '.btn-copy', function() {
+
+            const nofaktur = $(this).data('copy');
+            const input = document.getElementById(nofaktur);
+
+            if (!input) return;
+
+            input.select();
+            input.setSelectionRange(0, 99999);
+
+            navigator.clipboard.writeText(input.value);
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Disalin',
+                text: 'Data berhasil disalin ke clipboard',
+                timer: 1200,
+                showConfirmButton: false
+            });
         });
 
     });
@@ -249,6 +271,7 @@
 
     function bayar() {
         let nofaktur = $('#nofaktur').val();
+
         $.ajax({
             type: "post",
             url: "<?= site_url('modalBayar'); ?>",
@@ -266,11 +289,14 @@
                         text: response.error
                     });
                 }
+
                 if (response.data) {
                     $('.viewmodalbayar').html(response.data).show();
+
                     $('#modalbayar').on('shown.bs.modal', function(event) {
                         $('#jmluang').focus();
                     });
+
                     $('#modalbayar').modal('show');
                 }
             },
@@ -280,6 +306,40 @@
         });
     }
 
+    // Skrip untuk mengaktifkan Tombol Salin No Transaksi
+    $(document).ready(function() {
+        $('.btn-copy').on('click', function() {
+            // Ambil nilai dari input nofaktur
+            let nofakturTeks = $('#nofaktur').val();
+
+            // Validasi jika kosong
+            if (!nofakturTeks) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Kosong',
+                    text: 'Tidak ada No Transaksi yang bisa disalin.',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+                return;
+            }
+
+            // Proses menyalin teks ke clipboard
+            navigator.clipboard.writeText(nofakturTeks).then(function() {
+                // Tampilkan notifikasi sukses menggunakan SweetAlert2
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Tersalin!',
+                    text: 'No Transaksi ' + nofakturTeks + ' disalin ke clipboard.',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            }).catch(function(err) {
+                console.error('Gagal menyalin: ', err);
+                alert('Gagal menyalin No Transaksi.');
+            });
+        });
+    });
 
     function cekNop() {
         let nop = $('#nop').val();
@@ -419,6 +479,51 @@
                 }
             }
         });
+    }
+
+    // Fungsi algoritma untuk mengubah angka ke kata-kata
+    function penyebut(nilai) {
+        nilai = Math.floor(Math.abs(nilai));
+        var huruf = ["", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas"];
+        var temp = "";
+
+        if (nilai < 12) {
+            temp = " " + huruf[nilai];
+        } else if (nilai < 20) {
+            temp = penyebut(nilai - 10) + " Belas";
+        } else if (nilai < 100) {
+            temp = penyebut(nilai / 10) + " Puluh" + penyebut(nilai % 10);
+        } else if (nilai < 200) {
+            temp = " Seratus" + penyebut(nilai - 100);
+        } else if (nilai < 1000) {
+            temp = penyebut(nilai / 100) + " Ratus" + penyebut(nilai % 100);
+        } else if (nilai < 2000) {
+            temp = " Seribu" + penyebut(nilai - 1000);
+        } else if (nilai < 1000000) {
+            temp = penyebut(nilai / 1000) + " Ribu" + penyebut(nilai % 1000);
+        } else if (nilai < 1000000000) {
+            temp = penyebut(nilai / 1000000) + " Juta" + penyebut(nilai % 1000000);
+        } else if (nilai < 1000000000000) {
+            temp = penyebut(nilai / 1000000000) + " Miliar" + penyebut(nilai % 1000000000);
+        }
+        return temp;
+    }
+
+    // Fungsi utama untuk mengambil nilai #totalbayar dan memasukkannya ke #terbilang
+    function updateTerbilang() {
+        // Ambil nilai dari #totalbayar
+        let totalVal = $('#totalbayar').val();
+
+        // Hapus format titik/koma ribuan agar murni menjadi angka (misal "15.000" jadi "15000")
+        let angka = parseInt(totalVal.toString().replace(/[^0-9]/g, ''), 10);
+
+        if (angka === 0 || isNaN(angka)) {
+            $('#terbilang').val('Nol Rupiah');
+        } else {
+            // Panggil fungsi penyebut dan tambahkan "Rupiah"
+            let hasil = penyebut(angka).trim() + " Rupiah";
+            $('#terbilang').val(hasil);
+        }
     }
 </script>
 
