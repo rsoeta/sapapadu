@@ -52,7 +52,7 @@ class Trx22 extends BaseController
         helper('terbilang');
 
         $data = [
-            'title' => 'Data Transaksi 2022'
+            'title' => 'Daftar Transaksi'
         ];
         return view('pbb/transaksi/2022/index', $data);
     }
@@ -813,5 +813,42 @@ class Trx22 extends BaseController
         if ($rt) $builder->where('rt', $rt);
 
         return $builder->get()->getResult();
+    }
+
+    public function detailAjax()
+    {
+        if ($this->request->isAJAX()) {
+
+            // 1. LOAD HELPER STRUK AGAR FUNGSI struk_token() & struk_url() TERBACA DI VIEW
+            helper('struk');
+
+            $id_tr = $this->request->getPost('id_tr');
+            $db = \Config\Database::connect();
+
+            // 2. Ambil Header Transaksi & Data Pelanggan
+            $header = $db->table('pbb_transaksi22')
+                ->join('pbb_pelanggan', 'pbb_transaksi22.pelanggan_id = pbb_pelanggan.id_pelanggan', 'left')
+                ->where('id_tr', $id_tr)
+                ->get()->getRowArray();
+
+            // 3. Ambil Item Detail NOP yang dibayar
+            $items = $db->table('pbb_detailtrans21')
+                ->select('pbb_detailtrans21.*, pbb_dhkp22.nama_wp, pbb_dhkp22.alamat_op')
+                ->join('pbb_dhkp22', 'pbb_detailtrans21.nop = pbb_dhkp22.nop', 'left')
+                ->where('dettr_faktur', $header['tr_faktur'])
+                ->groupBy('pbb_detailtrans21.id') // 🔥 INI KUNCI OBATNYA: Mencegah duplikasi data!
+                ->get()->getResultArray();
+
+            $data = [
+                'header' => $header,
+                'items'  => $items
+            ];
+
+            $msg = [
+                'data' => view('pbb/transaksi/2022/v_modal_detail', $data)
+            ];
+
+            echo json_encode($msg);
+        }
     }
 }

@@ -154,6 +154,7 @@ $routes->match(['GET', 'POST'], 'pbbterhutang', 'Dhkp22::pbbterhutang', ['filter
 
 $routes->add('trx22', 'Trx22::index', ['filter' => 'authfilterpbb']);
 $routes->post('trx22AmbilData', 'Trx22::ambildata', ['filter' => 'authfilterpbb']);
+$routes->post('trx22/detailAjax', 'Trx22::detailAjax', ['filter' => 'authfilterpbb']);
 $routes->post('dataDetail', 'Trx22::dataDetail', ['filter' => 'authfilterpbb']);
 $routes->post('hapusItem', 'Trx22::hapusItem', ['filter' => 'authfilterpbb']);
 $routes->get('trx22-pembayaran', 'Trx22::pembayaran', ['filter' => 'authfilterpbb']);

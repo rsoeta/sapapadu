@@ -48,10 +48,13 @@ class TrxModel22 extends Model
         $builder = $this->db->table('pbb_transaksi22');
         $builder->select('*');
         $builder->join('pbb_pelanggan', 'pbb_pelanggan.id_pelanggan = pbb_transaksi22.pelanggan_id');
-        $query = $builder->get();
+
+        // Tambahkan 'DESC' sebagai parameter kedua
+        $query = $builder->orderBy('tr_tgl', 'DESC')->get();
 
         return $query;
     }
+
 
     public function getDataRekDus()
     {
