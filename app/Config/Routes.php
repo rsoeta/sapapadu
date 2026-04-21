@@ -67,6 +67,10 @@ $routes->get('/dashboard/kpi', 'DashboardPbb::getKpi');
 $routes->get('/dashboard/ranking-rt', 'DashboardPbb::getRankingRt');
 $routes->get('/dashboard/komposisi', 'DashboardPbb::getKomposisi');
 $routes->get('/dashboard/timeline', 'DashboardPbb::getTimeline');
+$routes->get('/dashboard/progress-dusun', 'DashboardPbb::getProgressDusun');
+$routes->get('/dashboard/progress-rw', 'DashboardPbb::getProgressRw');
+$routes->get('/dashboard/distribusi-rt', 'DashboardPbb::getDistribusiRt');
+$routes->get('/dashboard/progress-rt', 'DashboardPbb::getProgressRt');
 
 // publik (tanpa auth) – kalau sebelumnya pakai detailUser, tambahkan fallback
 $routes->get('/api/wilayah/dusun', 'Api\Wilayah::dusunPublic');

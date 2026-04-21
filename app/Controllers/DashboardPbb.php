@@ -157,4 +157,130 @@ class DashboardPbb extends BaseController
 
         return $this->response->setJSON($builder->get()->getResult());
     }
+
+    /**
+     * 📊 CHART PROGRES PER DUSUN
+     */
+    public function getProgressDusun()
+    {
+        $tahun = $this->request->getGet('tahun') ?? date('Y');
+        $db = \Config\Database::connect();
+
+        $builder = $db->table('pbb_dhkp22 d')
+            ->select('d.dusun, SUM(d.pajak) as target, SUM(CASE WHEN d.pd_ket = 0 THEN d.pajak ELSE 0 END) as capaian')
+            ->where('d.pd_tahun', $tahun)
+            ->groupBy('d.dusun')
+            ->orderBy('CAST(d.dusun AS UNSIGNED)', 'ASC');
+
+        $result = $builder->get()->getResult();
+        $data = [];
+        foreach ($result as $row) {
+            $persen = $row->target > 0 ? round(($row->capaian / $row->target) * 100, 2) : 0;
+            $data[] = [
+                'label' => 'Dusun ' . $row->dusun,
+                'persentase' => $persen
+            ];
+        }
+        return $this->response->setJSON($data);
+    }
+
+    /**
+     * 📊 CHART PROGRES PER RW
+     */
+    public function getProgressRw()
+    {
+        $tahun = $this->request->getGet('tahun') ?? date('Y');
+        $dusun = $this->request->getGet('dusun'); // Bisa difilter per dusun
+
+        $db = \Config\Database::connect();
+        $builder = $db->table('pbb_dhkp22 d')
+            ->select('d.rw, SUM(d.pajak) as target, SUM(CASE WHEN d.pd_ket = 0 THEN d.pajak ELSE 0 END) as capaian')
+            ->where('d.pd_tahun', $tahun);
+
+        if (!empty($dusun)) {
+            $builder->where('d.dusun', $dusun);
+        }
+
+        $builder->groupBy('d.rw')->orderBy('CAST(d.rw AS UNSIGNED)', 'ASC');
+
+        $result = $builder->get()->getResult();
+        $data = [];
+        foreach ($result as $row) {
+            $persen = $row->target > 0 ? round(($row->capaian / $row->target) * 100, 2) : 0;
+            $data[] = [
+                'label' => 'RW ' . str_pad($row->rw, 2, '0', STR_PAD_LEFT),
+                'persentase' => $persen
+            ];
+        }
+        return $this->response->setJSON($data);
+    }
+
+    /**
+     * 🎯 DISTRIBUSI PROGRES RT
+     */
+    public function getDistribusiRt()
+    {
+        $tahun = $this->request->getGet('tahun') ?? date('Y');
+        $dusun = $this->request->getGet('dusun');
+
+        // Memanfaatkan fungsi dari DhkpModel22 yang sudah sangat bagus
+        $dataRt = $this->dhkp->setoranPerRtFiltered($dusun, null, null, $tahun);
+
+        $distribusi = [
+            'lunas'    => 0, // 100%
+            'hampir'   => 0, // 75% - 99%
+            'setengah' => 0, // 50% - 74%
+            'kurang'   => 0, // 25% - 49%
+            'minim'    => 0  // 0% - 24%
+        ];
+
+        foreach ($dataRt as $rt) {
+            $p = $rt->dataPersentase;
+            if ($p >= 100) {
+                $distribusi['lunas']++;
+            } elseif ($p >= 75) {
+                $distribusi['hampir']++;
+            } elseif ($p >= 50) {
+                $distribusi['setengah']++;
+            } elseif ($p >= 25) {
+                $distribusi['kurang']++;
+            } else {
+                $distribusi['minim']++;
+            }
+        }
+
+        return $this->response->setJSON([
+            'total_rt' => count($dataRt),
+            'distribusi' => $distribusi
+        ]);
+    }
+
+    /**
+     * 📊 CHART PROGRES PER RT
+     */
+    public function getProgressRt()
+    {
+        $tahun = $this->request->getGet('tahun') ?? date('Y');
+        $dusun = $this->request->getGet('dusun');
+        $rw    = $this->request->getGet('rw');
+
+        // Mengambil data menggunakan fungsi yang sudah ada di DhkpModel22
+        $dataRt = $this->dhkp->setoranPerRtFiltered($dusun, $rw, null, $tahun);
+
+        // Urutkan berdasarkan Dusun, RW, lalu RT
+        usort($dataRt, function ($a, $b) {
+            if ($a->dusun != $b->dusun) return $a->dusun <=> $b->dusun;
+            if ($a->rw != $b->rw) return $a->rw <=> $b->rw;
+            return $a->rt <=> $b->rt;
+        });
+
+        $data = [];
+        foreach ($dataRt as $row) {
+            $data[] = [
+                'label' => 'RT ' . str_pad($row->rt, 3, '0', STR_PAD_LEFT) . '/RW ' . str_pad($row->rw, 3, '0', STR_PAD_LEFT),
+                'persentase' => round($row->dataPersentase, 2)
+            ];
+        }
+        return $this->response->setJSON($data);
+    }
 }
