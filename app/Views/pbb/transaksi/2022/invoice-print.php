@@ -458,8 +458,18 @@
             },
             type: "post",
             success: function(response) {
-                if (response.totalbayar) {
+                if (response.totalbayar !== undefined) {
                     $('#totalbayar').val(response.totalbayar);
+
+                    // Update tampilan jumlah Item otomatis
+                    if (response.jmldata !== undefined) {
+                        $('#jmldata').val(response.jmldata);
+                    }
+
+                    // Panggil fungsi terbilang agar otomatis terisi (Dua Puluh Lima Ribu Rupiah)
+                    if (typeof updateTerbilang === "function") {
+                        updateTerbilang();
+                    }
                 }
             },
             error: function(xhr, thrownError) {

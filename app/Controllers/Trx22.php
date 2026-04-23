@@ -164,7 +164,7 @@ class Trx22 extends BaseController
     {
         $data = [
             'namaApp' => 'KolektorPBB',
-            'title' => 'Lampiran Pembayaran PBB-P2 Tahun 2022',
+            'title' => 'Lampiran Pembayaran PBB-P2',
             'detail' => $this->TrxModel22->getDetail($id_tr),
             // 'nofaktur' => $nofaktur
         ];
@@ -397,42 +397,48 @@ class Trx22 extends BaseController
             $tahun_ini = date('Y');
             $nofaktur = $this->request->getPost('nofaktur');
 
-            if (strlen($nama_wp && $tahun_ini) > 0) {
+            // PERBAIKAN 1: Logika pencarian data dibuat lebih aman dengan groupStart()
+            if (!empty($nama_wp) && !empty($tahun_ini)) {
                 $queryCekData = $db->table('pbb_dhkp22')->where('id', $id)->where('nop', $nop)->where('nama_wp', $nama_wp)->where('pd_tahun', $tahun_ini)->get();
             } else {
-                $queryCekData = $db->table('pbb_dhkp22')->where('pd_tahun', $tahun_ini)->like('nop', $nop)->orLike('nama_wp', $nop)->get();
+                $queryCekData = $db->table('pbb_dhkp22')
+                    ->where('pd_tahun', $tahun_ini)
+                    ->groupStart()
+                    ->like('nop', $nop)
+                    ->orLike('nama_wp', $nop)
+                    ->groupEnd()
+                    ->get();
             }
 
             $totalData = $queryCekData->getNumRows();
 
             if ($totalData > 1) {
-                $msg = [
-                    'totaldata' => 'banyak'
-                ];
+                $msg = ['totaldata' => 'banyak'];
             } elseif ($totalData == 1) {
-                // lakukan insert ke temp transaksi
                 $tblTempTrans = $db->table('pbb_temptrans21');
-
                 $rowData = $queryCekData->getRowArray();
-
                 $stokData = $rowData['pd_ket'];
 
                 if (intval($stokData) == 0) {
-                    $msg = [
-                        'error' => 'PBB telah lunas'
-                    ];
+                    $msg = ['error' => 'PBB telah lunas'];
                 } else {
 
+                    // PERBAIKAN 2: Mencegah NOP yang sama masuk 2x ke keranjang
+                    $cekKeranjang = $tblTempTrans->where('dettr_faktur', $nofaktur)->where('nop', $rowData['nop'])->countAllResults();
+                    if ($cekKeranjang > 0) {
+                        echo json_encode(['error' => 'NOP ini sudah ada di daftar pembayaran!']);
+                        return;
+                    }
+
                     $insertData = [
-                        'dettr_faktur' => $nofaktur,
-                        'nop' => $rowData['nop'],
-                        'pajak' => $rowData['pajak'],
-                        'ket' => $rowData['pd_ket'],
-                        'dettr_subtotal' => floatval($rowData['pajak']) * $rowData['pd_ket']
+                        'dettr_faktur'   => $nofaktur,
+                        'nop'            => $rowData['nop'],
+                        'pajak'          => $rowData['pajak'],
+                        'ket'            => $rowData['pd_ket'],
+                        'dettr_subtotal' => floatval($rowData['pajak']) // PERBAIKAN 3: Tidak lagi dikalikan dengan pd_ket
                     ];
 
                     $tblTempTrans->insert($insertData);
-
                     $msg = ['sukses' => 'berhasil'];
                 }
             } else {
@@ -449,24 +455,23 @@ class Trx22 extends BaseController
             $db       = \Config\Database::connect();
             $nofaktur = $this->request->getPost('nofaktur');
 
-            // Query total menggunakan Query Builder
+            // PERBAIKAN 4: Menghitung total harga DAN jumlah item sekaligus
             $result = $db->table('pbb_temptrans21')
-                ->select('SUM(dettr_subtotal) AS totalbayar')
+                ->select('SUM(dettr_subtotal) AS totalbayar, COUNT(id) AS jmldata')
                 ->where('dettr_faktur', $nofaktur)
                 ->get()
                 ->getRow();
 
-            // Antisipasi NULL dari SUM()
-            $total = (float) ($result->totalbayar ?? 0);
+            $total   = (float) ($result->totalbayar ?? 0);
+            $jmldata = (int) ($result->jmldata ?? 0);
 
             $msg = [
-                'totalbayar' => number_format($total, 0, ",", ".")
+                'totalbayar' => number_format($total, 0, ",", "."),
+                'jmldata'    => $jmldata
             ];
 
             return $this->response->setJSON($msg);
         }
-
-        // optional: handle non-AJAX request
         return $this->fail('Invalid request type');
     }
 
@@ -521,10 +526,10 @@ class Trx22 extends BaseController
             if ($cekDataTempTrans->getNumRows() > 0) {
                 // modal bayar
                 $data = [
-                    'nofaktur' => $nofaktur,
-                    'pelanggan_id' => $pelanggan_id,
-                    'id_wil' => $id_wil,
-                    'totalbayar' => $rowTotal['totalbayar']
+                    'nofaktur'      => $nofaktur,
+                    'pelanggan_id'  => $pelanggan_id,
+                    'id_wil'        => $id_wil,
+                    'totalbayar'    => $rowTotal['totalbayar']
                 ];
                 // var_dump($data);
 
