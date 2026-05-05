@@ -380,12 +380,16 @@ $role = detailUser()->pu_role_id;
                                         </table>
                                     </div>
                                 </div>
+
                                 <!-- </div> -->
                                 <div class="tab-pane fade" id="lunas" role="tabpanel" aria-labelledby="lunas-tab">
                                     <div class="row">
                                         <div class="col-12 mb-2">
                                             <button style="float: right;" type="button" class="btn btn-success shadow" onclick="window.location='<?= site_url('/trx22-pembayaran'); ?>'">
                                                 <i class="fa fa-plus mr-1"></i> Tambah Transaksi
+                                            </button>
+                                            <button style="float: right;" type="button" class="btn btn-success shadow" onclick="exportExcelLunas()">
+                                                <i class="fa-regular fa-file-excel mr-1"></i> Export Data Lunas
                                             </button>
                                         </div>
                                         <div class="col-12 col-sm-12">
@@ -1630,6 +1634,19 @@ $role = detailUser()->pu_role_id;
         });
     }
 
+    function exportExcelLunas() {
+        let desa = $('#data_desa').val() || '';
+        let dusun = $('#data_dusun').val() || '';
+        let rw = $('#data_rw').val() || '';
+        let rt = $('#data_rt').val() || '';
+        let tahun = $('#data_tahun').val() || '';
+
+        // Bangun URL dengan parameter GET
+        let url = `<?= site_url('dhkp22/export-lunas'); ?>?desa=${desa}&dusun=${dusun}&rw=${rw}&rt=${rt}&tahun=${tahun}`;
+
+        // Buka di tab baru untuk men-trigger download
+        window.open(url, '_blank');
+    }
 
     $(document).on('click', '#tmbDelet', function() {
         var id = $(this).data('id');

@@ -517,28 +517,33 @@ class Trx22 extends BaseController
             $nofaktur = $this->request->getPost('nofaktur');
             $id_wil = $this->request->getPost('id_wil');
 
-            $tblTempTrans = $db->table('pbb_temptrans21');
+            // 1. Cek apakah ada data di keranjang menggunakan countAllResults agar ringan
+            $jumlahItem = $db->table('pbb_temptrans21')
+                ->where('dettr_faktur', $nofaktur)
+                ->countAllResults();
 
-            $cekDataTempTrans = $tblTempTrans->getWhere(['dettr_faktur' => $nofaktur]);
-            $queryTotal = $tblTempTrans->select('SUM(dettr_subtotal) as totalbayar')->where('dettr_faktur', $nofaktur)->get();
-            $rowTotal = $queryTotal->getRowArray();
+            if ($jumlahItem > 0) {
+                // 2. Hitung total bayar menggunakan query mandiri agar tidak bentrok
+                $queryTotal = $db->table('pbb_temptrans21')
+                    ->select('SUM(dettr_subtotal) as totalbayar')
+                    ->where('dettr_faktur', $nofaktur)
+                    ->get()
+                    ->getRowArray();
 
-            if ($cekDataTempTrans->getNumRows() > 0) {
-                // modal bayar
+                // 3. Panggil modal bayar
                 $data = [
-                    'nofaktur'      => $nofaktur,
-                    'pelanggan_id'  => $pelanggan_id,
-                    'id_wil'        => $id_wil,
-                    'totalbayar'    => $rowTotal['totalbayar']
+                    'nofaktur' => $nofaktur,
+                    'pelanggan_id' => $pelanggan_id,
+                    'id_wil' => $id_wil,
+                    'totalbayar' => $queryTotal['totalbayar'] ?? 0
                 ];
-                // var_dump($data);
 
                 $msg = [
                     'data' => view('pbb/transaksi/2022/modalbayar', $data)
                 ];
             } else {
                 $msg = [
-                    'error' => 'Maaf item belum ada'
+                    'error' => 'Maaf item belum ada di keranjang.'
                 ];
             }
             echo json_encode($msg);

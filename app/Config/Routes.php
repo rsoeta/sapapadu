@@ -148,6 +148,7 @@ $routes->post('tb_dhkp22', 'Dhkp22::data_dhkp22', ['filter' => 'authfilterpbb'])
 $routes->post('tb_dhkp22_1', 'Dhkp22::data_dhkp22_1', ['filter' => 'authfilterpbb']);
 $routes->post('tb_dhkp22_2', 'Dhkp22::data_dhkp22_2', ['filter' => 'authfilterpbb']);
 $routes->post('tb_dhkp22_lunas', 'Dhkp22::data_dhkp22_lunas', ['filter' => 'authfilterpbb']);
+$routes->get('dhkp22/export-lunas', 'Dhkp22::exportLunas', ['filter' => 'authfilterpbb']);
 $routes->post('simpandatadhkp', 'Dhkp22::simpandatadhkp', ['filter' => 'authfilterpbb']);
 $routes->post('dltPbb', 'Dhkp22::hapus', ['filter' => 'authfilterpbb']);
 $routes->post('deleteSelected', 'Dhkp22::deleteSelected', ['filter' => 'authfilterpbb']);

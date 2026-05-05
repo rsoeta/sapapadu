@@ -199,7 +199,6 @@ class Dhkp22 extends BaseController
         return view('pbb/dhkp22/index', $data);
     }
 
-
     public function data_dhkp22()
     {
         $model = new DhkpModel22();
@@ -1405,5 +1404,104 @@ class Dhkp22 extends BaseController
             ->withFile($path . $namaFile)
             ->resize(1200, 1200, true, 'width') // maintain ratio
             ->save($path . $namaFile, 75); // quality 75%
+    }
+
+    public function exportLunas()
+    {
+        $model = new \App\Models\Pbb\DhkpModel22();
+
+        // Tangkap parameter filter dari GET (URL)
+        $desa  = $this->request->getGet('desa');
+        $dusun = $this->request->getGet('dusun');
+        $rw    = $this->request->getGet('rw');
+        $rt    = $this->request->getGet('rt');
+        $tahun = $this->request->getGet('tahun');
+
+        // Paksa status 0 (Lunas)
+        $ket = '0';
+
+        // Gunakan fungsi exportExcel dari model (parameter: desa, dusun, rw, rt, ket, tahun)
+        $query = $model->exportExcel($desa, $dusun, $rw, $rt, $ket, $tahun);
+        $dataLunas = $query->getResultArray();
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Judul Kolom (Header)
+        $sheet->setCellValue('A1', 'NO')
+            ->setCellValue('B1', 'NAMA WP')
+            ->setCellValue('C1', 'NOP')
+            ->setCellValue('D1', 'ALAMAT WP')
+            ->setCellValue('E1', 'ALAMAT OP')
+            ->setCellValue('F1', 'BUMI')
+            ->setCellValue('G1', 'PAJAK (Rp.)')
+            ->setCellValue('H1', 'TANGGAL PELUNASAN');
+
+        // Style Header agar tebal (Bold)
+        $sheet->getStyle('A1:H1')->getFont()->setBold(true);
+
+        $column = 2;
+        $no = 1;
+        $totalPajak = 0;
+
+        foreach ($dataLunas as $row) {
+            $sheet->setCellValue('A' . $column, $no++)
+                ->setCellValueExplicit('B' . $column, $row['nama_wp'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING)
+                ->setCellValueExplicit('C' . $column, $row['nop'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING)
+                ->setCellValue('D' . $column, $row['alamat_wp'])
+                ->setCellValue('E' . $column, $row['alamat_op'])
+                ->setCellValue('F' . $column, $row['bumi'])
+                ->setCellValue('G' . $column, $row['pajak']);
+
+            // --- PERBAIKAN FORMAT TANGGAL EXCEL ---
+            $tglPelunasan = $row['updated_at'];
+            if (!empty($tglPelunasan) && $tglPelunasan !== '0000-00-00 00:00:00') {
+                // Konversi format tanggal PHP ke format numeric/timestamp Excel
+                $excelDate = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($tglPelunasan);
+                $sheet->setCellValue('H' . $column, $excelDate);
+
+                // Ubah tipe cell menjadi Date/Time agar fitur Filter/Sort Excel berfungsi
+                $sheet->getStyle('H' . $column)
+                    ->getNumberFormat()
+                    ->setFormatCode('yyyy-mm-dd hh:mm:ss');
+            } else {
+                $sheet->setCellValue('H' . $column, '-');
+            }
+            // --------------------------------------
+
+            $totalPajak += $row['pajak'];
+            $column++;
+        }
+
+        // Baris Total di paling bawah
+        $sheet->setCellValue('A' . $column, 'TOTAL SELURUHNYA')
+            ->mergeCells('A' . $column . ':F' . $column);
+        $sheet->setCellValue('G' . $column, $totalPajak);
+        $sheet->getStyle('A' . $column . ':G' . $column)->getFont()->setBold(true);
+
+        $writer = new Xlsx($spreadsheet);
+
+        // --- PERBAIKAN PENAMAAN FILE ---
+        // 1. Ambil nama desa dari baris pertama data (kolom 'name' bawaan dari tb_villages)
+        $namaDesa = 'Semua Desa';
+        if (!empty($dataLunas) && isset($dataLunas[0]['name'])) {
+            // Ubah format huruf kapital menjadi Huruf Awal Kapital (misal: PASIRLANGU -> Pasirlangu)
+            $namaDesa = ucwords(strtolower($dataLunas[0]['name']));
+        }
+
+        // 2. Format tanggal: Tahun-Bulan-Tanggal
+        $tglExport = date('Y-m-d');
+
+        // 3. Rangkai nama file sesuai permintaan
+        $filename = 'Data PBB Lunas_Desa ' . $namaDesa . '_' . $tglExport;
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+        // WAJIB tambahkan tanda kutip ganda ("") di sekitar filename agar spasi aman terbaca browser
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
+        exit;
     }
 }

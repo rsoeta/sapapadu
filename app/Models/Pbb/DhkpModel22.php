@@ -1015,6 +1015,7 @@ class DhkpModel22 extends Model
         $builder = $this->db->table('pbb_dhkp22');
         $builder->select('*');
         $builder->join('tb_villages', 'tb_villages.id=pbb_dhkp22.pd_desa');
+
         if ($filter1 !== "") {
             $builder->where('pd_desa', $filter1);
         }
@@ -1033,7 +1034,13 @@ class DhkpModel22 extends Model
         if ($filter6 !== "") {
             $builder->where('pd_tahun', $filter6);
         }
-        $builder->orderBy('nop', 'asc');
+
+        // Bawaannya urut berdasarkan NOP:
+        // $builder->orderBy('nop', 'asc'); 
+
+        // GANTI MENJADI: Urut berdasarkan tanggal pelunasan (Terlama -> Terbaru)
+        $builder->orderBy('updated_at', 'ASC');
+
         $query = $builder->get();
 
         return $query;
