@@ -5,27 +5,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="viewport" content="minimal-ui, width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <!-- <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
-    <meta name='MSSmartTagsPreventParsing' content='true' /> -->
-    <!-- <meta name='ROBOTS' content='INDEX, FOLLOW' />
-    <meta name='Distribution' content='Global' />
-    <meta name='spiders' content='follow, all' />
-    <meta name='webcrawlers' content='follow, all' />
-    <meta name='googlebot' content='follow, all, index' />
-    <meta name='Googlebot-Image' content='follow, all, index' />
-    <meta name='Scooter' content='follow, all' />
-    <meta name='msnbot' content='follow, all' />
-    <meta name='Slurp' content='follow, all' />
-    <meta name='ZyBorg' content='follow, all' />
-    <meta name='revisit-after' content='2 days' />
-    <meta name='yahoobot' content='all, index, follow' />
-    <meta name='bingbot' content='all, index, follow' />
-    <meta name='language' content='id' />
-    <meta name='geo.country' content='id' />
-    <meta name='geo.placename' content='Indonesia' />
-    <meta name='rating' content='general' />
-    <meta name='generator' content='website' /> -->
-    <!-- <meta name='copyright' content='Pemerintah Desa Pasirlangu' /> -->
     <meta name="author" content="@riansutarsa">
 
     <meta name='keywords' content='<?= deskApp(); ?>' />
@@ -55,12 +34,7 @@
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 
-    <!-- <link rel="preconnect" href="https://fonts.gstatic.com"> -->
-    <!-- <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&family=Titillium+Web:ital,wght@0,200;0,300;1,200&display=swap" rel="stylesheet"> -->
-
     <!-- Font Awesome -->
-    <!-- <link rel="stylesheet" href="<?= base_url('assets/plugins/fontawesome-free/css/all.min.css') ?>"> -->
-    <!-- <link rel="stylesheet" href="<?= base_url('fontawesome/fontawesome-free-6.0.0-beta3-web/css/all.min.css') ?>"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- Theme style -->
@@ -70,24 +44,14 @@
     <!-- jQuery UI CSS -->
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="<?= base_url('assets/jquery/jquery-ui-1.13.0/jquery-ui.css'); ?>">
-    <!-- <link rel="stylesheet" type="text/css" href="/jquery-ui/jquery-ui.min.css"> -->
 
     <!-- DataTables -->
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css"> -->
-    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.dataTables.css"> -->
-    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.11.2/css/dataTables.bootstrap5.min.css"> -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css">
-    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" /> -->
     <!-- <link rel="stylesheet" href="<?= base_url('datatable/css/dataTables.bootstrap4.min.css'); ?>"> -->
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.bootstrap5.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.9/css/fixedHeader.bootstrap.min.css">
-    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css"> -->
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
-
-    <!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> -->
-    <!-- <link rel="stylesheet" href="<?= base_url(); ?>/assets/plugins/select2/css/select2.min.css"> -->
-    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/dt-1.11.4/datatables.min.css" /> -->
 
     <!-- sweetalert -->
     <link rel="stylesheet" href="<?= base_url('assets/plugins/sweetalert2/sweetalert2.min.css'); ?>">
@@ -96,66 +60,15 @@
     <link rel="stylesheet" href="<?= base_url('assets/dist/css/alertify.min.css'); ?>">
 
     <!-- jQuery -->
-
-    <!-- jQuery UI JS -->
-    <!-- <script type="text/javascript" src="/jquery-ui/jquery-ui.min.js"></script> -->
-
-    <!-- DataTables -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-    <!-- <style>
-        @keyframes growProgressBar {
-    
-                0%,
-                33% {
-                    --pgPercentage: 0;
-                }
-    
-                100% {
-                    --pgPercentage: var(--value);
-                }
-            }
-    
-            @property --pgPercentage {
-                syntax: '<number>';
-                inherits: false;
-                initial-value: 0;
-            }
-    
-            div[role="progressbar"] {
-                --size: 7rem;
-                /* --fg: #369; */
-                --fg: #1e51dc;
-                --bg: #def;
-                --pgPercentage: var(--value);
-                animation: growProgressBar 3s 1 forwards;
-                width: var(--size);
-                height: var(--size);
-                border-radius: 50%;
-                display: inline-grid;
-                padding: 30px 30px;
-                place-items: center;
-                background:
-                    radial-gradient(closest-side, white 60%, transparent 0 99.9%, white 0),
-                    conic-gradient(var(--fg) calc(var(--pgPercentage) * 1%), var(--bg) 0);
-                font-family: Helvetica, Arial, sans-serif;
-                font-size: calc(var(--size) / 9);
-                /* font-weight: bold; */
-                color: var(--fg);
-                float: left;
-            }
-    
-            div[role="progressbar"]::after {
-                counter-reset: percentage var(--value);
-                content: counter(percentage) '%';
-            }
-    
-            /* demo */
-        </style> -->
+
+    <link rel="manifest" href="<?= base_url('manifest.json'); ?>">
+    <meta name="theme-color" content="#0ea5e9">
+    <link rel="apple-touch-icon" href="<?= base_url('icon-192x192.png'); ?>">
 
     <!-- Memasang jQuery Migrate -->
     <script src="<?= base_url('assets/jquery/jquery-3.6.0.min.js'); ?>"></script>
-    <!-- <script src="https://code.jquery.com/jquery-3.5.1.js"></script> -->
 
     <script type='text/javascript'>
         //<![CDATA[
@@ -369,7 +282,6 @@
             });
         //]]>
     </script>
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script> -->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <!-- <script src="<?= base_url('assets/jquery/jquery-ui-1.13.0/jquery-ui.min.js'); ?>"></script> -->
@@ -393,11 +305,16 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-
-    <!-- Modal Header Color -->
-    <!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
-    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script> -->
-    <!------ Include the above in your HEAD tag ---------->
-
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('<?= base_url('sw.js'); ?>')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    }, function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
 </head>
