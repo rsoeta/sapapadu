@@ -45,4 +45,13 @@ class Exceptions extends BaseConfig
 	 * @var string
 	 */
 	public $errorViewPath = APPPATH . 'Views/errors';
+
+	/*
+     |--------------------------------------------------------------------------
+     | LOG DEPRECATIONS & SENSITIVE DATA (FIX PHP 8.2)
+     |--------------------------------------------------------------------------
+     */
+	public bool $logDeprecations = true;
+	public string $deprecationLogLevel = 'warning';
+	public array $sensitiveDataInTrace = [];
 }
