@@ -56,11 +56,7 @@ $routes->get('api/wilayah/rw', 'Api\Wilayah::rw');
 $routes->get('api/wilayah/rt', 'Api\Wilayah::rt');
 $routes->get('api/wilayah/tahun', 'Api\Wilayah::tahun');
 
-// $routes->get('dashboard', 'Pages::index', ['filter' => 'authfilterpbb']);
-// $routes->get('diagram', 'Pages::index2', ['filter' => 'authfilterpbb']);
 $routes->get('dashboard-v2', 'Pages::index2', ['filter' => 'authfilterpbb']);
-// $routes->get('home', 'Dhkp22::index', ['filter' => 'authfilterpbb']);
-// $routes->get('cache-this-page', 'Pages::index');
 
 // Dashboard API
 $routes->get('/dashboard/kpi', 'DashboardPbb::getKpi');

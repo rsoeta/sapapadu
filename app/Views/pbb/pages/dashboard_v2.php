@@ -404,31 +404,31 @@
         }
     };
 
-    // 2. Plugin Label Persen untuk Bar Chart (Dusun, RW, RT)
+    // 2. Plugin Label Persen untuk Bar Chart (Dusun, RW, RT) - VERSI STACKED
     const barPercentLabel = {
         id: 'barPercentLabel',
         afterDraw(chart) {
             const {
                 ctx
             } = chart;
-            chart.data.datasets.forEach((dataset, i) => {
-                const meta = chart.getDatasetMeta(i);
-                if (!meta.hidden) {
-                    meta.data.forEach((element, index) => {
-                        const value = dataset.data[index];
-                        if (value > 0) { // Hanya tampilkan jika > 0
-                            ctx.fillStyle = '#334155'; // Warna teks Slate-700
-                            ctx.font = 'bold 12px Quicksand, sans-serif';
-                            ctx.textAlign = 'center';
-                            ctx.textBaseline = 'bottom';
-                            const dataString = value.toFixed(1) + '%';
-                            const position = element.tooltipPosition();
-                            // Gambar teks sedikit di atas batang (y - 5)
-                            ctx.fillText(dataString, position.x, position.y - 5);
-                        }
-                    });
-                }
-            });
+            const dataset = chart.data.datasets[0]; // Hanya ambil dataset pertama (Progres)
+            const meta = chart.getDatasetMeta(0);
+
+            if (!meta.hidden) {
+                meta.data.forEach((element, index) => {
+                    const value = dataset.data[index];
+                    if (value > 0) {
+                        ctx.fillStyle = '#334155'; // Warna teks Slate-700
+                        ctx.font = 'bold 11px Quicksand, sans-serif';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'bottom';
+                        const dataString = value.toFixed(1) + '%';
+
+                        // Gambar teks persis di atas batang progres (menimpa area sisa yang berwarna abu)
+                        ctx.fillText(dataString, element.x, element.y - 3);
+                    }
+                });
+            }
         }
     };
 
@@ -436,7 +436,10 @@
        📊 INIT SEMUA CHART
     ========================= */
     function initAllCharts() {
-        // --- 1. KOMPOSISI (PIE) ---
+        // --- 1. KOMPOSISI (PIE) & 2. TIMELINE (LINE) ---
+        // (Biarkan kode komposisiChart dan timelineChart seperti aslinya...)
+
+        // (Salin kode komposisiChart dan timelineChart aslimu di sini)
         charts.komposisi = new Chart(document.getElementById('komposisiChart'), {
             type: 'pie',
             data: {
@@ -469,7 +472,6 @@
             plugins: [piePercentLabel]
         });
 
-        // --- 2. TIMELINE (LINE) ---
         charts.timeline = new Chart(document.getElementById('timelineChart'), {
             type: 'line',
             data: {
@@ -520,22 +522,33 @@
             }
         });
 
-        // Config standard untuk Bar Charts (Dusun, RW, RT)
+
+        // Config standard untuk Bar Charts (Dusun, RW, RT) -> DIBUAT STACKED
         const commonBarOptions = {
             responsive: true,
             maintainAspectRatio: false,
             layout: {
                 padding: {
-                    top: 25
+                    top: 15
                 }
-            }, // Space untuk teks di atas bar
+            },
             plugins: {
                 legend: {
-                    display: false
+                    display: true, // Tampilkan legend agar user tahu warna Progres vs Sisa
+                    position: 'bottom',
+                    labels: {
+                        usePointStyle: true,
+                        boxWidth: 8,
+                        font: {
+                            family: 'Quicksand',
+                            weight: 'bold'
+                        }
+                    }
                 }
             },
             scales: {
                 y: {
+                    stacked: true,
                     beginAtZero: true,
                     max: 100,
                     ticks: {
@@ -549,6 +562,7 @@
                     }
                 },
                 x: {
+                    stacked: true,
                     grid: {
                         display: false
                     },
@@ -565,10 +579,16 @@
             data: {
                 labels: [],
                 datasets: [{
-                    backgroundColor: '#a855f7',
-                    borderRadius: 6,
-                    data: []
-                }]
+                        label: 'Progres',
+                        backgroundColor: '#a855f7',
+                        data: []
+                    },
+                    {
+                        label: 'Sisa Target',
+                        backgroundColor: '#cccccc',
+                        data: []
+                    } // Warna abu-abu murni
+                ]
             },
             options: commonBarOptions,
             plugins: [barPercentLabel]
@@ -580,16 +600,79 @@
             data: {
                 labels: [],
                 datasets: [{
-                    backgroundColor: '#38bdf8',
-                    borderRadius: 6,
-                    data: []
-                }]
+                        label: 'Progres',
+                        backgroundColor: '#38bdf8',
+                        data: []
+                    },
+                    {
+                        label: 'Sisa Target',
+                        backgroundColor: '#cccccc',
+                        data: []
+                    } // Warna abu-abu murni
+                ]
             },
             options: commonBarOptions,
             plugins: [barPercentLabel]
         });
 
+        // --- 6. RT KESELURUHAN FULL WIDTH (BAR) ---
+        charts.rt = new Chart(document.getElementById('chartRt'), {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                        label: 'Progres',
+                        backgroundColor: '#14b8a6',
+                        data: []
+                    },
+                    {
+                        label: 'Sisa Target',
+                        backgroundColor: '#cccccc',
+                        data: []
+                    } // Warna abu-abu murni
+                ]
+            },
+            options: Object.assign({}, commonBarOptions, {
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        stacked: true,
+                        ticks: {
+                            autoSkip: false,
+                            maxRotation: 45,
+                            minRotation: 45,
+                            font: {
+                                size: 10
+                            }
+                        },
+                        grid: {
+                            display: false
+                        },
+                        border: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: v => v + '%'
+                        },
+                        grid: {
+                            color: '#f1f5f9'
+                        },
+                        border: {
+                            display: false
+                        }
+                    }
+                }
+            }),
+            plugins: [barPercentLabel]
+        });
+
         // --- 5. DISTRIBUSI (DOUGHNUT) ---
+        // (Biarkan kode distribusiChart aslinya...)
         charts.distribusi = new Chart(document.getElementById('chartDistribusi'), {
             type: 'doughnut',
             data: {
@@ -614,54 +697,6 @@
             }
         });
 
-        // --- 6. RT KESELURUHAN FULL WIDTH (BAR) ---
-        charts.rt = new Chart(document.getElementById('chartRt'), {
-            type: 'bar',
-            data: {
-                labels: [],
-                datasets: [{
-                    backgroundColor: '#14b8a6',
-                    borderRadius: 6,
-                    data: []
-                }]
-            },
-            options: Object.assign({}, commonBarOptions, {
-                // Konfigurasi agar scrollable jika RT banyak
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        ticks: {
-                            autoSkip: false,
-                            maxRotation: 45,
-                            minRotation: 45,
-                            font: {
-                                size: 10
-                            }
-                        },
-                        grid: {
-                            display: false
-                        },
-                        border: {
-                            display: false
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        max: 100,
-                        ticks: {
-                            callback: v => v + '%'
-                        },
-                        grid: {
-                            color: '#f1f5f9'
-                        },
-                        border: {
-                            display: false
-                        }
-                    }
-                }
-            }),
-            plugins: [barPercentLabel]
-        });
     }
 
     /* =========================
@@ -741,16 +776,18 @@
         // Dusun
         const resDsn = await $.get(`/dashboard/progress-dusun?tahun=${thn}`);
         charts.dusun.data.labels = resDsn.map(i => i.label);
-        charts.dusun.data.datasets[0].data = resDsn.map(i => i.persentase);
+        charts.dusun.data.datasets[0].data = resDsn.map(i => i.persentase); // Data Progres
+        charts.dusun.data.datasets[1].data = resDsn.map(i => 100 - i.persentase); // Kalkulasi Data Sisa
         charts.dusun.update();
 
         // RW
         const resRw = await $.get(`/dashboard/progress-rw?tahun=${thn}&dusun=${dsn}`);
         charts.rw.data.labels = resRw.map(i => i.label);
-        charts.rw.data.datasets[0].data = resRw.map(i => i.persentase);
+        charts.rw.data.datasets[0].data = resRw.map(i => i.persentase); // Data Progres
+        charts.rw.data.datasets[1].data = resRw.map(i => 100 - i.persentase); // Kalkulasi Data Sisa
         charts.rw.update();
 
-        // Distribusi
+        // Distribusi (Tetap sama)
         const resDist = await $.get(`/dashboard/distribusi-rt?tahun=${thn}&dusun=${dsn}`);
         const d = resDist.distribusi;
         charts.distribusi.data.datasets[0].data = [d.lunas, d.hampir, d.setengah, d.kurang, d.minim];
@@ -766,9 +803,10 @@
         // RT Keseluruhan (NEW)
         const resRt = await $.get(`/dashboard/progress-rt?tahun=${thn}&dusun=${dsn}&rw=${rw}`);
         charts.rt.data.labels = resRt.map(i => i.label);
-        charts.rt.data.datasets[0].data = resRt.map(i => i.persentase);
+        charts.rt.data.datasets[0].data = resRt.map(i => i.persentase); // Data Progres
+        charts.rt.data.datasets[1].data = resRt.map(i => 100 - i.persentase); // Kalkulasi Data Sisa
 
-        // Sesuaikan lebar canvas chart RT jika datanya banyak agar bisa di scroll horizontal
+        // Sesuaikan lebar canvas chart RT jika datanya banyak
         const chartRtContainer = document.querySelector('.chart-rt-container');
         if (resRt.length > 20) {
             chartRtContainer.style.width = (resRt.length * 40) + 'px';
